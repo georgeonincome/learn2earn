@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { COURSES, COURSE_LESSONS, SITE_CONFIG } from '@/lib/data'
+import { COURSES, SITE_CONFIG } from '@/lib/data'
+import { COURSE_LESSONS } from '@/lib/lessons-data'
 import type { Lesson } from '@/lib/types'
 import { ArrowLeft, Check, Play, Lock, ArrowRight, Star, ThumbsUp, MessageCircle } from 'lucide-react'
 
@@ -15,7 +16,7 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string; lessonId: string }> }) {
   const { slug, lessonId } = await params
-  const course = COURSES.find((c) => c.slug === slug)
+  const course = COURSES.find((c) => c.slug === slug)!
   const lesson = (COURSE_LESSONS[course.slug] || []).find((l) => l.id === lessonId)
   if (!course || !lesson) return { title: 'Lesson Not Found' }
   return {
@@ -26,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CourseLessonPage({ params }: { params: Promise<{ slug: string; lessonId: string }> }) {
   const { slug, lessonId } = await params
-  const course = COURSES.find((c) => c.slug === slug)
+  const course = COURSES.find((c) => c.slug === slug)!
   const lesson = (COURSE_LESSONS[course.slug] || []).find((l) => l.id === lessonId)
 
   if (!course || !lesson) {

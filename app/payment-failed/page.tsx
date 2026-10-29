@@ -1,5 +1,7 @@
+'use client'
 import Link from 'next/link'
-import { AlertTriangle, ArrowRight, RefreshCcw } from 'lucide-react'
+import { AlertTriangle, ArrowRight, RefreshCcw, MessageCircle } from 'lucide-react'
+import { SITE_CONFIG } from '@/lib/data'
 
 export default function PaymentFailedPage() {
   return (

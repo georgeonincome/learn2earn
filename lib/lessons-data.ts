@@ -803,4 +803,50 @@ export const FUNNELS: Record<string, any> = {
       { question: 'Is this for beginners?', answer: 'Yes, from setup to advanced campaigns.' },
     ],
   },
+  'ai-web-design': {
+    slug: 'ai-web-design',
+    title: 'AI Web Design Course',
+    description: 'Build websites with AI tools like Lovable, Claude, and v0. No coding required.',
+    price: 2604,
+    originalPrice: 5000,
+    ctaText: 'Enroll in AI Web Design',
+    ctaHref: '/checkout?course=ai-web-design-course',
+    features: [
+      'Build websites with AI',
+      'No coding required',
+      'Responsive design',
+      'Deploy and launch',
+    ],
+    testimonials: [
+      { name: 'Alice Wangari', role: 'Designer', content: 'Built my first website without any code.', rating: 5 },
+      { name: 'Brian Ochieng', role: 'Developer', content: 'AI web design changed how I work.', rating: 5 },
+    ],
+    faqs: [
+      { question: 'Do I need coding skills?', answer: 'No. AI tools handle the coding for you.' },
+      { question: 'What tools do I use?', answer: 'Lovable, Claude, v0, and other AI builders.' },
+    ],
+  },
+  'claude': {
+    slug: 'claude',
+    title: 'Claude AI Class',
+    description: 'Learn to use Claude AI for writing, analysis, coding, and business tasks.',
+    price: 2768,
+    originalPrice: 4500,
+    ctaText: 'Enroll in Claude AI Class',
+    ctaHref: '/checkout?course=claude-ai-class',
+    features: [
+      'Claude fundamentals',
+      'Data analysis',
+      'Content creation',
+      'No-code website building',
+    ],
+    testimonials: [
+      { name: 'Peter Maina', role: 'Analyst', content: 'Claude changed how I analyze data.', rating: 5 },
+      { name: 'Faith Njeri', role: 'Student', content: 'Practical AI skills I can use immediately.', rating: 5 },
+    ],
+    faqs: [
+      { question: 'Do I need coding experience?', answer: 'No. This is designed for complete beginners.' },
+      { question: 'What do I need?', answer: 'A Claude account (free tier works).' },
+    ],
+  },
 }

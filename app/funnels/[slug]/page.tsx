@@ -1,23 +1,12 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ArrowRight, Star, Play } from 'lucide-react'
-import { FUNNELS, SITE_CONFIG } from '@/lib/data'
+import { FUNNELS } from '@/lib/lessons-data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return Object.keys(FUNNELS).map((slug) => ({ slug }))
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const funnel = FUNNELS[slug]
-  if (!funnel) return { title: 'Page Not Found' }
-  return {
-    title: `${funnel.title} | Learn2Earn`,
-    description: funnel.description,
-  }
-}
-
-export default function FunnelPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function FunnelPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const funnel = FUNNELS[slug]
 
@@ -44,7 +33,7 @@ export default function FunnelPage({ params }: { params: Promise<{ slug: string 
               href={funnel.ctaHref}
               className="inline-flex h-12 items-center justify-center rounded-lg px-7 font-bold text-sm bg-[#1DB96B] text-[#111111] hover:bg-[#17A05D] transition-colors"
             >
-              {funnel.ctaText} <ArrowRight className="w-4 h-4 ml-1" />
+              {funnel.ctaText} →
             </Link>
           </div>
         </div>
@@ -53,11 +42,14 @@ export default function FunnelPage({ params }: { params: Promise<{ slug: string 
       {/* Features */}
       <section className="py-20 sm:py-28 px-4">
         <div className="mx-auto max-w-5xl">
-          <div className="grid md:grid-cols-3 gap-8">
-            {funnel.features.map((feature, i) => (
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111] mb-12 text-center">
+            What You'll Learn
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {funnel.features.map((feature: string, i: number) => (
               <div key={i} className="p-6 rounded-2xl border border-[#E5E5E5] bg-white">
-                <div className="w-10 h-10 rounded-lg bg-[#E3F6EF] flex items-center justify-center text-[#1DB96B] mb-4">
-                  <Play className="w-6 h-6" />
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[#1DB96B] mb-4 bg-[#E3F6EF]">
+                  ▶
                 </div>
                 <h3 className="text-lg font-bold text-[#111111] mb-2">{feature}</h3>
               </div>
@@ -73,11 +65,11 @@ export default function FunnelPage({ params }: { params: Promise<{ slug: string 
             What Learners Say
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
-            {funnel.testimonials.map((t, i) => (
+            {funnel.testimonials.map((t: any, i: number) => (
               <div key={i} className="p-6 rounded-2xl border border-[#E5E5E5] bg-[#F3F4F6]">
                 <div className="flex items-center gap-2 text-[#1DB96B] mb-3">
                   {[1, 2, 3, 4, 5].map((star, si) => (
-                    <Star key={si} className="w-3 h-3 fill-[#1DB96B]" />
+                    <span key={si} className="w-3 h-3 fill-[#1DB96B]">★</span>
                   ))}
                 </div>
                 <p className="text-sm text-[#737373] mb-3">{t.content}</p>
@@ -96,11 +88,10 @@ export default function FunnelPage({ params }: { params: Promise<{ slug: string 
             Frequently Asked Questions
           </h2>
           <div className="space-y-4">
-            {funnel.faqs.map((faq, i) => (
+            {funnel.faqs.map((faq: any, i: number) => (
               <details key={i} className="group border border-[#E5E5E5] rounded-xl overflow-hidden">
                 <summary
                   className="list-none cursor-pointer px-4 py-3 text-sm font-medium text-[#111111] flex justify-between items-start transition-colors group-open:bg-[#F3F4F6]"
-                  onClick={(e) => e.preventDefault()}
                 >
                   <span>{faq.question}</span>
                   <span className="text-sm">▾</span>
@@ -127,7 +118,7 @@ export default function FunnelPage({ params }: { params: Promise<{ slug: string 
             href={funnel.ctaHref}
             className="inline-flex h-12 items-center justify-center rounded-lg px-7 font-bold text-sm bg-[#10201A] text-[#FFFFFF] hover:bg-[#000000] transition-colors"
           >
-            {funnel.ctaText} <ArrowRight className="w-4 h-4 ml-1" />
+            {funnel.ctaText} →
           </Link>
         </div>
       </section>

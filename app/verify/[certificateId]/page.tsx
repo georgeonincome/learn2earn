@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { ShieldCheck, Check, ArrowLeft, RefreshCcw } from 'lucide-react'
+import { ShieldCheck, Check, ArrowLeft } from 'lucide-react'
 import { SAMPLE_CERTIFICATES } from '@/lib/lessons-data'
 
 export function generateStaticParams() {
@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ certifica
   }
 }
 
-export default function VerifyCertificatePage({ params }: { params: Promise<{ certificateId: string }> }) {
+export default async function VerifyCertificatePage({ params }: { params: Promise<{ certificateId: string }> }) {
   const { certificateId } = await params
   const cert = SAMPLE_CERTIFICATES[certificateId]
 
@@ -27,11 +27,8 @@ export default function VerifyCertificatePage({ params }: { params: Promise<{ ce
     notFound()
   }
 
-  const [searchParams] = [null] as const // placeholder for searchParams access if needed
-
   return (
     <div className="min-h-screen bg-[#F3F7F5] text-[#10201A]">
-      {/* Header */}
       <header className="border-b border-[#E3E8E5] bg-white sticky top-0 z-40">
         <div className="mx-auto max-w-[1000px] px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 text-[#1DB96B] hover:text-[#17A05D]">
@@ -83,12 +80,12 @@ export default function VerifyCertificatePage({ params }: { params: Promise<{ ce
             >
               <ArrowLeft className="w-4 h-4" /> Browse Courses
             </Link>
-            <button
-              onClick={() => window.location.reload()}
+            <Link
+              href={`/verify/${certificateId}`}
               className="flex items-center gap-2 text-sm font-medium text-[#737373] hover:text-[#111111] transition-colors"
             >
-              <RefreshCcw className="w-4 h-4" /> Verify Another
-            </button>
+              Verify Another
+            </Link>
           </div>
         </div>
       </main>

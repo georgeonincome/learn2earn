@@ -1,6 +1,7 @@
+'use client'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Play, Check, ArrowRight } from 'lucide-react'
+import { Check, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/data'
 
 const SKILL_CHECK_QUESTIONS = [
@@ -118,7 +119,7 @@ export default function SkillCheckPage() {
               <button
                 key={i}
                 onClick={() => handleAnswer(i)}
-                className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#E5E5E5] text-left text-sm text-[#111111] hover:bg-[#F3F4F6] transition-colors"
+                className="flex items-center justify-between px-4 py-3 rounded-lg border border-[#E5E5E5] text-left text-sm text-[#111111] hover:bg-[#F3F4F6] transition-colors"
               >
                 <span>{opt}</span>
               </button>
