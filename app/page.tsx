@@ -164,7 +164,7 @@ export default function HomePage() {
 
         {/* ============ LIVE CLASS BAND ============ */}
         <div className="aib-poster-theme">
-          <section aria-labelledby="ai-beginners-heading" className="bg-[hsl(var(--echelon-ink-raised))] text-[hsl(var(--echelon-on-dark))]">
+          <section aria-labelledby="ai-beginners-heading" className="bg-[hsl(var(--echelon-ink-raised))] text-[hsl(0_100%_99%)]">
             <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                 <div>
@@ -175,14 +175,14 @@ export default function HomePage() {
                     {LIVE_CLASS.title.replace(/ Class$/, '')}{' '}
                     <span className="aib-gradient-text">Class</span>
                   </h2>
-                  <p className="mt-4 max-w-xl text-lg leading-8 text-[hsl(var(--echelon-on-dark-muted))]">
+                  <p className="mt-4 max-w-xl text-lg leading-8 text-[hsl(0_100%_99%)]">
                     {LIVE_CLASS.description}
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <Link href={`/cohorts/${LIVE_CLASS.slug}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 font-bold text-sm text-[hsl(var(--echelon-ink))] bg-[hsl(var(--echelon-action))] hover:bg-[hsl(var(--echelon-action-hover))] transition-all">
                       Reserve my seat <ArrowRight className="h-4 w-4" />
                     </Link>
-                    <p className="text-sm text-[hsl(var(--echelon-on-dark-muted))]">
+                    <p className="text-sm text-[hsl(0_100%_99%)]">
                       <b className="text-[hsl(var(--echelon-on-dark))]">{fmt(LIVE_CLASS.price)}</b> · {LIVE_CLASS.schedule}
                     </p>
                   </div>
@@ -202,12 +202,12 @@ export default function HomePage() {
           </section>
 
           {/* ============ MEMBERSHIP HIGHLIGHTS ============ */}
-          <section className="border-y border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink-raised))] text-[hsl(var(--echelon-on-dark))]">
+          <section className="border-y border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink-raised))] text-[hsl(0_100%_99%)]">
             <div className="mx-auto grid max-w-7xl grid-cols-2 px-5 sm:px-8 lg:grid-cols-4 lg:px-12">
               {[[String(courseCount), "Published courses"], ["2", "Access plans"], ["Self-paced", "Learn on your schedule"], ["Direct", "Support from George"]].map(([v, g]) => (
                 <div key={g} className="border-b border-r border-[hsl(var(--echelon-line-dark))] px-3 py-7 text-center lg:border-b-0">
                   <p className="text-2xl font-extrabold text-[hsl(var(--echelon-green))] sm:text-3xl">{v}</p>
-                  <p className="mt-2 text-xs text-[hsl(var(--echelon-on-dark-muted))]">{g}</p>
+                  <p className="mt-2 text-xs text-[hsl(0_100%_99%)]">{g}</p>
                 </div>
               ))}
             </div>

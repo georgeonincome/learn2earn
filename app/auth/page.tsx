@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Mail, ArrowRight, Lock, MessageCircle, Phone } from 'lucide-react'
+import { Mail, ArrowRight, Lock, MessageCircle, Phone, ChevronRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/data'
 
 /* Auth page — exact 1:1 from click2skill Auth-DhBBJHb7.js:
@@ -10,6 +10,7 @@ import { SITE_CONFIG } from '@/lib/data'
    - Email sign-in form with Lucide icons
    - WhatsApp support link
    - Register toggle (single form)
+   - No Navbar, No Footer (own layout)
 */
 
 export default function AuthPage() {
@@ -21,7 +22,6 @@ export default function AuthPage() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    // Simulate submission — real auth handled by API
     setTimeout(() => setLoading(false), 1200)
   }
 
@@ -81,6 +81,20 @@ export default function AuthPage() {
                 />
               </div>
             </div>
+            {mode === 'login' && (
+              <div>
+                <label className="block text-sm font-medium text-[#111111] mb-1.5">Password</label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#737373]" />
+                  <input
+                    type="password"
+                    required
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#E5E5E5] bg-white text-sm focus:outline-none focus:ring-2 focus:ring-[#1DB96B]/20 focus:border-[#1DB96B] transition-all"
+                    placeholder="••••••••"
+                  />
+                </div>
+              </div>
+            )}
 
             <button
               type="submit"

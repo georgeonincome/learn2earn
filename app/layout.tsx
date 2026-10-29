@@ -1,8 +1,6 @@
-import type { Metadata } from 'next'
 import { Plus_Jakarta_Sans, Bricolage_Grotesque } from 'next/font/google'
 import './globals.css'
-import { Footer } from '@/components/layouts/Footer'
-import { Navbar } from '@/components/layouts/Navbar'
+import LayoutShell from '@/components/layouts/LayoutShell'
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -18,10 +16,9 @@ const bricolage = Bricolage_Grotesque({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
+export const metadata = {
   title: {
     default: 'Learn2Earn | Digital Skills Courses in Zambia',
-    template: '%s | Learn2Earn',
   },
   description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months. Pay with MTN/Airtel mobile money or card. Taught by George J Kasonso.',
   keywords: ['digital skills', 'online courses', 'Zambia', 'AI training', 'social media', 'web design', 'freelancing', 'Lusaka'],
@@ -64,11 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${plusJakarta.variable} ${bricolage.variable}`}>
       <body className="font-sans antialiased">
-        <Navbar />
-        <main className="min-h-screen">
-          {children}
-        </main>
-        <Footer />
+        <LayoutShell>{children}</LayoutShell>
       </body>
     </html>
   )

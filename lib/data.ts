@@ -429,15 +429,16 @@ export const REVIEWS = [
 ]
 
 export const FAQS = [
+  /* Getting started */
   {
     category: 'Getting started',
     question: 'What is Learn2Earn?',
-    answer: 'Learn2Earn is a Zambian learning platform for practical digital skills. Short, hands-on lessons you can apply the same day, taught and maintained personally by George Kasonso. Built for African learners, priced in kwacha, and it works on a phone.',
+    answer: 'Learn2Earn is a Zambian learning platform for practical digital skills. Short, hands-on lessons you can apply the same day, taught and maintained personally by George J Kasonso. Built for African learners, priced in kwacha, and it works on a phone.',
   },
   {
     category: 'Getting started',
     question: 'Who are the courses for?',
-    answer: "Anyone who wants a usable skill quickly. Students, job seekers, freelancers, creatives, business owners and complete beginners. Every lesson assumes you are starting from zero. So even if you've never touched a design tool or run an ad, you will be guided step by step.",
+    answer: "Anyone who wants a usable skill quickly. Students, job seekers, freelancers, creatives, business owners and complete beginners. Every lesson assumes you are starting from zero.",
   },
   {
     category: 'Getting started',
@@ -446,58 +447,313 @@ export const FAQS = [
   },
   {
     category: 'Getting started',
+    question: 'Can I see a lesson before I buy?',
+    answer: 'Many courses have a free preview lesson you can watch without paying. Look for the preview tag on the course page. What you see there is exactly how the rest of the course is taught.',
+  },
+  {
+    category: 'Getting started',
     question: 'Do I need a laptop?',
     answer: 'No. Everything works on a phone, including video, quizzes, assignments and your certificate. A laptop helps for some tools, but it is never required to complete a course.',
   },
   {
-    category: 'Payments',
-    question: 'How can I pay?',
-    answer: 'Mobile money or card, processed securely through Flutterwave. Prices are in Zambian Kwacha. We never see or store your card details.',
+    category: 'Getting started',
+    question: 'Is Learn2Earn only for people in Zambia?',
+    answer: 'No. Anyone can join from anywhere. Examples often use the Zambian market because that is what we know best, but the skills apply everywhere.',
   },
   {
-    category: 'Payments',
-    question: 'Is it a one-time payment or subscription?',
-    answer: 'Both are available, and you choose. Buy a single course or cohort once and it is yours to keep, or take a membership that opens every published course for a fixed period. Nothing renews automatically on either route. We do not keep your card to charge you again.',
+    category: 'Getting started',
+    question: 'Will this get me a job or clients?',
+    answer: 'The skills we teach are practical and income-ready. Many learners go on to freelance, get hired, or start their own services — but results depend on the work you put in.',
   },
   {
-    category: 'Payments',
-    question: 'Can I get a refund?',
-    answer: 'Yes, within limits. You can request a refund on a self-paced course within 7 days of buying, as long as you have barely started it and have not downloaded the main resources. For live cohorts, you can request a refund up to 48 hours before the start date.',
+    category: 'Getting started',
+    question: 'How much do courses cost?',
+    answer: 'Courses start from ZMW 432 for membership access. Individual courses and cohorts are priced separately in Zambian Kwacha, payable by mobile money or card.',
   },
   {
-    category: 'Certificates',
-    question: 'Are certificates included?',
-    answer: 'Yes. You can earn a certificate for each eligible course you complete. Certificates include a unique ID and verification link so anyone can confirm it is real.',
+    category: 'Getting started',
+    question: 'What is the difference between a course and a cohort?',
+    answer: 'Courses are self-paced recorded lessons you take on your own time. Cohorts are live, group-based programs with set start dates, deadlines, and live sessions with George.',
   },
   {
-    category: 'Certificates',
-    question: 'Are the certificates accredited?',
-    answer: 'No, and we say that plainly on the certificate itself. It is a certificate of completion, not a government or board accredited qualification. Its value is the practical skill behind it, which is what clients and employers actually test you on.',
+    category: 'Getting started',
+    question: 'How long are the lessons?',
+    answer: 'Lessons range from 5 to 30 minutes each. Courses have 8 to 20+ lessons totaling 8 to 18 hours of video.',
   },
   {
-    category: 'Support',
-    question: 'Can I speak directly to George?',
-    answer: 'Yes. Learn2Earn has no support desk. WhatsApp +260 97 123 4567 and you are speaking with George directly. Call or WhatsApp between 7am and 10pm CAT, any day of the week.',
+    category: 'Getting started',
+    question: 'How much time should I set aside each day?',
+    answer: 'We recommend 30 to 60 minutes a day. The platform is flexible, so you can go faster or slower depending on your schedule.',
   },
   {
-    category: 'Support',
-    question: 'How fast is support?',
-    answer: 'Usually quickly between 7am and 10pm CAT, every day. Messages go to George himself, not a queue, and payment or access issues get handled first because those block you from learning.',
-  },
-  {
-    category: 'Courses',
+    category: 'Getting started',
     question: 'Do I get lifetime access?',
     answer: 'Yes. Self-paced courses come with lifetime access once purchased. Cohort recordings stay in your account after the program ends.',
   },
   {
-    category: 'Courses',
-    question: 'What if I miss a live session?',
-    answer: 'Every session is recorded and shared, so you can catch up in your own time without falling behind.',
+    category: 'Getting started',
+    question: 'Do I have to attend cohort sessions live?',
+    answer: 'Live attendance is recommended so you can ask questions, but every session is recorded and shared if you miss it.',
   },
   {
-    category: 'Courses',
+    category: 'Getting started',
+    question: 'When does the next cohort start?',
+    answer: 'Check the cohorts page for upcoming start dates. New cohorts open regularly across AI, social media, virtual assistance, and more.',
+  },
+  {
+    category: 'Getting started',
+    question: 'Can I do more than one course at a time?',
+    answer: 'Yes. With a membership you can take as many courses as you like at once. Individual course purchases are also yours to keep and take whenever you want.',
+  },
+  {
+    category: 'Getting started',
     question: 'Are courses updated over time?',
-    answer: 'Yes. Tools change fast, especially AI ones, so lessons get refreshed and new ones get added. Updates are free, you do not pay again for a course you already own.',
+    answer: 'Yes. Tools change fast, especially AI ones, so lessons get refreshed and new ones get added. Updates are free — you do not pay again for a course you already own.',
+  },
+  {
+    category: 'Getting started',
+    question: 'What is the 5AM Challenge?',
+    answer: 'A structured morning routine program to help you build discipline, focus, and consistent results. It is one of our most popular live challenges.',
+  },
+  {
+    category: 'Getting started',
+    question: 'What skills can I learn?',
+    answer: 'AI productivity, web design, Meta ads, social media management, virtual assistance, video editing, computer skills, and freelancing — all taught with Zambian examples and kwacha pricing.',
+  },
+  /* Account */
+  {
+    category: 'Account',
+    question: 'Are there quizzes and assignments?',
+    answer: 'Yes. Many courses include quizzes and assignments to help you practice and check your understanding.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I retake a quiz?',
+    answer: 'Yes. You can retake quizzes to improve your score and reinforce your learning.',
+  },
+  {
+    category: 'Account',
+    question: 'Do I have to pass a quiz to continue?',
+    answer: 'Some courses require a passing mark to unlock the next lesson or certificate, but most let you move at your own pace.',
+  },
+  {
+    category: 'Account',
+    question: 'How are assignments graded?',
+    answer: 'Assignments are reviewed based on the rubric provided in each course. Feedback comes from George or the teaching team.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I use AI to help with my assignment?',
+    answer: 'Yes — we encourage using AI as a tool to work faster, as long as you understand the work you are submitting.',
+  },
+  {
+    category: 'Account',
+    question: 'What happens if I fail the final assessment?',
+    answer: 'You can retake it. We want you to learn the material properly, not just pass a test.',
+  },
+  {
+    category: 'Account',
+    question: 'How do I see my progress?',
+    answer: 'Your dashboard shows completion percentage, lessons finished, and upcoming sessions for each course and cohort you are enrolled in.',
+  },
+  {
+    category: 'Account',
+    question: 'How do I create an account?',
+    answer: 'Go to the sign-in page and create an account with your email. You will receive a secure code to verify your address.',
+  },
+  {
+    category: 'Account',
+    question: 'I did not get my sign in code',
+    answer: 'Check your spam folder. If it still has not arrived, request a new code or WhatsApp George directly for help.',
+  },
+  {
+    category: 'Account',
+    question: 'Do I still need a password?',
+    answer: 'No. Learn2Earn uses secure email code sign-in — no password to remember or reset.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I use my account on both my phone and laptop?',
+    answer: 'Yes. Your account works on any device with a browser, and your progress syncs automatically.',
+  },
+  {
+    category: 'Account',
+    question: 'I signed up with Google, can I switch to email codes?',
+    answer: 'Contact George on WhatsApp and he can help you switch your sign-in method.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I change my name or email?',
+    answer: 'Yes. Message George on WhatsApp with your request and he will update your account.',
+  },
+  {
+    category: 'Account',
+    question: 'What if I lose access to my email?',
+    answer: 'WhatsApp George immediately with your new email and he will help you recover your account.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I share my account?',
+    answer: 'No. Each account is for one person. Sharing login details may result in access being removed without refund.',
+  },
+  {
+    category: 'Account',
+    question: 'Can I delete my account?',
+    answer: 'Yes. Message George on WhatsApp and he will delete your account and data on request.',
+  },
+  /* Payments */
+  {
+    category: 'Payments',
+    question: 'How can I pay?',
+    answer: 'Mobile money (MTN, Airtel, Zamtel) or card, processed securely through Flutterwave. Prices are in Zambian Kwacha. We never see or store your card details.',
+  },
+  {
+    category: 'Payments',
+    question: 'Is it a one-time payment or a subscription?',
+    answer: 'Both are available. Buy a single course or cohort once and it is yours to keep, or take a membership that opens every published course for a fixed period. Nothing renews automatically.',
+  },
+  {
+    category: 'Payments',
+    question: 'What happens when my membership ends?',
+    answer: 'Your membership access expires, but anything you purchased individually stays in your account. You can renew at any time.',
+  },
+  {
+    category: 'Payments',
+    question: 'Can I renew before my membership runs out?',
+    answer: 'Yes. You can renew your membership anytime through the subscribe page or by messaging George on WhatsApp.',
+  },
+  {
+    category: 'Payments',
+    question: 'Can I get a refund?',
+    answer: 'Yes, within limits. Self-paced courses: refund within 7 days if you have barely started and not downloaded the main resources. Live cohorts: refund up to 48 hours before the start date.',
+  },
+  {
+    category: 'Payments',
+    question: 'I paid but I do not have access',
+    answer: 'WhatsApp George with your payment reference and he will activate your access manually, usually within minutes.',
+  },
+  {
+    category: 'Payments',
+    question: 'I was charged twice',
+    answer: 'WhatsApp George with both transaction references. Duplicate charges are refunded after verification.',
+  },
+  {
+    category: 'Payments',
+    question: 'Can someone else pay for me?',
+    answer: 'Yes. They can pay using your email address, or you can share the checkout link with them.',
+  },
+  {
+    category: 'Payments',
+    question: 'Do I get a receipt?',
+    answer: 'Yes. A receipt is emailed to you after every successful payment.',
+  },
+  {
+    category: 'Payments',
+    question: 'Do you offer discounts?',
+    answer: 'Yes. Some courses have early-bird pricing, and the membership gives you every course for one fee instead of buying individually.',
+  },
+  {
+    category: 'Payments',
+    question: 'Do you train teams or companies?',
+    answer: 'Yes. Message George on WhatsApp to discuss group training for your team or company.',
+  },
+  /* Certificates */
+  {
+    category: 'Certificates',
+    question: 'How do I get my certificate?',
+    answer: 'Complete the course requirements (lessons, quizzes, final assessment) and your certificate is issued automatically. Download it from your dashboard.',
+  },
+  {
+    category: 'Certificates',
+    question: 'Are the certificates accredited?',
+    answer: 'No, and we say that plainly on the certificate itself. It is a certificate of completion, not a government or board accredited qualification. Its value is the practical skill behind it.',
+  },
+  {
+    category: 'Certificates',
+    question: 'Can I use it on LinkedIn or my CV?',
+    answer: 'Yes. Add the certificate to your LinkedIn profile and CV — many learners use it to show clients and employers their practical skills.',
+  },
+  {
+    category: 'Certificates',
+    question: 'Can an employer verify it?',
+    answer: 'Yes. Every certificate has a unique ID and verification link so anyone can confirm it is real.',
+  },
+  {
+    category: 'Certificates',
+    question: 'Do cohorts give certificates too?',
+    answer: 'Yes. Complete a cohort program and you receive a cohort completion certificate as well.',
+  },
+  {
+    category: 'Certificates',
+    question: 'My name is wrong on the certificate',
+    answer: 'Message George on WhatsApp and he will correct your name and re-issue the certificate.',
+  },
+  /* Support */
+  {
+    category: 'Support',
+    question: 'Can I ask questions while I am learning?',
+    answer: 'Yes. Each course has a discussion area, and you can always WhatsApp George directly.',
+  },
+  {
+    category: 'Support',
+    question: 'How fast is support?',
+    answer: 'Usually quickly between 7am and 10pm CAT, every day. Messages go to George himself, not a queue, and payment or access issues get handled first.',
+  },
+  {
+    category: 'Support',
+    question: 'Can I talk to George directly?',
+    answer: 'Yes. Learn2Earn has no support desk. WhatsApp +260 97 123 4567 and you are speaking with George directly.',
+  },
+  {
+    category: 'Support',
+    question: 'Can I suggest a course?',
+    answer: 'Yes. WhatsApp George with your suggestion — many of our courses started as learner requests.',
+  },
+  {
+    category: 'Support',
+    question: 'Can I resell or teach your course content?',
+    answer: 'No. Course content is for your personal learning only. Reselling or teaching it as your own is not permitted.',
+  },
+  /* Technical */
+  {
+    category: 'Technical',
+    question: 'The video will not play or keeps buffering',
+    answer: 'Check your internet connection. Try lowering the video quality or switching from WiFi to mobile data. If it persists, WhatsApp George.',
+  },
+  {
+    category: 'Technical',
+    question: 'Does the platform use a lot of data?',
+    answer: 'Video uses the most data. You can lower quality in the player settings, and lessons work on basic connections.',
+  },
+  {
+    category: 'Technical',
+    question: 'Can I download lessons to watch offline?',
+    answer: 'Not yet. Lessons stream in the browser, but the platform works on mobile data and basic connections.',
+  },
+  {
+    category: 'Technical',
+    question: 'My assignment file will not upload',
+    answer: 'Check the file size and format requirements for the assignment. Try a different browser or WhatsApp George for help.',
+  },
+  {
+    category: 'Technical',
+    question: 'Which browser works best?',
+    answer: 'Chrome, Safari, and Firefox all work well. Make sure your browser is up to date.',
+  },
+  {
+    category: 'Technical',
+    question: 'The site keeps signing me out',
+    answer: 'Clear your browser cookies and sign in again. If it persists, WhatsApp George with details.',
+  },
+  {
+    category: 'Technical',
+    question: 'Is there a dark mode?',
+    answer: 'Not yet. It is on our roadmap based on learner demand.',
+  },
+  {
+    category: 'Technical',
+    question: 'Is my data safe?',
+    answer: 'Yes. We do not sell your data. Cards are never stored by us — Flutterwave handles them. Your account is protected by your email and secure sign-in code.',
   },
 ]
 
