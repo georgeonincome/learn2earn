@@ -1,0 +1,1 @@
+import{bF as e,bG as n,bH as s}from"./index-BADBJMlb.js";const r={slug:"smm-meta-2027",name:"Social Media Management + Meta Ads",price:4690},t={id:"smm-meta-2027",name:"SMM + Meta Ads",value:4690,currency:"KES"};function m(a,c){if(a==="ViewContent")return e(t);if(a==="InitiateCheckout")return n(t);s(t,"whatsapp")}export{r as S,t as a,m as s};

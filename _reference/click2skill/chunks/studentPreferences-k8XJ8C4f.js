@@ -1,0 +1,1 @@
+const a={classReminders:!0,whatsappReminders:!1,courseUpdates:!0,skillcheckReminders:!0,offers:!0,weeklyProgress:!1},c={dataSaver:!1,autoplayNext:!0,captions:!0};function i(e){const s=e&&typeof e=="object"?e:{},r=o=>Object.fromEntries(Object.entries(o).map(([t,n])=>[t,typeof s[t]=="boolean"?s[t]:n]));return{notifications:r(a),learning:r(c)}}export{i as r};

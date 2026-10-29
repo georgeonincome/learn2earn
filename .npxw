@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+export PATH="/home/george_jackson/Projects/web/clone/learn2earn/.node-portable/bin:$PATH"
+exec npx "$@"

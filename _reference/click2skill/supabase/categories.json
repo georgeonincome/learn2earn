@@ -1,0 +1,6 @@
+[{"id":"a2dc81a6-16b3-4367-bc51-1f34050026dc","name":"Development","description":"Programming and software development courses","created_at":"2025-11-27T10:17:14.106251+00:00","display_order":0}, 
+ {"id":"fb6ce30a-70b8-40ec-87ef-54a87c0d0de9","name":"Design","description":"UI/UX and graphic design courses","created_at":"2025-11-27T10:17:14.106251+00:00","display_order":0}, 
+ {"id":"f8e5813b-4322-4d97-bba4-08c321164b3d","name":"Business","description":"Business strategy and management courses","created_at":"2025-11-27T10:17:14.106251+00:00","display_order":0}, 
+ {"id":"b28df2c2-c948-4cce-a268-c8c76bfd4403","name":"AI Productivity","description":"","created_at":"2025-11-30T20:37:09.493177+00:00","display_order":0}, 
+ {"id":"0e2af33d-0ace-4291-a3a2-13351afc96c5","name":"Web Design","description":"","created_at":"2025-12-02T20:50:52.02421+00:00","display_order":0}, 
+ {"id":"b315c59e-a7b9-41bb-accd-207d978abcb4","name":"Modern Computer Packages","description":"","created_at":"2025-12-02T20:51:20.612128+00:00","display_order":0}]

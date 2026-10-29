@@ -1,0 +1,386 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============ Design tokens — extracted 1:1 from Click2Skill (assets_index-Bm9z18eA.css) ============ */
+
+:root {
+  --background: 0 0% 98%;
+  --foreground: 222 47% 11%;
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 222 47% 11%;
+  --primary: 152 73% 42%;
+  --primary-foreground: 0 0% 100%;
+  --primary-dark: 152 72% 36%;
+  --primary-tint: 152 60% 95%;
+  --ink: 220 47% 8%;
+  --ink-foreground: 100 6% 96%;
+  --ink-surface: 154 46% 13%;
+  --secondary: 40 40% 96%;
+  --secondary-foreground: 215 25% 27%;
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 16% 47%;
+  --accent: 152 73% 42%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 152 73% 42%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 5%;
+  --info: 217 91% 60%;
+  --info-foreground: 0 0% 100%;
+  --border: 214 32% 91%;
+  --input: 214 32% 91%;
+  --ring: 152 73% 42%;
+  --radius: 0.75rem;
+  --gradient-primary: linear-gradient(90deg, hsl(152 72% 36%) 0%, hsl(152 73% 42%) 100%);
+  --gradient-accent: linear-gradient(90deg, hsl(152 73% 42%) 0%, hsl(152 72% 36%) 100%);
+  --gradient-dark-overlay: linear-gradient(180deg, hsla(0, 0%, 5%, 0.9) 0%, hsla(0, 0%, 5%, 0.95) 100%);
+  --shadow-soft: 0 2px 8px -1px rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 12px -2px rgba(0, 0, 0, 0.08);
+  --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --dashboard-bg: 0 0% 98%;
+  --dashboard-sidebar: 0 0% 100%;
+  --dashboard-sidebar-border: 214 32% 91%;
+  --dashboard-sidebar-text: 215 25% 27%;
+  --dashboard-sidebar-active-bg: 152 73% 42% / 0.1;
+  --dashboard-sidebar-active-text: 158 64% 27%;
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 215 25% 27%;
+  --sidebar-primary: 152 73% 42%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 240 5% 96%;
+  --sidebar-accent-foreground: 222 47% 11%;
+  --sidebar-border: 214 32% 91%;
+  --sidebar-ring: 152 73% 42%;
+  /* footer / dark strips (fixed hex from reference) */
+  --footer-bg: #0A0D14;
+  --announcement-bg: #07140E;
+  --cta-hover: #1BBF83;
+  --cta-dark-text: #0D0D0D;
+}
+
+.dark {
+  --background: 0 0% 7%;
+  --foreground: 0 0% 95%;
+  --card: 0 0% 11%;
+  --card-foreground: 0 0% 95%;
+  --popover: 0 0% 11%;
+  --popover-foreground: 0 0% 95%;
+  --primary: 152 73% 42%;
+  --primary-foreground: 0 0% 100%;
+  --primary-dark: 152 72% 36%;
+  --primary-tint: 152 60% 12%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 90%;
+  --muted: 0 0% 15%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 152 73% 42%;
+  --accent-foreground: 0 0% 100%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  --success: 152 73% 42%;
+  --success-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 5%;
+  --info: 217 91% 60%;
+  --info-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 20%;
+  --ring: 152 73% 42%;
+  --shadow-soft: 0 2px 8px -1px rgba(0, 0, 0, 0.3);
+  --shadow-medium: 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  --dashboard-bg: 0 0% 7%;
+  --dashboard-sidebar: 0 0% 9%;
+  --dashboard-sidebar-border: 0 0% 20%;
+  --dashboard-sidebar-text: 0 0% 72%;
+  --dashboard-sidebar-active-bg: 152 73% 42% / 0.12;
+  --dashboard-sidebar-active-text: 152 73% 55%;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-feature-settings: "liga" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Headings use Bricolage Grotesque per reference --head token */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-head, 'Bricolage Grotesque', system-ui, sans-serif);
+    color: hsl(var(--foreground));
+  }
+
+  /* Reference heading scale: desktop -> tablet -> mobile (max-width style cascade) */
+  h1 {
+    font-size: 2.625rem;
+    line-height: 1.02;
+    font-weight: 800;
+    letter-spacing: 0;
+    margin-bottom: 1.5rem;
+  }
+  @media (min-width: 48rem) {
+    h1 { font-size: 3.5rem; }
+  }
+  @media (min-width: 64rem) {
+    h1 { font-size: 4.5rem; }
+  }
+
+  h2 {
+    font-size: 1.875rem;
+    line-height: 1.12;
+    font-weight: 700;
+  }
+  @media (min-width: 48rem) {
+    h2 { font-size: 2.25rem; }
+  }
+  @media (min-width: 64rem) {
+    h2 { font-size: 2.625rem; }
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+  h4 {
+    font-size: 1.25rem;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .container-wide {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  @media (min-width: 1024px) {
+    .container-wide {
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+  }
+  @media (min-width: 1536px) {
+    .container-wide {
+      padding-left: 0rem;
+      padding-right: 0rem;
+    }
+  }
+
+  .section-padding {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  @media (min-width: 768px) {
+    .section-padding {
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding-top: 5rem;
+      padding-bottom: 5rem;
+    }
+  }
+
+  /* Buttons — reference-driven */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    font-weight: 700;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    transition: var(--transition-smooth);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+  }
+  .btn-primary:hover {
+    background-color: var(--cta-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-medium);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+  }
+  @media (min-width: 768px) {
+    .btn-primary {
+      padding: 0.875rem 1.75rem;
+      font-size: 1rem;
+    }
+  }
+
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: transparent;
+    color: hsl(var(--primary));
+    font-weight: 700;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    border: 2px solid hsl(var(--primary));
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-outline:hover {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+  @media (min-width: 768px) {
+    .btn-outline {
+      padding: 0.875rem 1.75rem;
+      font-size: 1rem;
+    }
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background-color: hsl(var(--secondary));
+    color: hsl(var(--secondary-foreground));
+    font-weight: 700;
+    border-radius: 0.75rem;
+    font-size: 0.875rem;
+    transition: var(--transition-smooth);
+    border: 1px solid hsl(var(--border));
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-secondary:hover {
+    background-color: hsl(var(--muted));
+  }
+  @media (min-width: 768px) {
+    .btn-secondary {
+      padding: 0.875rem 1.75rem;
+      font-size: 1rem;
+    }
+  }
+
+  /* Dark strip buttons (dark navbar/footer variant from reference) */
+  .btn-dark-nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: #94A3B8;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.04);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-dark-nav:hover {
+    color: #ffffff;
+    border-color: hsl(var(--primary));
+    background: rgba(255, 255, 255, 0.08);
+  }
+
+  .btn-dark-cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1.25rem;
+    border-radius: 9999px;
+    background-color: hsl(var(--primary));
+    color: var(--cta-dark-text);
+    font-weight: 700;
+    font-size: 0.875rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+    transition: var(--transition-smooth);
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-dark-cta:hover {
+    background-color: var(--cta-hover);
+  }
+
+  .card-default {
+    background-color: hsl(var(--card));
+    border-radius: 1rem;
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+  }
+
+  .heading-accent {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: hsl(var(--primary));
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* aib-poster-theme — from click2skill live class section */
+.aib-poster-theme{--echelon-ink: 8 34% 5%;--echelon-ink-raised: 6 32% 9%;--echelon-action: 15 92% 58%;--echelon-action-hover: 15 90% 50%;--echelon-line-dark: 8 20% 17%}
+.aib-gradient-text{background-image:linear-gradient(92deg,#ff7a4d,#f04e8b 55%,#a855f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

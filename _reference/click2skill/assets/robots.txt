@@ -1,0 +1,25 @@
+User-agent: *
+Allow: /
+
+# Private and utility areas
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /secure-admin
+Disallow: /internal-auth
+Disallow: /internal-reset-password
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /checkout
+Disallow: /course/
+Disallow: /course-player/
+Disallow: /cohort/
+Disallow: /cohort-access
+Disallow: /cohort-player-demo
+Disallow: /verify/
+Disallow: /payment-success
+Disallow: /payment-failed
+Disallow: /search
+Disallow: /welcome
+Disallow: /skillcheck/
+
+Sitemap: https://click2skill.com/sitemap.xml

@@ -1,0 +1,1 @@
+function r(s){const t=String(s??"").trim();return!t.startsWith("/")||t.startsWith("//")||t.startsWith("/\\")||/[\u0000-\u001f]/.test(t)||t==="/auth"||t.startsWith("/auth?")||t.startsWith("/auth/")?null:t}const u="c2s_auth_next";export{u as N,r as s};

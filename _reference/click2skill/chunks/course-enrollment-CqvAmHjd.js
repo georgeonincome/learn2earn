@@ -1,0 +1,1 @@
+const c="A few errors are being resolved for these classes.",s=["8f1c2b54-8fb6-45ef-b0c3-d9accce4c98b","efd85a61-393f-450d-bb65-ae4ccbf3bdc4"],o={id:"1c6a3588-afa7-41f2-8f18-540ab5034b2a",slug:"social-media-management-with-ai-august-2026"};function f(e){return s.some(a=>a===e)}export{c as C,o as S,f as i};
