@@ -102,3 +102,87 @@ export interface SocialLink {
   href: string
   icon: string
 }
+
+/* ---------- Lesson & Learning Types ---------- */
+
+export interface Lesson {
+  id: string
+  courseId: string | number
+  title: string
+  description?: string
+  content?: string
+  videoUrl?: string
+  duration?: string // e.g. "12:30"
+  sortOrder: number
+  isFree: boolean
+  status: 'published' | 'draft'
+  isPreview?: boolean
+}
+
+export interface LessonProgress {
+  lessonId: string
+  userId: string | number
+  status: 'not_started' | 'in_progress' | 'completed'
+  watchTime: number // seconds watched
+  completedAt?: string
+  lastAccessedAt: string
+}
+
+export interface Certificate {
+  id: string
+  certificateId: string // public verification code
+  studentName: string
+  courseTitle: string
+  courseSlug: string
+  cohortTitle?: string
+  issueDate: string
+  downloadUrl?: string
+  isVerified: boolean
+}
+
+export interface Enrollment {
+  id: string
+  userId: string | number
+  courseId?: string | number
+  cohortId?: string | number
+  type: 'course' | 'cohort' | 'membership'
+  status: 'enrolled' | 'in_progress' | 'completed'
+  progress: number // 0-100
+  enrolledAt: string
+  completedAt?: string
+  certificateId?: string
+}
+
+export interface QuizAttempt {
+  id: string
+  lessonId: string
+  userId: string | number
+  score: number
+  total: number
+  passed: boolean
+  attemptedAt: string
+}
+
+export interface CertificateVerification {
+  certificateId: string
+  found: boolean
+  studentName?: string
+  courseTitle?: string
+  issueDate?: string
+  isVerified: boolean
+}
+
+/* ---------- Funnel Types ---------- */
+
+export interface FunnelPage {
+  slug: string
+  title: string
+  description: string
+  price: number
+  originalPrice?: number
+  ctaText: string
+  ctaHref: string
+  features: string[]
+  testimonials: { name: string; role: string; content: string; rating: number }[]
+  faqs: { question: string; answer: string }[]
+}

@@ -1,0 +1,97 @@
+import Link from 'next/link'
+import { notFound } from 'next/navigation'
+import { ShieldCheck, Check, ArrowLeft, RefreshCcw } from 'lucide-react'
+import { SAMPLE_CERTIFICATES } from '@/lib/lessons-data'
+
+export function generateStaticParams() {
+  return Object.keys(SAMPLE_CERTIFICATES).map((certificateId) => ({
+    certificateId,
+  }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ certificateId: string }> }) {
+  const { certificateId } = await params
+  const cert = SAMPLE_CERTIFICATES[certificateId]
+  if (!cert) return { title: 'Certificate Not Found' }
+  return {
+    title: `Verify Certificate ${certificateId} | Learn2Earn`,
+    description: `Verify the certificate of ${cert.studentName} for ${cert.courseTitle}`,
+  }
+}
+
+export default function VerifyCertificatePage({ params }: { params: Promise<{ certificateId: string }> }) {
+  const { certificateId } = await params
+  const cert = SAMPLE_CERTIFICATES[certificateId]
+
+  if (!cert) {
+    notFound()
+  }
+
+  const [searchParams] = [null] as const // placeholder for searchParams access if needed
+
+  return (
+    <div className="min-h-screen bg-[#F3F7F5] text-[#10201A]">
+      {/* Header */}
+      <header className="border-b border-[#E3E8E5] bg-white sticky top-0 z-40">
+        <div className="mx-auto max-w-[1000px] px-4 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2 text-[#1DB96B] hover:text-[#17A05D]">
+            <ShieldCheck className="h-6 w-6" /> Learn2Earn
+          </Link>
+          <span className="text-sm font-semibold text-[#5B6B64]">Certificate check</span>
+        </div>
+      </header>
+
+      <main className="mx-auto max-w-[1000px] px-4 py-8 sm:py-12">
+        <div className="rounded-2xl border border-[#E3E8E5] bg-white p-6 sm:p-10 text-center">
+          <ShieldCheck className="mx-auto h-10 w-10 text-[#1DB96B] mb-3" />
+          <h1 className="mt-3 text-2xl font-extrabold">Certificate Verified</h1>
+          <p className="mx-auto mt-2 max-w-md text-[#5B6B64]">
+            This certificate is valid and has been issued by Learn2Earn.
+          </p>
+
+          <div className="mt-10 bg-[#F6F7F5] rounded-xl p-8 text-left">
+            <div className="flex items-center gap-3 mb-2">
+              <Check className="w-5 h-5 text-[#1DB96B]" />
+              <span className="text-sm font-medium text-[#111111]">Certificate ID</span>
+              <span className="ml-auto text-xs font-mono text-[#5B6B64]">{cert.certificateId}</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-sm font-medium text-[#111111]">Student Name</span>
+              <span className="ml-auto text-xs font-semibold text-[#1DB96B]">{cert.studentName}</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-sm font-medium text-[#111111]">Course</span>
+              <span className="ml-auto text-xs text-[#5B6B64]">{cert.courseTitle}</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-sm font-medium text-[#111111]">Issue Date</span>
+              <span className="ml-auto text-xs text-[#5B6B64]">{cert.issueDate}</span>
+            </div>
+            <div className="flex items-center gap-3 mb-2">
+              <span className="text-sm font-medium text-[#111111]">Status</span>
+              <span className="flex items-center gap-1">
+                <span className="w-2 h-2 rounded-full bg-[#0F7A42]" />
+                <span className="text-xs font-medium text-[#0F7A42]">Verified</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="mt-8 flex justify-center gap-3">
+            <Link
+              href="/courses"
+              className="flex items-center gap-2 text-sm font-medium text-[#1DB96B] hover:text-[#17A05D] transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" /> Browse Courses
+            </Link>
+            <button
+              onClick={() => window.location.reload()}
+              className="flex items-center gap-2 text-sm font-medium text-[#737373] hover:text-[#111111] transition-colors"
+            >
+              <RefreshCcw className="w-4 h-4" /> Verify Another
+            </button>
+          </div>
+        </div>
+      </main>
+    </div>
+  )
+}

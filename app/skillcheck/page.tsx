@@ -1,0 +1,131 @@
+import { useState } from 'react'
+import Link from 'next/link'
+import { Play, Check, ArrowRight } from 'lucide-react'
+import { SITE_CONFIG } from '@/lib/data'
+
+const SKILL_CHECK_QUESTIONS = [
+  {
+    id: 1,
+    question: 'Which of these is a practical digital skill you can monetize online?',
+    options: ['Watching TikTok videos', 'Social media management', 'Scrolling Facebook', 'Playing mobile games'],
+    correct: 1,
+  },
+  {
+    id: 2,
+    question: 'What is the most important factor when choosing a digital skill to learn?',
+    options: ['What your friends are doing', 'Market demand and your interest', 'What looks easiest', 'What costs the least'],
+    correct: 1,
+  },
+  {
+    id: 3,
+    question: 'Which platform is best for finding freelance clients in Zambia?',
+    options: ['Only Facebook', 'LinkedIn, Upwork, Fiverr, and direct outreach', 'Only WhatsApp groups', 'Only Instagram'],
+    correct: 1,
+  },
+  {
+    id: 4,
+    question: 'Can you earn money with digital skills without a university degree?',
+    options: ['No', 'Yes, skills matter more than degrees for digital work', 'Only if you know someone', 'Only in certain cities'],
+    correct: 1,
+  },
+  {
+    id: 5,
+    question: 'What should you do after learning a new digital skill?',
+    options: ['Keep it to yourself', 'Practice, build a portfolio, and find clients', 'Forget about it', 'Only use it once'],
+    correct: 1,
+  },
+]
+
+export default function SkillCheckPage() {
+  const [currentQuestion, setCurrentQuestion] = useState(0)
+  const [answers, setAnswers] = useState<number[]>([])
+  const [showResults, setShowResults] = useState(false)
+
+  const handleAnswer = (optionIndex: number) => {
+    setAnswers([...answers, optionIndex])
+    setCurrentQuestion((prev) => prev + 1)
+  }
+
+  const score = answers.filter((ans, i) => ans === SKILL_CHECK_QUESTIONS[i].correct).length
+
+  if (showResults) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
+        <div className="mx-auto max-w-[480px] px-5 py-20 text-center">
+          <div className="flex h-16 w-14 items-center justify-center rounded-full bg-[#E3F6EF] text-[#0F7A42] mx-auto mb-5">
+            <Check className="h-8 w-8" />
+          </div>
+          <h1 className="text-2xl font-extrabold mb-3">Skill Check Complete</h1>
+          <p className="text-lg text-[#737373] mb-8">
+            You scored <span className="font-bold text-[#1DB96B]">{score}</span> out of {SKILL_CHECK_QUESTIONS.length}.
+          </p>
+          <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-8">
+            {score >= 4 ? (
+              <>
+                <p className="text-sm font-bold text-[#111111] mb-2">Great job!</p>
+                <p className="text-sm text-[#737373] mb-4">
+                  You have a good understanding of digital skills. You're ready to start learning and earning.
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm font-bold text-[#111111] mb-2">Keep learning!</p>
+                <p className="text-sm text-[#737373] mb-4">
+                  You&apos;re on the right track. Start with our beginner courses to build your foundation.
+                </p>
+              </>
+            )}
+          </div>
+          <div className="flex flex-col gap-3">
+            <Link
+              href="/courses"
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1DB96B] text-[#111111] font-bold text-sm hover:bg-[#17A05D] transition-colors"
+            >
+              Browse Courses <ArrowRight className="w-4 h-4 ml-1" />
+            </Link>
+            <button
+              onClick={() => {
+                setCurrentQuestion(0)
+                setAnswers([])
+                setShowResults(false)
+              }}
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#E5E5E5] text-sm font-bold text-[#111111] hover:bg-[#F3F4F6] transition-colors"
+            >
+              Retake Quiz
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+
+  const question = SKILL_CHECK_QUESTIONS[currentQuestion]
+
+  return (
+    <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
+      <div className="mx-auto max-w-[480px] px-5 py-20">
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-2xl font-extrabold">Skill Check</h1>
+          <span className="text-sm text-[#737373]">{currentQuestion + 1} of {SKILL_CHECK_QUESTIONS.length}</span>
+        </div>
+        <div className="w-full h-2 bg-[#E5E5E5] rounded-full mb-8">
+          <div className="h-full bg-[#1DB96B] rounded-full" style={{ width: `${((currentQuestion + 1) / SKILL_CHECK_QUESTIONS.length) * 100}%` }} />
+        </div>
+        <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-8">
+          <p className="text-lg font-bold text-[#111111] mb-4">{question.question}</p>
+          <div className="space-y-3">
+            {question.options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => handleAnswer(i)}
+                className="flex items-center justify-between px-4 py-3 rounded-xl border border-[#E5E5E5] text-left text-sm text-[#111111] hover:bg-[#F3F4F6] transition-colors"
+              >
+                <span>{opt}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
