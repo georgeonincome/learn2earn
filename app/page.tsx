@@ -438,7 +438,7 @@ export default function HomePage() {
         </section>
 
         {/* ============ LEARNER REVIEWS ============ */}
-        <section id="reviews" aria-labelledby="reviews-heading" style={{ backgroundColor: SAND, color: 'hsl(0 100% 99%)' }}>
+        <section id="reviews" aria-labelledby="reviews-heading" style={{ backgroundColor: CREAM, color: 'hsl(0 86% 3%)' }}>
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
             <div className="max-w-2xl">
               <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: GREEN_DEEP }}>Learner reviews</p>
@@ -460,7 +460,7 @@ export default function HomePage() {
                     {"“" + r.content + "”"}
                   </blockquote>
                   <figcaption className="mt-6 border-t border-[hsl(24_14%_88%)] pt-4">
-                    <p className="font-extrabold text-[hsl(0_100%_99%)]">{r.name}</p>
+                    <p className="font-extrabold text-[#10201A]">{r.name}</p>
                     <p className="mt-1 text-xs text-[hsl(354_6%_39%)]">{r.cohort}</p>
                   </figcaption>
                 </figure>
