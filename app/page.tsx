@@ -7,7 +7,6 @@ import {
   ChevronDown,
   MessageCircle,
   Megaphone,
-  Play,
   Quote,
   Star,
   Video,
@@ -413,11 +412,6 @@ export default function HomePage() {
                 <article key={v.title} className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[hsl(0_17%_14%)] bg-[hsl(0_24%_8%)] transition-all duration-300 hover:-translate-y-1 hover:border-[hsl(153_85%_28%)] hover:shadow-xl hover:shadow-[hsl(0_0%_0%)_0.4]">
                   <div className="aspect-[9/16] w-full min-w-0 overflow-hidden bg-[hsl(0_100%_99%)]">
                     <Image src={v.image} alt={v.title} width={600} height={1067} loading="lazy" className="h-full w-full object-cover" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                        <Play className="w-5 h-5 text-[#0A0D14] ml-0.5" fill="#0A0D14" />
-                      </div>
-                    </div>
                   </div>
                   <div className="flex flex-1 flex-col p-5">
                     <h3 className="font-extrabold leading-6">{v.title}</h3>
