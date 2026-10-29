@@ -8,6 +8,7 @@ import {
   MessageCircle,
   Megaphone,
   Play,
+  Quote,
   Star,
   Video,
 } from 'lucide-react'
@@ -355,116 +356,106 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* ============ 06 — SEE FOR YOURSELF ============ */}
+        <section style={{ backgroundColor: SAND }}>
+          <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+            <div>
+              <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: GREEN_DEEP }}>06 — See for yourself</p>
+              <h2 className="font-head text-3xl font-extrabold leading-tight sm:text-4xl">Check the teaching before you pay.</h2>
+              <p className="mt-5 text-lg leading-8" style={{ color: ON_LIGHT_MUTED }}>George shares practical digital skills content across five platforms. Watch a few lessons first and decide whether the teaching style works for you.</p>
+              <a href="#pricing" className="mt-8 inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm" style={{ backgroundColor: ACTION, color: INK }}>Ready? Get membership</a>
+            </div>
+            <ul className={`divide-y divide-[${LINE_LIGHT}] border-y border-[${LINE_LIGHT}]`}>
+              {[
+                { name: 'TikTok', handle: '@george_kasonso', href: SITE_CONFIG.social.tiktok, icon: 'TT' },
+                { name: 'Instagram', handle: '@george_kasonso', href: SITE_CONFIG.social.instagram, icon: 'IG' },
+                { name: 'YouTube', handle: '@georgekasonso', href: SITE_CONFIG.social.youtube, icon: 'YT' },
+                { name: 'Facebook', handle: 'George Kasonso', href: SITE_CONFIG.social.facebook, icon: 'F' },
+                { name: 'LinkedIn', handle: 'George Kasonso', href: SITE_CONFIG.social.linkedin, icon: 'IN' },
+              ].map((v) => (
+                <a key={v.href} href={v.href} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 px-1 py-4">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(0_86%_3%)] text-xs font-extrabold text-[hsl(0_100%_99%)]">{v.icon}</span>
+                  <span className="min-w-0">
+                    <span className="block font-bold text-[hsl(0_100%_99%)]">{v.name}</span>
+                    <span className="block truncate text-sm text-[hsl(354_6%_39%)]">{v.handle}</span>
+                  </span>
+                  <ArrowRight className="ml-auto h-5 w-5 text-[hsl(153_85%_28%)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </a>
+              ))}
+            </ul>
+          </div>
+        </section>
+
         {/* ============ WATCH AND LEARN ============ */}
         <section aria-labelledby="watch-learn-heading" style={{ backgroundColor: INK, color: 'hsl(0 100% 99%)' }}>
           <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-16 items-start">
               <div>
-                <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: ACTION }}>
-                  Watch and learn
-                </p>
-                <h2 id="watch-learn-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl text-[hsl(0_100%_99%)]">
-                  Practical lessons from {firstName}
-                </h2>
-                <p className="mt-5 text-lg leading-8" style={{ color: 'hsl(0 100% 99%)' }}>
-                  Short lessons on digital skills, freelancing, web design and turning what you know into useful work.
-                </p>
-                <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex items-center gap-2 rounded-lg px-7 font-bold text-sm" style={{ backgroundColor: ACTION, color: INK }}>
-                  Watch on TikTok <ArrowRight className="h-4 w-4" />
-                </a>
-              </div>
-              <div className="relative aspect-video overflow-hidden rounded-2xl border border-[#1E293B] bg-[#0A0D14]">
-                <Image
-                  src="/images/elvis-teaching-phone.webp"
-                  alt={`${firstName} teaching digital skills`}
-                  width={1080}
-                  height={608}
-                  loading="lazy"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                    <Play className="w-5 h-5 text-[#0A0D14] ml-0.5" fill="#0A0D14" />
-                  </div>
-                </div>
+                <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: ACTION }}>Watch and learn</p>
+                <h2 id="watch-learn-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl text-[hsl(0_100%_99%)]">Practical lessons from {firstName}</h2>
+                <p className="mt-5 text-lg leading-8" style={{ color: 'hsl(0 100% 99%)' }}>Short lessons on digital skills, freelancing, web design and turning what you know into useful work.</p>
               </div>
             </div>
-
-            {/* TikTok video cards */}
-            <div className="mt-16 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {TIKTOK_VIDEOS.map((v, i) => (
-                <a
-                  key={`tiktok-${i}`}
-                  href={v.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block rounded-2xl border bg-[hsl(0_100%_100%)] overflow-hidden hover:shadow-md transition-all"
-                  style={{ borderColor: LINE_LIGHT }}
-                >
-                  <div className="relative aspect-video bg-[#EEF1EE]">
-                    <Image
-                      src={v.image}
-                      alt={v.title}
-                      width={600}
-                      height={338}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
+            <div className="mt-10 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {TIKTOK_VIDEOS.map((v) => (
+                <article key={v.title} className="group flex min-w-0 flex-col overflow-hidden rounded-2xl border border-[hsl(0_17%_14%)] bg-[hsl(0_24%_8%)] transition-all duration-300 hover:-translate-y-1 hover:border-[hsl(153_85%_28%)] hover:shadow-xl hover:shadow-[hsl(0_0%_0%)_0.4]">
+                  <div className="aspect-[9/16] w-full min-w-0 overflow-hidden bg-[hsl(0_100%_99%)]">
+                    <Image src={v.image} alt={v.title} width={600} height={1067} loading="lazy" className="h-full w-full object-cover" />
                     <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white">
-                        <Play className="w-6 h-6 text-[#0A0D14] ml-0.5" fill="#0A0D14" />
+                        <Play className="w-5 h-5 text-[#0A0D14] ml-0.5" fill="#0A0D14" />
                       </div>
                     </div>
-                    <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs font-bold px-2 py-1 rounded">
-                      {v.duration}
-                    </div>
                   </div>
-                  <div className="p-4">
-                    <p className="font-bold text-foreground mb-1">{v.title}</p>
-                    <p className="text-xs" style={{ color: ON_LIGHT_MUTED }}>{v.desc}</p>
-                    <div className="mt-3 flex items-center gap-2">
-                      <span className="flex items-center gap-1 text-xs font-semibold text-[#2E3D37]">
-                        <span className="bg-[#E8F8F0] text-[#0F7A42] px-2 py-0.5 rounded text-[10px]">TikTok</span> @george_kasonso
-                      </span>
-                      <ArrowRight className="w-3 h-3 text-[#2E3D37]" />
-                    </div>
+                  <div className="flex flex-1 flex-col p-5">
+                    <h3 className="font-extrabold leading-6">{v.title}</h3>
+                    <p className="mt-2 flex-1 text-sm leading-6 text-[hsl(354_6%_39%)]">{v.desc}</p>
+                    <a href={v.href} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex items-center gap-1 text-sm font-bold text-[hsl(153_85%_28%)] transition-colors hover:text-[hsl(152_73%_42%)]">
+                      Watch on TikTok <ArrowRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                    </a>
                   </div>
-                </a>
+                </article>
               ))}
             </div>
+            <div className="mt-9 text-center">
+              <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm border border-[hsl(24_14%_88%)] bg-transparent text-[hsl(0_100%_99%)] hover:bg-[hsl(0_24%_8%)] hover:text-[hsl(0_100%_99%)]">
+                Follow {firstName} on TikTok <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+        </section>
 
-            {/* Learner reviews */}
-            <div className="mt-16 rounded-2xl border bg-[hsl(0_100%_100%)] p-8" style={{ borderColor: LINE_LIGHT }}>
-              <div className="flex items-center gap-2 mb-4">
-                <Megaphone className="h-4 w-4" style={{ color: GREEN_DEEP }} />
-                <p className="font-extrabold text-foreground">Learner reviews</p>
-              </div>
-              <p className="text-sm text-[hsl(0_100%_99%)/70] mb-6">
-                What learners say after taking the classes.
-              </p>
-              <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {REVIEWS.slice(0, 6).map((r) => (
-                  <div key={r.id} className="p-5 rounded-xl border bg-[hsl(0_24%_8%)]" style={{ borderColor: LINE_LIGHT }}>
-                    <div className="flex gap-1 mb-3" aria-label={`${r.rating} out of 5 stars`}>
+        {/* ============ LEARNER REVIEWS ============ */}
+        <section id="reviews" aria-labelledby="reviews-heading" style={{ backgroundColor: SAND, color: 'hsl(0 100% 99%)' }}>
+          <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+            <div className="max-w-2xl">
+              <p className="mb-5 text-xs font-extrabold uppercase tracking-[0.18em]" style={{ color: GREEN_DEEP }}>Learner reviews</p>
+              <h2 id="reviews-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl">What learners say after taking the classes.</h2>
+              <p className="mt-4 text-lg leading-8" style={{ color: ON_LIGHT_MUTED }}>Feedback from learners across Learn2Earn courses and masterclasses.</p>
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              {REVIEWS.map((r) => (
+                <figure key={r.id} className="flex min-h-[280px] flex-col rounded-xl border border-[hsl(24_14%_88%)] bg-[hsl(0_100%_99%)] p-6">
+                  <Quote className="h-8 w-8" style={{ color: ACTION }} aria-hidden="true" />
+                  {r.rating && (
+                    <div className="mt-5 flex gap-1" aria-label={`${r.rating} out of 5 stars`}>
                       {Array.from({ length: r.rating }).map((_, i) => (
                         <Star key={i} className="h-4 w-4" style={{ color: ACTION, fill: ACTION }} aria-hidden="true" />
                       ))}
                     </div>
-                    <blockquote className="text-sm leading-6 mb-4" style={{ color: 'hsl(0 100% 99%)/90' }}>
-                      &ldquo;{r.content}&rdquo;
-                    </blockquote>
-                    <figcaption className="text-xs">
-                      <p className="font-extrabold text-[hsl(0_100%_99%)]">{r.name}</p>
-                      <p className="text-[hsl(0_100%_99%)/60]">{r.cohort}</p>
-                    </figcaption>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 text-center">
-                <Link href="/reviews" className="text-sm font-extrabold underline" style={{ color: ACTION }}>
-                  Read all learner reviews <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
+                  )}
+                  <blockquote className="mt-5 flex-1 text-[15px] leading-7 text-[hsl(354_6%_39%)]">
+                    {"“" + r.content + "”"}
+                  </blockquote>
+                  <figcaption className="mt-6 border-t border-[hsl(24_14%_88%)] pt-4">
+                    <p className="font-extrabold text-[hsl(0_100%_99%)]">{r.name}</p>
+                    <p className="mt-1 text-xs text-[hsl(354_6%_39%)]">{r.cohort}</p>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Link href="/reviews" className="text-sm font-extrabold underline">Read all learner reviews</Link>
             </div>
           </div>
         </section>
