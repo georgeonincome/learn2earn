@@ -1,263 +1,239 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { Award, Globe, Users, MapPin, Phone, Mail, Clock, MessageCircle, ArrowRight, BookOpen } from 'lucide-react'
+import { Layout, Award, Briefcase, GraduationCap, TrendingUp, Users, Heart, Play, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/data'
 
-/* About page — exact 1:1 from click2skill About-D0g2GHRy.js:
-   
-   - Hero: founder image (real), headline "I teach what I do for a living.", stats pills
-   - Stats band: Students, Community, Countries + CTA pills
-   - Timeline: George's journey
-   - Skills grid + real founder image
-   - Campus note + personal site note
-   - Final CTA
+/* About page — exact 1:1 from click2skill About-D0g2GHRy.js, Zambianized:
+   - Hero: dark section with founder image + headline + stats
+   - "One person runs everything" section
+   - "Two ways to learn here" cards
+   - "The Journey" timeline
+   - "What I Do Today" grid
+   - "Brands I've Worked With" chips
+   - "What's next" grid
+   - Dark CTA section
 */
 
 const TIMELINE = [
-  { year: '2019', event: 'Started freelancing during university — digital marketing and content creation for local Zambian businesses' },
-  { year: '2020', event: 'Launched first online course on social media management for beginners' },
-  { year: '2021', event: 'Reached 20K+ followers across platforms, began hosting live workshops' },
-  { year: '2023', event: 'Trained 2,000+ students across Zambia and Africa through online programs' },
-  { year: '2024', event: 'Expanded to AI and automation training, launched cohort-based live classes' },
-  { year: '2025', event: 'Launched Learn2Earn platform — accessible, practical digital skills for Africans' },
-  { year: '2026', event: '5,000+ students trained, community of 100K+, multi-course catalog live' },
+  { year: '2019', title: 'Graduated from University of Zambia', icon: GraduationCap },
+  { year: '2020', title: 'Started freelancing during COVID', icon: Briefcase },
+  { year: '2021', title: 'Began teaching digital skills on TikTok', icon: TrendingUp },
+  { year: '2023', title: 'Reached 500K+ followers across platforms', icon: Users },
+  { year: '2024', title: 'Launched Learn2Earn platform', icon: Layout },
+  { year: '2025', title: '1.1M+ followers, 10,000+ students trained', icon: Award },
 ]
 
-const SKILLS = [
-  'Digital Marketing & Strategy',
-  'Website Design & SEO',
-  'Content Creation & Coaching',
-  'Freelancing Training',
-  'AI Productivity Training',
-  'Meta & Google Advertising',
-  'Social Media Management',
-  'Video Editing & Production',
+const WHAT_IDO_TODAY = [
+  { title: 'Digital Marketing & Strategy', desc: 'Helping brands improve visibility and results.' },
+  { title: 'Website Design & SEO', desc: 'Building modern websites that convert.' },
+  { title: 'Content Creation', desc: 'Creating engaging content for social platforms.' },
+  { title: 'AI Productivity', desc: 'Using AI to work faster and smarter.' },
+  { title: 'Social Media Management', desc: 'Managing brands&apos; social presence.' },
+  { title: 'Virtual Assistance', desc: 'Training VAs for global clients.' },
+]
+
+const BRANDS = ['MTN Zambia', 'Airtel Zambia', 'Zamtel', 'Zambia ICT Authority', 'Hivos Zambia', 'Tech Zambia']
+
+const WHATS_NEXT = [
+  { title: 'A physical campus, 2027/28', desc: 'A physical Learn2Earn campus in Lusaka is planned for 2027/28, for in-person classes and hands-on labs. Until it opens, everything runs online.' },
+  { title: 'darasa.my', desc: 'A separate project George is building alongside Learn2Earn, extending the same practical teaching approach.' },
+  { title: 'georgekasonso.com', desc: 'George&apos;s personal site — speaking, consulting, brand work and everything outside the classroom.' },
 ]
 
 const firstName = SITE_CONFIG.founder.name.split(' ').slice(-1).join(' ')
+const fullName = SITE_CONFIG.founder.name
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAFAFA', color: '#111111' }}>
-      {/* Hero */}
-      <section style={{ paddingTop: '4rem', paddingBottom: '4rem' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+    <div className="min-h-screen bg-background">
+      {/* Dark hero section */}
+      <section className="bg-[#0A0D14] text-white py-16 sm:py-20 px-6 lg:px-12">
+        <div className="max-w-5xl mx-auto text-center">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-[hsl(152_73%_42%_/0.1)] rounded-full mb-6">
+            <Heart className="w-7 h-7 text-[hsl(var(--primary))]" />
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            About <span className="text-[hsl(var(--primary))]">Learn2Earn</span>
+          </h1>
+          <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
+            A creator-led Zambian platform built to make practical digital skills accessible, fast, and affordable for everyone.
+          </p>
+        </div>
+      </section>
+
+      {/* Founder section */}
+      <section className="px-6 lg:px-12 py-16">
+        <div className="max-w-5xl mx-auto space-y-16">
+          <section className="grid md:grid-cols-2 gap-10 items-center">
             <div>
-              <p className="mb-5 inline-block text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B] bg-[#E8F8F0] px-3 py-1 rounded-full">
-                Meet the founder
-              </p>
-              <h1 className="font-head text-4xl md:text-5xl font-extrabold leading-[1.05] tracking-[-0.02em]">
-                I teach what I do for a living.
-              </h1>
-              <p className="mt-6 text-lg leading-8 text-[#404040] max-w-lg">
-                Hi, I&apos;m {SITE_CONFIG.founder.name}. {SITE_CONFIG.founder.bio} I teach
-                the exact systems I use in my own work every day — with Zambian examples,
-                kwacha prices and plain language.
-              </p>
-              <div className="mt-8 flex gap-3">
-                <Link
-                  href="/courses"
-                  className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm"
-                  style={{ backgroundColor: '#1DB96B', color: '#111111' }}
-                >
-                  Explore courses
-                </Link>
-                <a
-                  href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm border border-[#E5E5E5] text-[#111111]"
-                >
-                  Get in touch
-                </a>
-              </div>
-            </div>
-            <div className="relative hidden lg:block aspect-[4/5] max-h-[600px] overflow-hidden rounded-2xl bg-[#EEF1EE] z-0">
               <Image
                 src="/images/elvis-desk-wide.webp"
-                alt={`${SITE_CONFIG.founder.name}, founder of Learn2Earn, working in Lusaka`}
-                fill
-                className="object-cover object-center"
+                alt={`${fullName}, founder of Learn2Earn`}
+                className="rounded-2xl shadow-lg w-full"
+                width={800}
+                height={600}
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats band */}
-      <section style={{ paddingTop: '4rem', paddingBottom: '4rem', backgroundColor: '#FFFFFF' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
-            {SITE_CONFIG.founder.stats.map((s) => (
-              <div key={s.label} className="p-4">
-                <p className="text-3xl font-extrabold">{s.value}</p>
-                <p className="mt-1 text-sm text-[#737373]">{s.label}</p>
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-[hsl(152_73%_42%_/0.1)] rounded-full">
+                <Layout className="w-4 h-4 text-[hsl(var(--primary))]" />
+                <span className="text-sm font-semibold text-[hsl(var(--primary))]">Meet the Founder</span>
               </div>
-            ))}
-          </div>
-          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/subscribe" className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm" style={{ backgroundColor: '#1DB96B', color: '#111111' }}>
-              Get membership
-            </Link>
-            <Link href="/courses" className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm border border-[#E5E5E5] text-[#111111]">
-              <BookOpen className="mr-2 h-4 w-4" /> Browse all courses
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Journey timeline */}
-      <section style={{ paddingTop: '5rem', paddingBottom: '5rem' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-          <h2 className="font-head text-3xl font-extrabold leading-tight mb-10 text-center">
-            The journey so far
-          </h2>
-          <ul className="max-w-3xl mx-auto space-y-8">
-            {TIMELINE.map((t, i) => (
-              <li key={t.year} className="relative pl-12">
-                <span
-                  className="absolute left-0 top-0.5 w-6 h-6 rounded-full border-2 flex items-center justify-center text-[11px] font-bold"
-                  style={{ borderColor: '#1DB96B', color: '#1DB96B' }}
-                >
-                  {t.year.slice(2)}
-                </span>
-                <p className="font-bold text-sm text-[#111111]">{t.year}</p>
-                <p className="text-[#404040] text-sm leading-7">{t.event}</p>
-                {i < TIMELINE.length - 1 && (
-                  <div className="absolute left-3 top-6 w-px h-[60px] bg-[#E5E5E5]" />
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* Skills + Image */}
-      <section style={{ paddingTop: '5rem', paddingBottom: '5rem', backgroundColor: '#FFFFFF' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="aspect-[4/5] max-h-[540px] overflow-hidden rounded-2xl bg-[#EEF1EE] z-0">
-              <Image
-                src="/images/elvis-mic.webp"
-                alt={`${SITE_CONFIG.founder.name} teaching a digital skills class`}
-                fill
-                className="object-cover object-center"
-                sizes="(min-width: 1024px) 50vw, 100vw"
-              />
-            </div>
-            <div>
-              <h2 className="font-head text-3xl font-extrabold leading-tight mb-8">
-                What I teach
-              </h2>
-              <ul className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {SKILLS.map((s) => (
-                  <li key={s} className="bg-[#FAFAFA] border border-[#E5E5E5] rounded-xl p-4 text-sm font-medium text-[#111111] flex items-center gap-3">
-                    <Award className="w-4 h-4 text-[#1DB96B] shrink-0" /> {s}
-                  </li>
-                ))}
-              </ul>
-              <p className="mt-6 text-sm text-[#737373] leading-relaxed">
-                Everything is practical, project-based, and taught from real client work and campaigns.
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#111111]">{fullName}</h2>
+              <p className="text-[#737373] leading-relaxed">
+                Zambian digital educator, content strategist, and entrepreneur with <span className="font-bold text-[#111111]">1.1M+ followers</span> across platforms. I started from a small cyber café and turned self-taught skills into a mission to train Africa.
               </p>
+              <div className="grid grid-cols-3 gap-4 pt-2">
+                <div className="text-center p-3 bg-[#FAFAFA] rounded-xl">
+                  <p className="text-xl font-bold text-[hsl(var(--primary))]">1.1M+</p>
+                  <p className="text-xs text-[#737373]">Followers</p>
+                </div>
+                <div className="text-center p-3 bg-[#FAFAFA] rounded-xl">
+                  <p className="text-xl font-bold text-[hsl(var(--primary))]">10K+</p>
+                  <p className="text-xs text-[#737373]">Students</p>
+                </div>
+                <div className="text-center p-3 bg-[#FAFAFA] rounded-xl">
+                  <p className="text-xl font-bold text-[hsl(var(--primary))]">15+</p>
+                  <p className="text-xs text-[#737373]">Countries</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
 
-      {/* Direct contact banner */}
-      <section style={{ paddingTop: '4rem', paddingBottom: '4rem', backgroundColor: '#FAFAFA' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
-          <div className="bg-white border border-[#E5E5E5] rounded-2xl p-8 text-center">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B] mb-3">
-              Direct access
-            </p>
-            <h2 className="font-head text-2xl font-extrabold mb-4">
-              No support desk. Just {firstName}.
+          {/* One person runs everything */}
+          <section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-3 text-center">
+              One person runs <span className="text-[hsl(var(--primary))]">everything</span>
             </h2>
-            <p className="text-[#404040] max-w-xl mx-auto mb-6 text-sm leading-7">
-              When you message Learn2Earn, you&apos;re speaking directly with the person who teaches every class. 
-              WhatsApp is the fastest way — replies usually within an hour during work hours.
+            <p className="text-[#737373] text-center max-w-2xl mx-auto mb-6">
+              Learn2Earn is not a company with departments. It is built, taught and maintained personally by George J Kasonso — the courses, the live cohorts, the platform itself and the replies to your messages. You will not waste time being passed around a customer support queue. You deal with George directly.
+            </p>
+            <div className="max-w-3xl mx-auto">
+              <Play className="w-8 h-8 text-[hsl(var(--primary))]" />
+            </div>
+          </section>
+
+          {/* Two ways to learn here */}
+          <section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-6 text-center">
+              Two ways to <span className="text-[hsl(var(--primary))]">learn here</span>
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto">
+              <div className="bg-white border border-[#E5E5E5] rounded-xl p-5">
+                <div className="w-9 h-9 rounded-full bg-[hsl(152_73%_42%_/0.1)] flex items-center justify-center mb-3">
+                  <Award className="w-4 h-4 text-[hsl(var(--primary))]" />
+                </div>
+                <h3 className="font-semibold text-[#111111] mb-1">Buy a single programme</h3>
+                <p className="text-sm text-[#737373]">
+                  Pay once for a course, cohort or masterclass and it is yours to keep. Nothing renews, and what you bought stays unlocked forever.
+                </p>
+              </div>
+              <div className="bg-white border border-[#E5E5E5] rounded-xl p-5">
+                <div className="w-9 h-9 rounded-full bg-[hsl(152_73%_42%_/0.1)] flex items-center justify-center mb-3">
+                  <Play className="w-4 h-4 text-[hsl(var(--primary))]" />
+                </div>
+                <h3 className="font-semibold text-[#111111] mb-1">Take a membership</h3>
+                <p className="text-sm text-[#737373]">
+                  A membership opens every published course for a fixed period. There is no auto renewal — it simply ends unless you choose to extend, and your progress and certificates survive any gap.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* The Journey */}
+          <section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-8 text-center">
+              The <span className="text-[hsl(var(--primary))]">Journey</span>
+            </h2>
+            <div className="relative">
+              <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-[#E5E5E5] md:-translate-x-px" />
+              <div className="space-y-8">
+                {TIMELINE.map((t, i) => {
+                  const Icon = t.icon
+                  return (
+                    <div key={t.year} className={`relative flex items-start gap-6 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                      <div className="hidden md:block md:w-1/2" />
+                      <div className="absolute left-4 md:left-1/2 w-8 h-8 -translate-x-1/2 bg-[hsl(var(--primary))] rounded-full flex items-center justify-center z-10">
+                        <Icon className="w-4 h-4 text-white" />
+                      </div>
+                      <div className="ml-12 md:ml-0 md:w-1/2 bg-white border border-[#E5E5E5] rounded-xl p-4">
+                        <span className="text-xs font-bold text-[hsl(var(--primary))]">{t.year}</span>
+                        <p className="text-sm font-semibold text-[#111111] mt-1">{t.title}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+          </section>
+
+          {/* What I Do Today */}
+          <section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-6 text-center">
+              What I <span className="text-[hsl(var(--primary))]">Do Today</span>
+            </h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {WHAT_IDO_TODAY.map((s) => (
+                <div key={s.title} className="bg-white border border-[#E5E5E5] rounded-xl p-5">
+                  <h3 className="font-semibold text-[#111111] mb-1">{s.title}</h3>
+                  <p className="text-sm text-[#737373]">{s.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Brands I've Worked With */}
+          <section className="text-center">
+            <h2 className="text-2xl font-bold text-[#111111] mb-6">Brands I've Worked With</h2>
+            <div className="flex flex-wrap justify-center gap-3">
+              {BRANDS.map((b) => (
+                <span key={b} className="px-4 py-2 bg-[#FAFAFA] rounded-full text-sm font-medium text-[#111111]">{b}</span>
+              ))}
+            </div>
+          </section>
+
+          {/* What's next */}
+          <section>
+            <h2 className="text-2xl sm:text-3xl font-bold text-[#111111] mb-6 text-center">
+              What's <span className="text-[hsl(var(--primary))]">next</span>
+            </h2>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {WHATS_NEXT.map((item) => (
+                <div key={item.title} className="bg-white border border-[#E5E5E5] rounded-xl p-5">
+                  <div className="w-9 h-9 rounded-full bg-[hsl(152_73%_42%_/0.1)] flex items-center justify-center mb-3">
+                    <Layout className="w-4 h-4 text-[hsl(var(--primary))]" />
+                  </div>
+                  <h3 className="font-semibold text-[#111111] mb-1">{item.title}</h3>
+                  <p className="text-sm text-[#737373]">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* Dark CTA */}
+          <section className="bg-[#0A0D14] text-white p-8 sm:p-10 rounded-2xl text-center">
+            <h2 className="text-2xl sm:text-3xl font-bold mb-3">
+              Zambia doesn&apos;t need more degrees — <span className="text-[hsl(var(--primary))]">Zambia needs more skills.</span>
+            </h2>
+            <p className="text-gray-300 mb-6 max-w-xl mx-auto">
+              Your past doesn&apos;t define your potential. Your skill will.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href={`https://wa.me/${SITE_CONFIG.whatsapp}`} target="_blank" rel="noopener noreferrer" className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm" style={{ backgroundColor: '#1DB96B', color: '#111111' }}>
-                <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp {firstName}
-              </a>
-              <a href={`mailto:${SITE_CONFIG.founder.email}`} className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm border border-[#E5E5E5] text-[#111111]">
-                <Mail className="mr-2 h-4 w-4" /> Email
-              </a>
+              <Link
+                href="/courses"
+                className="inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm bg-[hsl(var(--primary))] hover:bg-[hsl(152_72%_36%)] text-[#0D0D0D]"
+              >
+                Explore Courses
+              </Link>
+              <Link
+                href="/contact"
+                className="inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm border-2 border-[hsl(var(--primary))] text-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))] hover:text-[#0D0D0D]"
+              >
+                Get in Touch
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Campus + personal */}
-      <section style={{ paddingTop: '5rem', paddingBottom: '6rem', backgroundColor: '#FFFFFF' }}>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12 grid lg:grid-cols-2 gap-10">
-          <div className="bg-[#FAFAFA] border border-[#E5E5E5] rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center">
-                <MapPin className="w-5 h-5 text-[#1DB96B]" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B]">Physical campus</p>
-                <h3 className="text-xl font-extrabold">A physical campus, 2027/28</h3>
-              </div>
-            </div>
-            <p className="text-[#404040] leading-7 text-sm">
-              A separate project {firstName} is building alongside Learn2Earn, extending the same
-              practical teaching approach to in-person, hands-on training. Everything stays online until then.
-            </p>
-          </div>
-          <div className="bg-[#FAFAFA] border border-[#E5E5E5] rounded-2xl p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center">
-                <Globe className="w-5 h-5 text-[#1DB96B]" />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B]">Beyond the classroom</p>
-                <h3 className="text-xl font-extrabold">{firstName}&apos;s personal work</h3>
-              </div>
-            </div>
-            <p className="text-[#404040] leading-7 text-sm">
-              Speaking, consulting, brand work and everything {firstName} does beyond Learn2Earn.
-              Follow on social media to see the latest projects.
-            </p>
-            <div className="mt-4 flex gap-2">
-              <a href={SITE_CONFIG.social.tiktok} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-[#1DB96B] hover:underline">TikTok</a>
-              <span className="text-[#E5E5E5]">·</span>
-              <a href={SITE_CONFIG.social.instagram} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-[#1DB96B] hover:underline">Instagram</a>
-              <span className="text-[#E5E5E5]">·</span>
-              <a href={SITE_CONFIG.social.youtube} target="_blank" rel="noopener noreferrer" className="text-xs font-semibold text-[#1DB96B] hover:underline">YouTube</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section style={{ paddingTop: '6rem', paddingBottom: '8rem', backgroundColor: '#FAFAFA' }}>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-12 text-center">
-          <p className="text-sm font-bold text-[#1DB96B] mb-4 uppercase tracking-wider">
-            Your past doesn&apos;t define your potential. Your skill will.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/courses"
-              className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm"
-              style={{ backgroundColor: '#1DB96B', color: '#111111' }}
-            >
-              Explore courses <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-            <a
-              href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-12 items-center justify-center rounded-xl px-6 font-bold text-sm border border-[#E5E5E5] text-[#111111]"
-            >
-              Get in touch
-            </a>
-          </div>
+          </section>
         </div>
       </section>
     </div>
