@@ -73,12 +73,12 @@ export default function AboutPage() {
                 </a>
               </div>
             </div>
-            <div className="relative hidden lg:block aspect-[4/5] max-h-[600px] overflow-hidden rounded-2xl bg-[#EEF1EE]">
+            <div className="relative hidden lg:block aspect-[4/5] max-h-[600px] overflow-hidden rounded-2xl bg-[#EEF1EE] z-0">
               <Image
                 src="/images/elvis-desk-wide.webp"
                 alt={`${SITE_CONFIG.founder.name}, founder of Learn2Earn, working in Lusaka`}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
@@ -138,12 +138,12 @@ export default function AboutPage() {
       <section style={{ paddingTop: '5rem', paddingBottom: '5rem', backgroundColor: '#FFFFFF' }}>
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="aspect-[4/5] max-h-[540px] overflow-hidden rounded-2xl bg-[#EEF1EE]">
+            <div className="aspect-[4/5] max-h-[540px] overflow-hidden rounded-2xl bg-[#EEF1EE] z-0">
               <Image
                 src="/images/elvis-mic.webp"
                 alt={`${SITE_CONFIG.founder.name} teaching a digital skills class`}
                 fill
-                className="object-cover"
+                className="object-cover object-center"
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
             </div>
