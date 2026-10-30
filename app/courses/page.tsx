@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Search, X, Star, ArrowRight, Check, BookOpen } from 'lucide-react'
 import { COURSES, MEMBERSHIP_PLANS } from '@/lib/data'
+import { BOOKS } from '@/lib/books-data'
 import type { Course } from '@/lib/types'
 
 /* Courses catalog — exact 1:1 from click2skill CourseCatalog-CSQkCmX2.js + shared-BssGVXN1.js:
@@ -132,6 +133,13 @@ export default function CoursesPage() {
               style={{ padding: '8px 18px', borderRadius: 999, background: 'transparent', color: C.textSecondary, minHeight: 38, fontWeight: 400, display: 'inline-flex', alignItems: 'center' }}
             >
               cohorts
+            </Link>
+            <Link
+              href="/books"
+              className="text-sm capitalize transition-colors"
+              style={{ padding: '8px 18px', borderRadius: 999, background: 'transparent', color: C.textSecondary, minHeight: 38, fontWeight: 400, display: 'inline-flex', alignItems: 'center' }}
+            >
+              books
             </Link>
           </div>
           <p className="text-xs mt-2" style={{ color: C.textMuted }}>

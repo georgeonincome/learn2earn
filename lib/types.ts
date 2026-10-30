@@ -103,6 +103,51 @@ export interface SocialLink {
   icon: string
 }
 
+/* ---------- Book Types ---------- */
+
+export interface Book {
+  id: string | number
+  slug: string
+  title: string
+  author: string
+  description: string
+  excerpt: string
+  price: number // ZMW
+  originalPrice?: number
+  category: string
+  tags: string[]
+  image: string
+  pdfUrl?: string
+  pages?: number
+  language: string
+  publishedDate: string
+  featured: boolean
+  inPlan?: boolean
+  learningOutcomes?: string[]
+  faqs?: { question: string; answer: string }[]
+}
+
+export interface BookReview {
+  id: string
+  bookId: string
+  name: string
+  rating: number
+  content: string
+  verified?: boolean
+  createdAt: string
+}
+
+export interface BookEnrollment {
+  id: string
+  userId: string | number
+  bookId: string
+  purchasedAt: string
+  amount: number
+  currency: string
+  downloadCount: number
+  lastAccessedAt?: string
+}
+
 /* ---------- Lesson & Learning Types ---------- */
 
 export interface Lesson {
