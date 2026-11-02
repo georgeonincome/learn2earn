@@ -111,13 +111,15 @@ export const cohortEnrollments = sqliteTable(
     id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
     cohortId: text('cohort_id').notNull(),
     studentId: text('student_id').notNull(),
-    status: text('status'), // "active"
+    status: text('status'), // "active" | "completed"
     paymentStatus: text('payment_status'),
     paymentMethod: text('payment_method'),
     amountPaid: real('amount_paid'),
     enrollmentSource: text('enrollment_source'),
     transactionId: text('transaction_id'),
     enrolledAt: text('enrolled_at'),
+    completedAt: text('completed_at'), // set when cohort is completed
+    finalScore: real('final_score'), // final assessment score if applicable
     createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
   },
   (t) => [
@@ -179,6 +181,183 @@ export const cohortTokenRedemptions = sqliteTable('cohort_token_redemptions', {
   enrollmentId: text('enrollment_id'),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
 })
+
+// ---------------------------------------------------------------------------
+// Cohorts (reference: `cohorts` — full schema from Supabase dump)
+// Phase 0 created a minimal support table; this is the full reference model.
+// ---------------------------------------------------------------------------
+
+export const cohorts = sqliteTable('cohorts', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  title: text('title').notNull(),
+  slug: text('slug').notNull(),
+  description: text('description'),
+  thumbnail_url: text('thumbnail_url'),
+  start_date: text('start_date'),
+  end_date: text('end_date'),
+  total_days: integer('total_days'),
+  lesson_duration_minutes: integer('lesson_duration_minutes'),
+  status: text('status'), // "upcoming" | "active" | "completed"
+  max_students: integer('max_students'),
+  price: real('price'),
+  price_usd: real('price_usd'),
+  discount_price: real('discount_price'),
+  discount_end_date: text('discount_end_date'),
+  is_published: integer('is_published', { mode: 'boolean' }).default(false),
+  access_start_time: text('access_start_time'),
+  access_end_time: text('access_end_time'),
+  enforce_access_window: integer('enforce_access_window', { mode: 'boolean' }).default(false),
+  require_checkin: integer('require_checkin', { mode: 'boolean' }).default(false),
+  timezone: text('timezone').default('Africa/Lusaka'),
+  whatsapp_link: text('whatsapp_link'),
+  whatsapp_group_url: text('whatsapp_group_url'),
+  meet_url: text('meet_url'),
+  class_key: text('class_key'),
+  enable_post_replay: integer('enable_post_replay', { mode: 'boolean' }).default(false),
+  max_replay_requests: integer('max_replay_requests').default(3),
+  points_deduction_per_replay: integer('points_deduction_per_replay').default(5),
+  daily_quiz_question_count: integer('daily_quiz_question_count').default(15),
+  daily_quiz_time_minutes: integer('daily_quiz_time_minutes').default(10),
+  missed_session_penalty_points: integer('missed_session_penalty_points').default(5),
+  access_type: text('access_type').default('paid'),
+  enable_checkins: integer('enable_checkins', { mode: 'boolean' }).default(false),
+  checkin_start_time: text('checkin_start_time'),
+  checkin_end_time: text('checkin_end_time'),
+  checkin_points: integer('checkin_points').default(10),
+  all_lessons_unlocked: integer('all_lessons_unlocked', { mode: 'boolean' }).default(false),
+  unlock_all_date: text('unlock_all_date'),
+  unlocked_by: text('unlocked_by'),
+  registration_closes_at: text('registration_closes_at'),
+  enrollment_open: integer('enrollment_open', { mode: 'boolean' }).default(true),
+  archived: integer('archived', { mode: 'boolean' }).default(false),
+  auto_issue_transcripts: integer('auto_issue_transcripts', { mode: 'boolean' }).default(false),
+  deleted_at: integer('deleted_at', { mode: 'timestamp' }),
+  created_at: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  updated_at: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+})
+export const cohortsSlugIndex = index('cohorts_slug_idx').on(cohorts.slug)
+export const cohortsStatusIndex = index('cohorts_status_idx').on(cohorts.status)
+
+// ---------------------------------------------------------------------------
+// Cohort lessons / sessions (reference: `cohort_lessons`)
+// ---------------------------------------------------------------------------
+
+export const cohortLessons = sqliteTable(
+  'cohort_lessons',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    cohortId: text('cohort_id').notNull().references(() => cohorts.id),
+    title: text('title').notNull(),
+    startsAt: text('starts_at').notNull(),
+    minutes: integer('minutes').default(25),
+    videoUrl: text('video_url'),
+    videoProvider: text('video_provider').default('external'),
+    content: text('content'),
+    description: text('description'),
+    resources: text('resources', { mode: 'json' }), // [{name,type,url,size}]
+    quizQuestions: text('quiz_questions', { mode: 'json' }), // [{id,question,options,correct}]
+    position: integer('position').default(0), // last watched position seconds
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('cohort_lessons_cohort_idx').on(t.cohortId)],
+)
+
+// ---------------------------------------------------------------------------
+// Cohort lesson progress (reference: `cohort_lesson_progress`)
+// Phase 0 created the base table; adding watch_time/position columns here.
+// ---------------------------------------------------------------------------
+
+// cohort_lesson_progress already defined in Phase 0 with:
+// id, enrollment_id, lesson_id, student_id, is_completed, completed_at,
+// watch_time_seconds, position_seconds, updated_at
+
+// ---------------------------------------------------------------------------
+// Cohort enrollments — add completed_at + final_score (reference adds these)
+// ---------------------------------------------------------------------------
+
+// cohort_enrollments already defined in Phase 0.  Adding the two extra
+// columns via migration in scripts/db-phase2.mjs.
+
+// ---------------------------------------------------------------------------
+// Cohort certificates (reference: `cohort_certificates`)
+// ---------------------------------------------------------------------------
+
+export const cohortCertificates = sqliteTable(
+  'cohort_certificates',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    certificateId: text('certificate_id').notNull(), // public verification code
+    studentId: text('student_id').notNull().references(() => students.id),
+    cohortId: text('cohort_id').notNull().references(() => cohorts.id),
+    enrollmentId: text('enrollment_id').references(() => cohortEnrollments.id),
+    studentName: text('student_name').notNull(),
+    cohortTitle: text('cohort_title').notNull(),
+    issueDate: text('issue_date'),
+    downloadUrl: text('download_url'),
+    isVerified: integer('is_verified', { mode: 'boolean' }).default(true),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('cohort_certificates_student_idx').on(t.studentId)],
+)
+
+// ---------------------------------------------------------------------------
+// Cohort check-ins (reference: `cohort_checkins`)
+// ---------------------------------------------------------------------------
+
+export const cohortCheckins = sqliteTable(
+  'cohort_checkins',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    studentId: text('student_id').notNull().references(() => students.id),
+    cohortId: text('cohort_id').notNull().references(() => cohorts.id),
+    dayId: text('day_id').notNull(), // date string YYYY-MM-DD
+    checkinAt: text('checkin_at'),
+    points: integer('points').default(10),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('cohort_checkins_student_cohort_idx').on(t.studentId, t.cohortId)],
+)
+
+// ---------------------------------------------------------------------------
+// Cohort final assessments (reference: `cohort_final_assessments`)
+// ---------------------------------------------------------------------------
+
+export const cohortFinalAssessments = sqliteTable(
+  'cohort_final_assessments',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    cohortId: text('cohort_id').notNull().references(() => cohorts.id),
+    title: text('title').notNull(),
+    totalQuestions: integer('total_questions').default(0),
+    passingScore: integer('passing_score').default(70),
+    timeLimitMinutes: integer('time_limit_minutes'),
+    isPublished: integer('is_published', { mode: 'boolean' }).default(false),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('final_assessment_cohort_idx').on(t.cohortId)],
+)
+
+// ---------------------------------------------------------------------------
+// Cohort final assessment attempts (reference: `cohort_final_assessment_attempts`)
+// ---------------------------------------------------------------------------
+
+export const cohortFinalAssessmentAttempts = sqliteTable(
+  'cohort_final_assessment_attempts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    assessmentId: text('assessment_id').notNull().references(() => cohortFinalAssessments.id),
+    enrollmentId: text('enrollment_id').notNull().references(() => cohortEnrollments.id),
+    score: integer('score').default(0),
+    percentage: integer('percentage').default(0),
+    passed: integer('passed', { mode: 'boolean' }).default(false),
+    status: text('status'), // "submitted" | "completed" | "expired"
+    submittedAt: text('submitted_at'),
+    answers: text('answers', { mode: 'json' }),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('final_assessment_attempt_enrollment_idx').on(t.enrollmentId)],
+)
 
 // ---------------------------------------------------------------------------
 // Transactions — full payment audit trail (reference: `transactions`)
