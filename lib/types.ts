@@ -23,6 +23,13 @@ export interface Course {
   tags?: string[]
   learningOutcomes?: string[]
   faqs?: [string, string][]
+  // Reference-derived fields for the catalog card
+  format?: 'Live Recording' | 'Self-paced'
+  enrolled?: number
+  addedDate?: string
+  referenceSale?: number
+  discountPercentage?: number
+  monthlySubPrice?: number
 }
 
 export interface MembershipPlan {
@@ -206,6 +213,14 @@ export interface QuizAttempt {
   total: number
   passed: boolean
   attemptedAt: string
+}
+
+export interface QuizQuestion {
+  id: string
+  question: string
+  options: string[]
+  correct: number // index of correct answer
+  explanation?: string
 }
 
 export interface CertificateVerification {

@@ -1,140 +1,290 @@
 'use client'
+
+import { useMemo, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
-import { useState } from 'react'
-import { Play, Star, ArrowRight, BookOpen, Download, FileText } from 'lucide-react'
+import { Search, X, ArrowRight, BookOpen } from 'lucide-react'
 import { BOOKS } from '@/lib/books-data'
-import { SITE_CONFIG } from '@/lib/data'
+import CatalogTabs from '@/components/catalog/CatalogTabs'
+import type { Book } from '@/lib/books-data'
+
+/* Books catalog — same view sequence as /courses and /cohorts:
+   pill tabs (books active) → title + search → category chips → count → grid.
+   Cards use the same square-thumbnail / eyebrow / price / CTA card style. */
+
+const C = {
+  pageBg: '#FAFAFA',
+  surface: '#FFFFFF',
+  border: '#E5E5E5',
+  shadow: '0 2px 8px rgba(0,0,0,0.06)',
+  primary: '#1DB96B',
+  badgeBg: '#E8F8F0',
+  badgeText: '#0F7A42',
+  text: '#111111',
+  textSecondary: '#404040',
+  textMuted: '#737373',
+  radiusCard: 12,
+  radiusBtn: 8,
+  radiusPill: 9999,
+}
+
+const SORTS = [
+  { value: 'newest', label: 'Newest' },
+  { value: 'price_asc', label: 'Price: low to high' },
+  { value: 'price_desc', label: 'Price: high to low' },
+] as const
+
+type SortValue = (typeof SORTS)[number]['value']
+
+const fmtKES = (n?: number) => (n == null ? '' : `ZMW ${n.toLocaleString('en-ZM')}`)
 
 export default function BooksPage() {
-  const [categoryFilter, setCategoryFilter] = useState('all')
+  const [books] = useState<Book[]>(BOOKS)
+  const [query, setQuery] = useState('')
+  const [debounced, setDebounced] = useState('')
+  const [category, setCategory] = useState('all')
+  const [sort, setSort] = useState<SortValue>('newest')
 
-  const categories = ['All', ...new Set(BOOKS.map(b => b.category))]
+  useMemo(() => {
+    const t = setTimeout(() => setDebounced(query), 250)
+    return () => clearTimeout(t)
+  }, [query])
 
-  const filteredBooks = categoryFilter === 'All'
-    ? BOOKS
-    : BOOKS.filter(b => b.category === categoryFilter)
+  const countsByCategory = useMemo(() => {
+    const map = new Map<string, number>()
+    for (const b of books) map.set(b.category, (map.get(b.category) ?? 0) + 1)
+    return map
+  }, [books])
+
+  const filtered = useMemo(() => {
+    let list = [...books]
+    if (debounced.trim()) {
+      const q = debounced.toLowerCase()
+      list = list.filter(b => (b.title + ' ' + (b.description ?? '')).toLowerCase().includes(q))
+    }
+    if (category !== 'all') list = list.filter(b => b.category === category)
+    switch (sort) {
+      case 'price_asc':
+        list.sort((a, b) => a.price - b.price)
+        break
+      case 'price_desc':
+        list.sort((a, b) => b.price - a.price)
+        break
+      default:
+        list.sort((a, b) => Number(a.id) - Number(b.id))
+    }
+    return list
+  }, [books, debounced, category, sort])
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
-      {/* Hero */}
-      <section className="bg-[#0A0D14] text-white py-20 sm:py-28 px-4">
-        <div className="mx-auto max-w-5xl text-center">
-          <span className="inline-block text-xs font-extrabold uppercase tracking-[0.14em] text-[#1DB96B] bg-[#1DB96B]/20 px-3 py-1 rounded-full mb-4">
-            E-Books
-          </span>
-          <h1 className="text-3xl sm:text-5xl font-extrabold mb-4">
-            Downloadable E-Books
-          </h1>
-          <p className="text-lg text-[#A3A3A3] mb-8 max-w-xl mx-auto">
-            Practical digital skills books by George J Kasonso. Instant PDF downloads. Learn at your own pace.
+    <div className="min-h-screen font-sans" style={{ background: C.pageBg, color: C.text }}>
+      <main className="pt-28 pb-16">
+        {/* Tabs row */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-6">
+          <CatalogTabs active="books" />
+          <p className="text-xs mt-2" style={{ color: C.textMuted }}>
+            <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Books</strong> = instant PDF downloads,
+            study at your own pace.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="#all-books"
-              className="inline-flex h-12 items-center justify-center rounded-lg px-7 font-bold text-sm bg-[#1DB96B] text-[#111111] hover:bg-[#17A05D] transition-colors"
-            >
-              Browse Books <ArrowRight className="w-4 h-4 ml-1" />
-            </Link>
-          </div>
         </div>
-      </section>
 
-      {/* Categories Filter */}
-      <section className="py-10 px-4">
-        <div className="mx-auto max-w-5xl">
-          <div className="flex flex-wrap gap-3 justify-center mb-12">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setCategoryFilter(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                  categoryFilter === cat
-                    ? 'bg-[#1DB96B] text-white'
-                    : 'bg-white border border-[#E5E5E5] text-[#737373] hover:bg-[#F3F4F6]'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Books Grid */}
-      <section id="all-books" className="py-20 sm:py-28 px-4">
-        <div className="mx-auto max-w-5xl">
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111111] mb-12 text-center">
-            Featured Books
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {filteredBooks.map((book, i) => (
-              <div key={book.id} className="bg-white border border-[#E5E5E5] rounded-2xl p-6 hover:shadow-lg transition-all group">
-                <div className="aspect-[3/4] rounded-xl bg-[#EEF1EE] overflow-hidden mb-4">
-                  <Link href={`/books/${book.slug}`}>
-                    <img
-                      src={book.image}
-                      alt={book.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                    />
-                  </Link>
-                </div>
-                <span className="text-xs font-bold text-[#1DB96B] uppercase tracking-[0.1em] mb-2 block">
-                  {book.category}
-                </span>
-                <h3 className="text-lg font-bold text-[#111111] mb-2">
-                  {book.title}
-                </h3>
-                <p className="text-sm text-[#737373] mb-4">
-                  {book.excerpt}
-                </p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-bold text-[#1DB96B]">
-                    ZMW {book.price.toLocaleString('en-ZM')}
-                  </span>
-                  {book.originalPrice && book.originalPrice > book.price && (
-                    <span className="text-sm text-[#737373] line-through">
-                      ZMW {book.originalPrice.toLocaleString('en-ZM')}
-                    </span>
-                  )}
-                </div>
-                <Link
-                  href={`/books/${book.slug}`}
-                  className="flex items-center justify-center gap-2 rounded-lg bg-[#1DB96B] text-[#111111] font-bold text-sm py-2 mt-4 hover:bg-[#17A05D] transition-colors"
+        {/* Title + search */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-6">
+          <div className="flex items-center justify-between gap-4 flex-wrap">
+            <h1 className="text-2xl lg:text-3xl font-bold" style={{ color: C.text }}>
+              Browse E-Books
+            </h1>
+            <div className="flex items-center">
+              <input
+                autoFocus
+                type="text"
+                placeholder="Search books..."
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                className="text-sm focus:outline-none w-48 sm:w-64"
+                style={{
+                  minHeight: 44,
+                  padding: '0 14px',
+                  borderRadius: C.radiusBtn,
+                  background: C.surface,
+                  border: `1px solid ${C.border}`,
+                  color: C.text,
+                }}
+              />
+              {query ? (
+                <button
+                  onClick={() => setQuery('')}
+                  className="p-2"
+                  style={{ color: C.textSecondary }}
+                  aria-label="Clear search"
                 >
-                  Buy Now <ArrowRight className="w-3 h-3 ml-1" />
-                </Link>
-              </div>
-            ))}
+                  <X className="w-5 h-5" />
+                </button>
+              ) : (
+                <span className="p-2" style={{ color: C.textMuted }}>
+                  <Search className="w-5 h-5" />
+                </span>
+              )}
+            </div>
           </div>
         </div>
-      </section>
 
-      {/* Benefits */}
-      <section className="py-20 sm:py-28 px-4 bg-[#1DB96B] text-[#111111]">
-        <div className="mx-auto max-w-5xl text-center">
-          <h2 className="text-2xl sm:text-3xl font-extrabold mb-4">
-            Why Learn2Earn Books?
-          </h2>
-          <p className="text-lg text-[#111111]/80 mb-8 max-w-xl mx-auto">
-            Practical knowledge delivered instantly. Download and start learning immediately.
-          </p>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              { icon: '📚', title: 'Instant Download', desc: 'Get immediate access after purchase.' },
-              { icon: '📱', title: 'Any Device', desc: 'Read on phone, tablet, or computer.' },
-              { icon: '💳', title: 'Mobile Money', desc: 'Pay with MTN, Airtel, or card.' },
-            ].map((item, i) => (
-              <div key={i}>
-                <div className="w-12 h-12 rounded-full bg-white text-[#1DB96B] flex items-center justify-center mx-auto mb-4 text-xl">
-                  {item.icon}
-                </div>
-                <h3 className="text-lg font-bold mb-2">{item.title}</h3>
-                <p className="text-sm text-[#111111]/80">{item.desc}</p>
-              </div>
-            ))}
+        {/* Category chips + sort */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
+            <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide w-full sm:w-auto -mx-1 px-1">
+              <button
+                onClick={() => setCategory('all')}
+                className="shrink-0 text-sm transition-colors"
+                style={{
+                  padding: '8px 16px', borderRadius: C.radiusPill,
+                  background: category === 'all' ? C.primary : '#fff',
+                  color: category === 'all' ? '#fff' : C.text,
+                  border: `1px solid ${category === 'all' ? C.primary : C.border}`,
+                  fontWeight: category === 'all' ? 500 : 400, minHeight: 40, cursor: 'pointer',
+                }}
+              >
+                All ({books.length})
+              </button>
+              {[...countsByCategory.entries()].map(([name, count]) => (
+                <button
+                  key={name}
+                  onClick={() => setCategory(name)}
+                  className="shrink-0 text-sm transition-colors"
+                  style={{
+                    padding: '8px 16px', borderRadius: C.radiusPill,
+                    background: category === name ? C.primary : '#fff',
+                    color: category === name ? '#fff' : C.text,
+                    border: `1px solid ${category === name ? C.primary : C.border}`,
+                    fontWeight: category === name ? 500 : 400, minHeight: 40, cursor: 'pointer',
+                  }}
+                >
+                  {name} ({count})
+                </button>
+              ))}
+            </div>
+            <select
+              value={sort}
+              onChange={e => setSort(e.target.value as SortValue)}
+              className="text-sm bg-white cursor-pointer focus:outline-none"
+              style={{
+                height: 40,
+                padding: '0 32px 0 14px',
+                borderRadius: C.radiusBtn,
+                border: '1px solid #D4D4D4',
+                color: C.text,
+                appearance: 'none',
+                backgroundImage: `url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>")`,
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'right 10px center',
+              }}
+            >
+              {SORTS.map(s => (
+                <option key={s.value} value={s.value}>
+                  {s.label}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
-      </section>
+
+        {/* Count */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-5">
+          <p className="text-sm" style={{ color: C.textMuted }}>
+            {filtered.length} {filtered.length === 1 ? 'book' : 'books'}
+          </p>
+        </div>
+
+        {/* Grid — same card style as /courses */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
+            {filtered.map(b => {
+              const showSave = !!b.originalPrice && b.originalPrice > b.price
+              const savePct = showSave && b.originalPrice ? Math.round(((b.originalPrice - b.price) / b.originalPrice) * 100) : 0
+
+              return (
+                <article
+                  key={b.slug}
+                  style={{
+                    background: C.surface, border: `1px solid ${C.border}`,
+                    borderRadius: C.radiusCard, boxShadow: C.shadow,
+                    overflow: 'hidden', transition: 'box-shadow 150ms ease, transform 150ms ease',
+                  }}
+                  className="hover:-translate-y-0.5 hover:shadow-md"
+                >
+                  <Link href={`/books/${b.slug}`}>
+                    <div className="relative w-full aspect-square" style={{ background: '#EEF1EE' }}>
+                      <Image
+                        src={b.image}
+                        alt={b.title}
+                        fill
+                        className="object-cover"
+                        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 100vw"
+                      />
+                      <div className="absolute top-2 right-2">
+                        <span
+                          className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium"
+                          style={{ background: C.badgeBg, color: C.badgeText, borderRadius: C.radiusPill }}
+                        >
+                          PDF · {b.pages ?? 0} pages
+                        </span>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="p-4">
+                    <p className="text-xs font-semibold mb-1" style={{ color: C.primary }}>
+                      {b.category}
+                    </p>
+                    <Link href={`/books/${b.slug}`}>
+                      <h3 className="font-bold text-sm leading-snug line-clamp-2" style={{ color: C.text }}>
+                        {b.title}
+                      </h3>
+                    </Link>
+                    <div className="flex items-center gap-2 text-xs flex-wrap mt-2 mb-3" style={{ color: C.textSecondary }}>
+                      <span style={{ color: C.textMuted }}>· {b.author}</span>
+                    </div>
+                    {/* price row */}
+                    <div className="flex items-center gap-2 flex-wrap mb-3">
+                      <span className="text-lg font-medium" style={{ color: C.primary }}>
+                        {b.price === 0 ? 'Free' : fmtKES(b.price)}
+                      </span>
+                      {showSave && (
+                        <>
+                          <span className="text-sm line-through" style={{ color: C.textMuted }} aria-hidden="true">
+                            {fmtKES(b.originalPrice)}
+                          </span>
+                          <span
+                            className="text-[11px] font-medium px-2 py-0.5"
+                            style={{ background: C.badgeBg, color: C.badgeText, borderRadius: C.radiusPill }}
+                          >
+                            Save {savePct}%
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    {/* action */}
+                    <Link
+                      href={`/books/${b.slug}`}
+                      className="inline-flex items-center justify-center gap-1.5 w-full text-sm font-semibold transition-colors"
+                      style={{ minHeight: 44, borderRadius: C.radiusBtn, background: C.primary, color: '#fff', border: `1px solid ${C.primary}`, padding: '0 18px' }}
+                    >
+                      View book · {fmtKES(b.price)} <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+
+          {filtered.length === 0 && (
+            <div className="text-center py-20" style={{ color: C.textMuted }}>
+              <BookOpen className="w-10 h-10 mx-auto mb-4" style={{ color: C.textMuted }} />
+              <p className="font-semibold" style={{ color: C.text }}>No books match your filters</p>
+              <p className="text-sm mt-2">Try clearing the search or picking another category.</p>
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   )
 }

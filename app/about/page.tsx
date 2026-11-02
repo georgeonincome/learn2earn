@@ -67,7 +67,7 @@ export default function AboutPage() {
           <section className="grid md:grid-cols-2 gap-10 items-center">
             <div>
               <Image
-                src="/images/elvis-desk-wide.webp"
+                src="/images/portrait-tight.jpg"
                 alt={`${fullName}, founder of Learn2Earn`}
                 className="rounded-2xl shadow-lg w-full"
                 width={800}

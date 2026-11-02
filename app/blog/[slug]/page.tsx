@@ -117,7 +117,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         </p>
 
         <figure className="aspect-video overflow-hidden rounded-2xl mb-10 bg-[#EEF1EE]">
-          <Image src="/images/elvis-teaching-phone.webp" alt={post.title} width={1200} height={675} priority className="w-full h-full object-cover" />
+          <Image src="/images/teaching.jpg" alt={post.title} width={1200} height={675} priority className="w-full h-full object-cover" />
         </figure>
 
         {BLOG_CONTENT[post.slug] ? (

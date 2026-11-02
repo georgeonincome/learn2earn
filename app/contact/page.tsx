@@ -32,7 +32,7 @@ export default function ContactPage() {
             </div>
             <div className="hidden lg:block aspect-[4/5] max-h-[480px] overflow-hidden rounded-2xl bg-[#EEF1EE]">
               <Image
-                src="/images/elvis-teaching-phone.webp"
+                src="/images/teaching.jpg"
                 alt={`${SITE_CONFIG.founder.name} teaching a digital skills session`}
                 fill
                 className="object-cover"
@@ -113,7 +113,7 @@ export default function ContactPage() {
               </div>
               <div className="flex-1 max-w-md aspect-video overflow-hidden rounded-xl bg-[#EEF1EE]">
                 <Image
-                  src="/images/elvis-classroom.webp"
+                  src="/images/gallery-6.jpg"
                   alt="Learn2Earn classroom in Lusaka"
                   fill
                   className="object-cover"

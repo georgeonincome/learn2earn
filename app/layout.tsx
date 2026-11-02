@@ -18,12 +18,12 @@ const bricolage = Bricolage_Grotesque({
 
 export const metadata = {
   title: {
-    default: 'Learn2Earn | Digital Skills Courses in Zambia',
+    default: 'Learn2Earn | Digital Skills Courses in Zambia by George J. Kasonso',
   },
   description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months. Pay with MTN/Airtel mobile money or card. Taught by George J Kasonso.',
-  keywords: ['digital skills', 'online courses', 'Zambia', 'AI training', 'social media', 'web design', 'freelancing', 'Lusaka'],
-  authors: [{ name: 'George J Kasonso' }],
-  creator: 'George J Kasonso',
+  keywords: ['digital skills', 'online courses', 'Zambia', 'AI training', 'social media', 'web design', 'freelancing', 'Lusaka', 'George J. Kasonso', 'The $100 Guy'],
+  authors: [{ name: 'George J. Kasonso' }],
+  creator: 'George J. Kasonso',
   metadataBase: new URL('https://learn2earn.co.zm'),
   alternates: { canonical: '/' },
   robots: {
@@ -38,7 +38,7 @@ export const metadata = {
     },
   },
   openGraph: {
-    title: 'Learn2Earn | Digital Skills Courses in Zambia',
+    title: 'Learn2Earn | Digital Skills Courses in Zambia by George J. Kasonso',
     description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months.',
     url: 'https://learn2earn.co.zm',
     siteName: 'Learn2Earn',
@@ -47,9 +47,16 @@ export const metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Learn2Earn | Digital Skills Courses in Zambia',
+    title: 'Learn2Earn | Digital Skills Courses in Zambia by George J. Kasonso',
     description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months.',
-    creator: '@george_kasonso',
+    creator: '@georgeonincome',
+  },
+  icons: {
+    icon: [
+      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [{ url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
   },
 }
 

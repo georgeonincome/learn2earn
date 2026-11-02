@@ -22,7 +22,7 @@ import {
 
 /* Home page — mirrored 1:1 from click2skill ZD.
    Echelon tokens ref: .echelon-home, .aib-poster-theme, .aib-gradient-text
-   Images from click2skill.com downloaded to public/images/
+   Images: George J Kasonso's own photos (same set as georgekasonso.com), in public/images/
 */
 
 const INK = 'hsl(0 86% 3%)'
@@ -68,42 +68,42 @@ const TIKTOK_VIDEOS: { title: string; desc: string; duration: string; href: stri
     desc: 'Write better prompts and save hours every day with Claude and ChatGPT.',
     duration: '45s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/elvis-teaching-phone.webp',
+    image: '/images/gallery-8.jpg',
   },
   {
     title: '5 Digital Skills to Learn in 2026',
     desc: 'AI prompting, vibe coding, video editing, paid advertising and email automation.',
     duration: '60s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/elvis-slide-wide.webp',
+    image: '/images/teaching.jpg',
   },
   {
     title: 'Skills for Remote Work',
     desc: 'Build a practical craft, learn continuously and turn that skill into income.',
     duration: '52s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/elvis-classroom.webp',
+    image: '/images/live_teaching.jpg',
   },
   {
     title: 'What Your Laptop Can Help You Build',
     desc: 'A quick reminder that the right digital skills can turn an everyday laptop into a working tool.',
     duration: '38s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/elvis-desk-wide.webp',
+    image: '/images/office.jpg',
   },
   {
     title: 'Digital Marketing Explained Simply',
     desc: 'How content, websites, Google Ads and Meta Ads work together to bring a business customers.',
     duration: '55s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/smm-elvis-001.webp',
+    image: '/images/speaking.jpg',
   },
   {
     title: 'How Long Does Web Design Take to Learn?',
     desc: 'A practical look at learning web design consistently and using it to solve business problems.',
     duration: '48s',
     href: 'https://www.tiktok.com/@george_kasonso',
-    image: '/images/elvis-mic.webp',
+    image: '/images/gallery-7.jpg',
   },
 ]
 
@@ -159,7 +159,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="aspect-[4/5] max-h-[640px] overflow-hidden rounded-2xl bg-[hsl(0_24%_8%)]">
-              <Image src="/images/elvis-desk-wide.webp" alt="Learn2Earn founder George J Kasonso working in Lusaka" width={778} height={839} priority className="h-full w-full object-cover" />
+              <Image src="/images/portrait.jpg" alt="Learn2Earn founder George J Kasonso working in Lusaka" width={778} height={839} priority className="h-full w-full object-cover" />
             </div>
           </div>
         </section>
@@ -190,7 +190,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <figure className="overflow-hidden rounded-2xl border border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink))]">
-                  <Image src="/images/beginner-ai-classes.png" alt={`${LIVE_CLASS.title} poster — live class starting ${dateRange(LIVE_CLASS.startDate, LIVE_CLASS.endDate)}, ${LIVE_CLASS.schedule}`} width={1080} height={1080} loading="lazy" className="h-auto w-full" />
+                  <Image src="/images/gallery-8.jpg" alt={`${LIVE_CLASS.title} poster — live class starting ${dateRange(LIVE_CLASS.startDate, LIVE_CLASS.endDate)}, ${LIVE_CLASS.schedule}`} width={1080} height={1080} loading="lazy" className="h-auto w-full" />
                 </figure>
               </div>
               <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12">
@@ -234,7 +234,7 @@ export default function HomePage() {
               <a href="#pricing" className="mt-8 inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm" style={{ backgroundColor: ACTION, color: INK }}>Get my membership</a>
             </div>
             <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-[hsl(20_39%_93%)]">
-              <Image src="/images/elvis-classroom.webp" alt="A practical Learn2Earn digital skills class" width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
+              <Image src="/images/gallery-4.jpg" alt="A practical Learn2Earn digital skills class" width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
             </div>
           </div>
         </section>
@@ -258,7 +258,7 @@ export default function HomePage() {
               <Link href="/courses" className="mt-8 inline-flex h-12 items-center justify-center rounded-lg px-6 font-bold text-sm" style={{ backgroundColor: ACTION, color: INK }}>Browse all {courseCount} courses</Link>
             </div>
             <div className="aspect-[11/9] overflow-hidden rounded-2xl bg-[hsl(0_24%_8%)]">
-              <Image src="/images/elvis-slide-wide.webp" alt="Learn2Earn digital skills training in progress" width={1080} height={886} loading="lazy" className="h-full w-full object-cover" />
+              <Image src="/images/portrait-wide.jpg" alt="Learn2Earn digital skills training in progress" width={1080} height={886} loading="lazy" className="h-full w-full object-cover" />
             </div>
           </div>
         </section>
@@ -283,7 +283,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-white">
-              <Image src="/images/smm-elvis-001.webp" alt="Social media management + Meta ads bundle" width={1080} height={1350} loading="lazy" className="h-full w-full object-cover" />
+              <Image src="/images/gallery-1.jpg" alt="Social media management + Meta ads bundle" width={1080} height={1350} loading="lazy" className="h-full w-full object-cover" />
             </div>
           </div>
         </section>
@@ -309,7 +309,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-[hsl(0_100%_99%)]">
-              <Image src="/images/elvis-teaching-phone.webp" alt={`${firstName} teaching a live digital skills session`} width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
+              <Image src="/images/teaching.jpg" alt={`${firstName} teaching a live digital skills session`} width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
             </div>
           </div>
         </section>
@@ -350,7 +350,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="aspect-[4/5] overflow-hidden rounded-2xl bg-[hsl(0_24%_8%)]">
-              <Image src="/images/elvis-mic.webp" alt={`${SITE_CONFIG.founder.name}, founder and instructor at Learn2Earn`} width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
+              <Image src="/images/hero.jpg" alt={`${SITE_CONFIG.founder.name}, founder and instructor at Learn2Earn`} width={778} height={973} loading="lazy" className="h-full w-full object-cover" />
             </div>
           </div>
         </section>

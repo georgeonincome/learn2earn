@@ -45,7 +45,7 @@ export default function ReviewsPage() {
             </div>
             <div className="hidden lg:block aspect-[4/3] max-h-[320px] overflow-hidden rounded-2xl bg-[#EEF1EE]">
               <Image
-                src="/images/elvis-mic.webp"
+                src="/images/podium.jpg"
                 alt={`${firstName} teaching at Learn2Earn`}
                 fill
                 className="object-cover"

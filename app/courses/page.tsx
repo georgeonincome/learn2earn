@@ -3,10 +3,12 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Search, X, Star, ArrowRight, Check, BookOpen } from 'lucide-react'
+import { Search, X, ArrowRight, Check, BookOpen, Lock, ChevronRight } from 'lucide-react'
 import { COURSES, MEMBERSHIP_PLANS } from '@/lib/data'
 import { BOOKS } from '@/lib/books-data'
 import type { Course } from '@/lib/types'
+import CatalogTabs from '@/components/catalog/CatalogTabs'
+import SubscriptionModal from '@/components/catalog/SubscriptionModal'
 
 /* Courses catalog — exact 1:1 from click2skill CourseCatalog-CSQkCmX2.js + shared-BssGVXN1.js:
    - Pill tabs for Courses/Cohorts
@@ -14,7 +16,7 @@ import type { Course } from '@/lib/types'
    - All/Free/Paid toggle
    - Debounced search, sort, auto-fill grid
    - Square thumbnails with real category images
-   - Star ratings, lesson counts, price with savings
+   - Price with savings, subscribe button (opens modal), buy button
 */
 
 const C = {
@@ -30,21 +32,20 @@ const C = {
   text: '#111111',
   textSecondary: '#404040',
   textMuted: '#737373',
-  star: '#F59E0B',
   radiusCard: 12,
   radiusBtn: 8,
   radiusPill: 9999,
 }
 
-/* Map categories to representative images */ 
+/* Map categories to representative images */
 const CATEGORY_IMAGES: Record<string, string> = {
-  'AI Productivity': '/images/elvis-teaching-phone.webp',
-  'Web Design': '/images/elvis-slide-wide.webp',
-  'Business': '/images/elvis-desk-wide.webp',
-  'Video Editing': '/images/elvis-teaching-phone.webp',
-  'Freelancing': '/images/elvis-slide-wide.webp',
-  'Content Creation': '/images/elvis-classroom.webp',
-  'Other': '/images/elvis-teaching-phone.webp',
+  'AI Productivity': '/images/gallery-8.jpg',
+  'Web Design': '/images/gallery-7.jpg',
+  'Business': '/images/speaking.jpg',
+  'Video Editing': '/images/gallery-3.jpg',
+  'Freelancing': '/images/office.jpg',
+  'Content Creation': '/images/live_teaching.jpg',
+  'Other': '/images/teaching.jpg',
 }
 
 function getCategoryImage(category: string): string {
@@ -62,7 +63,7 @@ type SortValue = (typeof SORTS)[number]['value']
 
 const PER_PAGE = 24
 
-const fmtKES = (n?: number) => (n == null ? '' : `ZMW ${n.toLocaleString('en-ZM')}`)
+const fmtZMW = (n?: number) => (n == null ? '' : `ZMW ${n.toLocaleString('en-ZM')}`)
 
 export default function CoursesPage() {
   const [courses] = useState<Course[]>(COURSES as unknown as Course[])
@@ -72,6 +73,7 @@ export default function CoursesPage() {
   const [paidFilter, setPaidFilter] = useState<'all' | 'free' | 'paid'>('all')
   const [sort, setSort] = useState<SortValue>('popular')
   const [limit, setLimit] = useState(PER_PAGE)
+  const [subscribeModal, setSubscribeModal] = useState<{ open: boolean; course?: Course }>({ open: false })
 
   useMemo(() => {
     const t = setTimeout(() => setDebounced(query), 250)
@@ -120,28 +122,7 @@ export default function CoursesPage() {
       <main className="pt-28 pb-16">
         {/* Tabs row */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-6">
-          <div className="inline-flex p-1 gap-1" style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 999 }}>
-            <button
-              className="text-sm capitalize transition-colors"
-              style={{ padding: '8px 18px', borderRadius: 999, background: C.primary, color: '#fff', minHeight: 38, fontWeight: 500, border: 'none', cursor: 'pointer' }}
-            >
-              courses
-            </button>
-            <Link
-              href="/cohorts"
-              className="text-sm capitalize transition-colors"
-              style={{ padding: '8px 18px', borderRadius: 999, background: 'transparent', color: C.textSecondary, minHeight: 38, fontWeight: 400, display: 'inline-flex', alignItems: 'center' }}
-            >
-              cohorts
-            </Link>
-            <Link
-              href="/books"
-              className="text-sm capitalize transition-colors"
-              style={{ padding: '8px 18px', borderRadius: 999, background: 'transparent', color: C.textSecondary, minHeight: 38, fontWeight: 400, display: 'inline-flex', alignItems: 'center' }}
-            >
-              books
-            </Link>
-          </div>
+          <CatalogTabs active="courses" />
           <p className="text-xs mt-2" style={{ color: C.textMuted }}>
             <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Courses</strong> = self-paced learning.{' '}
             <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Cohorts</strong> = live, group-based programs with deadlines.
@@ -284,7 +265,7 @@ export default function CoursesPage() {
             className="rounded-xl px-4 py-3 text-[12.5px] font-semibold"
             style={{ background: '#F3FBF6', border: '1px solid #C7EEDA', color: '#17A05D' }}
           >
-            {MEMBERSHIP_PLANS[1].name} from {fmtKES(MEMBERSHIP_PLANS[0].price)} · everything unlocked.{' '}
+            {MEMBERSHIP_PLANS[1].name} from {fmtZMW(MEMBERSHIP_PLANS[0].price)} · everything unlocked.{' '}
             <Link href="/subscribe" className="underline">
               Get membership →
             </Link>
@@ -295,9 +276,17 @@ export default function CoursesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
             {visible.map(c => {
-              const eff = c.price
-              const showSave = !!c.originalPrice && c.originalPrice > eff && eff > 0
-              const savePct = showSave && c.originalPrice ? Math.round(((c.originalPrice - eff) / c.originalPrice) * 100) : 0
+              const refSale = c.referenceSale
+              const eff = refSale ?? c.price
+              const showSave = refSale != null && refSale < c.price
+              const savePct = showSave ? Math.round(((c.price - refSale) / c.price) * 100) : 0
+              const isNew = (added: string) => {
+                if (!added) return false
+                const d = new Date(added)
+                const cutoff = new Date()
+                cutoff.setDate(cutoff.getDate() - 30)
+                return d > cutoff
+              }
 
               return (
                 <article
@@ -320,41 +309,43 @@ export default function CoursesPage() {
                         sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 100vw"
                       />
                       <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
+                      {/* NEW badge (reference: new within 30 days of addedDate) */}
+                      {c.featured && c.addedDate && isNew(c.addedDate) && (
                         <span
                           className="inline-flex items-center px-2.5 py-1 text-[11px] font-medium"
-                          style={{ background: C.badgeBg, color: C.badgeText, border: `1px solid ${C.badgeBg}`, borderRadius: C.radiusPill }}
+                          style={{ background: C.primary, color: '#fff', borderRadius: C.radiusPill }}
                         >
-                          {c.lessonCount ?? 0} lessons
+                          NEW
                         </span>
+                      )}
                       </div>
                     </div>
                   </Link>
                   {/* body */}
                   <div className="p-4">
                     <p className="text-xs font-semibold mb-1" style={{ color: C.primary }}>
-                      {c.category ?? 'Course'}
+                      {c.category ?? 'Course'} · {c.format ?? 'Self-paced'}
                     </p>
                     <Link href={`/courses/${c.slug}`}>
-                      <h3 className="font-bold text-sm leading-snug line-clamp-2" style={{ color: C.text }}>
+                      <h3 className="font-bold text-sm leading-snug line-clamp-1" style={{ color: C.text }}>
                         {c.title}
                       </h3>
                     </Link>
-                    <div className="flex items-center gap-2 text-xs flex-wrap mt-2 mb-3" style={{ color: C.textSecondary }}>
-                      <span className="flex items-center gap-1">
-                        <Star className="w-3.5 h-3.5" style={{ color: C.star, fill: C.star }} />
-                        <span style={{ color: C.text, fontWeight: 500 }}>4.{(Number(c.id) % 9) + 0}</span>
-                      </span>
-                      <span style={{ color: C.textMuted }}>· {c.duration ?? 'Self-paced'}</span>
+                    <div className="flex items-center gap-2 text-xs flex-wrap mt-1 mb-2" style={{ color: C.textMuted }}>
+                      {c.enrolled && c.enrolled > 0 && (
+                        <span>{c.enrolled} enrolled</span>
+                      )}
+                      <span>Added {c.addedDate}</span>
                     </div>
                     {/* price row */}
-                    <div className="flex items-center gap-2 flex-wrap mb-3">
+                    <div className="flex items-center gap-2 flex-wrap mb-2">
                       <span className="text-lg font-medium" style={{ color: C.primary }}>
-                        {eff === 0 ? 'Free' : fmtKES(eff)}
+                        {eff === 0 ? 'Free' : fmtZMW(eff)}
                       </span>
                       {showSave && (
                         <>
                           <span className="text-sm line-through" style={{ color: C.textMuted }} aria-hidden="true">
-                            {fmtKES(c.originalPrice)}
+                            {fmtZMW(c.price)}
                           </span>
                           <span
                             className="text-[11px] font-medium px-2 py-0.5"
@@ -365,13 +356,24 @@ export default function CoursesPage() {
                         </>
                       )}
                     </div>
+                    {/* Subscribe button (opens subscription modal) */}
+                    {c.inPlan && (
+                      <button
+                        type="button"
+                        onClick={() => setSubscribeModal({ open: true, course: c })}
+                        className="inline-flex w-full items-center justify-center gap-1.5 mt-1 text-sm font-semibold transition-colors"
+                        style={{ minHeight: 40, borderRadius: C.radiusBtn, background: '#F3FBF6', color: C.primary, border: `1px solid ${C.primary}`, padding: '0 18px' }}
+                      >
+                        <Lock className="w-3 h-3" /> Subscribe · from {fmtZMW(c.monthlySubPrice)}/mo
+                      </button>
+                    )}
                     {/* action */}
                     <Link
                       href={`/checkout?course=${c.slug}`}
-                      className="inline-flex items-center justify-center gap-1.5 w-full text-sm font-semibold transition-colors"
+                      className="inline-flex w-full items-center justify-center gap-1.5 mt-1 text-sm font-semibold transition-colors"
                       style={{ minHeight: 44, borderRadius: C.radiusBtn, background: C.primary, color: '#fff', border: `1px solid ${C.primary}`, padding: '0 18px' }}
                     >
-                      Enrol now · {fmtKES(eff)} <ArrowRight className="w-4 h-4" />
+                      Buy this course · {fmtZMW(eff)} <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
                 </article>
@@ -400,6 +402,14 @@ export default function CoursesPage() {
           )}
         </div>
       </main>
+
+      {/* Subscription modal */}
+      {subscribeModal.open && subscribeModal.course && (
+        <SubscriptionModal
+          course={subscribeModal.course}
+          onClose={() => setSubscribeModal({ open: false })}
+        />
+      )}
     </div>
   )
 }

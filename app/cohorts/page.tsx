@@ -16,6 +16,7 @@ import {
 import { COHORTS, SITE_CONFIG } from '@/lib/data'
 import type { Cohort } from '@/lib/types'
 import { formatPrice } from '@/lib/utils'
+import CatalogTabs from '@/components/catalog/CatalogTabs'
 
 /* Cohorts catalog — exact 1:1 from click2skill CohortsCatalog-B3iMLcaa.js:
    Pill tabs, search, status chips, grid with real thumbnails,
@@ -108,21 +109,7 @@ export default function CohortsPage() {
       <main className="pt-28 pb-16">
         {/* Tabs row */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-6">
-          <div className="inline-flex p-1 gap-1" style={{ background: C.surface, border: `1px solid ${C.border}`, borderRadius: 999 }}>
-            <Link
-              href="/courses"
-              className="text-sm capitalize"
-              style={{ padding: '8px 18px', borderRadius: 999, color: C.textSecondary, minHeight: 38, fontWeight: 400, display: 'inline-flex', alignItems: 'center' }}
-            >
-              courses
-            </Link>
-            <span
-              className="text-sm capitalize"
-              style={{ padding: '8px 18px', borderRadius: 999, background: C.primary, color: '#fff', minHeight: 38, fontWeight: 500, display: 'inline-flex', alignItems: 'center' }}
-            >
-              cohorts
-            </span>
-          </div>
+          <CatalogTabs active="cohorts" />
           <p className="text-xs mt-2" style={{ color: C.textMuted }}>
             <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Courses</strong> = self-paced learning.{' '}
             <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Cohorts</strong> = live, group-based programs with deadlines.
@@ -268,7 +255,7 @@ export default function CohortsPage() {
                     <Link href={`/cohorts/${c.slug}`}>
                       <div className="relative w-full aspect-square bg-[#EEF1EE]" aria-hidden="true">
                         <Image
-                          src={ended ? '/images/elvis-mic.webp' : '/images/beginner-ai-classes.png'}
+                          src={ended ? '/images/podium.jpg' : '/images/gallery-8.jpg'}
                           alt={c.title}
                           fill
                           className="object-cover"

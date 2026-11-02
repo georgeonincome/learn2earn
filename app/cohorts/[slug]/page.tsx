@@ -91,7 +91,7 @@ export default async function CohortPage({ params }: { params: Promise<{ slug: s
                 <div className="bg-white rounded-2xl border border-[#E5E5E5] p-6">
                   <div className="aspect-[16/9] overflow-hidden rounded-xl mb-5">
                     <Image
-                      src={cohort.status === 'completed' ? '/images/elvis-mic.webp' : '/images/beginner-ai-classes.png'}
+                      src={cohort.status === 'completed' ? '/images/podium.jpg' : '/images/gallery-8.jpg'}
                       alt={`${cohort.title} class poster`}
                       width={600}
                       height={338}

@@ -52,7 +52,7 @@ export default function BlogPage() {
             >
               <div className="aspect-video overflow-hidden" style={{ backgroundColor: '#EEF1EE' }}>
                 <Image
-                  src="/images/elvis-teaching-phone.webp"
+                  src="/images/teaching.jpg"
                   alt={p.title}
                   width={600}
                   height={338}

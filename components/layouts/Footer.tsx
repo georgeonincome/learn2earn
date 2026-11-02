@@ -150,7 +150,7 @@ export function Footer() {
             <ul className="space-y-3 text-sm text-gray-400">
               <li className="flex items-center gap-2">
                 <Phone className="w-4 h-4 text-[hsl(var(--primary))] shrink-0" />
-                <a href={`tel:${SITE_CONFIG.founder.phone.replace(/\s/g, '')}`} className="hover:text-[hsl(var(--primary))] transition-[var(--transition-smooth)]">
+                <a href={`tel:${SITE_CONFIG.founder.phone.replace(/\s\/\s/g, '').replace(/\s/g, '')}`} className="hover:text-[hsl(var(--primary))] transition-[var(--transition-smooth)]">
                   {SITE_CONFIG.founder.phone}
                 </a>
               </li>

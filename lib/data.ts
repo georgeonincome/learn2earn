@@ -1,48 +1,52 @@
-// All content extracted from Click2Skill.com and customized for Learn2Earn
-// Currency conversion: 1 KES = 0.155 ZMW (as of 2026-10-28)
+// All brand information updated from ONLINE_PRESENCE identity files (2026-10-21)
+// Currency conversion: 1 ZMW = 0.155 ZMW (documented in lib/config.ts)
 
 export const SITE_CONFIG = {
   name: 'Learn2Earn',
-  tagline: 'Practical skills. Real work. Zambian context.',
-  description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months. Pay with mobile money or card.',
+  tagline: 'Practical skills. Real work. Zambian context. Money lives in people.',
+  description: 'Learn AI, Meta ads, social media, web design and video editing. Practical courses from ZMW 432 for 4 months. Pay with MTN/Airtel mobile money or card. Taught by George J Kasonso.',
   url: 'https://learn2earn.co.zm',
   founder: {
-    name: 'George J Kasonso',
+    name: 'George J. Kasonso',
+    alsoKnownAs: 'George → The $100 Guy',
     title: 'Founder & Instructor',
-    bio: 'Zambian digital educator, content strategist, and entrepreneur. Teaching practical digital skills to help Africans build careers online.',
-    email: 'hello@learn2earn.co.zm',
-    phone: '+260 97 123 4567',
+    roles: 'Digital Entrepreneur · Digital Skills Educator · Speaker',
+    bio: 'Zambian digital educator, content strategist, and entrepreneur. Teaching practical digital skills to help Africans build careers online. I help individuals turn their skills into real income. Not by working harder, but by positioning themselves where money already flows, packaging what they already know into something people buy, and selling it with a system instead of hope. I teach through monthly masterclasses, content, and consulting. I\'ve trained 3,800+ online students, and I\'m the lecturer at Enterprise College, an AETZ-accredited ICT and digital skills institution.',
+    email: 'kasonso44@gmail.com',
+    phone: '0979982819 / 0955595667',
     location: 'Lusaka, Zambia',
     hours: 'Mon–Sun, 7AM–10PM CAT',
+    mission: 'Help 100,000 people earn their first $100 online.',
+    studentCount: '3,800+ online students',
     social: {
-      tiktok: '@george_kasonso',
-      instagram: '@george_kasonso',
-      youtube: '@georgekasonso',
-      facebook: 'George Kasonso',
-      linkedin: 'george-kasonso',
+      tiktok: '@georgeonincome',
+      instagram: '@georgeonincome',
+      youtube: '@georgeonincome',
+      facebook: '@georgeonincome',
+      linkedin: 'George J. Kasonso',
     },
     stats: [
-      { label: 'Students Trained', value: '5,000+' },
-      { label: 'Community', value: '1M+' },
-      { label: 'Countries', value: '15+' },
+      { label: 'Students Trained', value: '3,800+' },
+      { label: 'Community', value: 'The $100 Guy' },
+      { label: 'Countries', value: 'Zambia & beyond' },
     ],
   },
   social: {
-    tiktok: 'https://tiktok.com/@george_kasonso',
-    instagram: 'https://instagram.com/george_kasonso',
-    youtube: 'https://youtube.com/@georgekasonso',
-    facebook: 'https://facebook.com/george.kasonso',
-    linkedin: 'https://linkedin.com/in/george-kasonso',
-    website: 'https://georgekasonso.com',
+    tiktok: 'https://tiktok.com/@georgeonincome',
+    instagram: 'https://instagram.com/georgeonincome',
+    youtube: 'https://youtube.com/@georgeonincome',
+    facebook: 'https://facebook.com/@georgeonincome',
+    linkedin: 'https://linkedin.com/in/george-j-kasonso',
+    website: 'https://learn2earn.co.zm',
   },
-  whatsapp: '+260971234567',
+  whatsapp: '0979982819',
   currency: 'ZMW',
   currencySymbol: 'ZMW',
 }
 
 // Currency conversion — see lib/config.ts
-import { KES_TO_ZMW_RATE, toZMW } from '@/lib/config'
-export { KES_TO_ZMW_RATE, toZMW }
+import { ZMW_RATE, toZMW } from '@/lib/config'
+export { ZMW_RATE, toZMW }
 
 export const MEMBERSHIP_PLANS = [
   {
