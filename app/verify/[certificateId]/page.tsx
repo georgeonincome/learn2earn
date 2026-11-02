@@ -1,31 +1,31 @@
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { ShieldCheck, Check, ArrowLeft } from 'lucide-react'
-import { SAMPLE_CERTIFICATES } from '@/lib/lessons-data'
-
-export function generateStaticParams() {
-  return Object.keys(SAMPLE_CERTIFICATES).map((certificateId) => ({
-    certificateId,
-  }))
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ certificateId: string }> }) {
   const { certificateId } = await params
-  const cert = SAMPLE_CERTIFICATES[certificateId]
-  if (!cert) return { title: 'Certificate Not Found' }
   return {
     title: `Verify Certificate ${certificateId} | Learn2Earn`,
-    description: `Verify the certificate of ${cert.studentName} for ${cert.courseTitle}`,
+    description: `Verify the certificate ${certificateId}`,
   }
 }
 
 export default async function VerifyCertificatePage({ params }: { params: Promise<{ certificateId: string }> }) {
   const { certificateId } = await params
-  const cert = SAMPLE_CERTIFICATES[certificateId]
 
-  if (!cert) {
-    notFound()
-  }
+  // Fetch certificate verification from the API
+  const res = await fetch(`/api/certificates/${certificateId}/verify`, { cache: 'no-store' })
+  if (!res.ok) notFound()
+  const data = await res.json()
+  if (!data.found) notFound()
+
+  const issueDate = data.issueDate
+    ? new Date(data.issueDate).toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : ''
 
   return (
     <div className="min-h-screen bg-[#F3F7F5] text-[#10201A]">
@@ -50,19 +50,19 @@ export default async function VerifyCertificatePage({ params }: { params: Promis
             <div className="flex items-center gap-3 mb-2">
               <Check className="w-5 h-5 text-[#1DB96B]" />
               <span className="text-sm font-medium text-[#111111]">Certificate ID</span>
-              <span className="ml-auto text-xs font-mono text-[#5B6B64]">{cert.certificateId}</span>
+              <span className="ml-auto text-xs font-mono text-[#5B6B64]">{data.certificateId}</span>
             </div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-sm font-medium text-[#111111]">Student Name</span>
-              <span className="ml-auto text-xs font-semibold text-[#1DB96B]">{cert.studentName}</span>
+              <span className="ml-auto text-xs font-semibold text-[#1DB96B]">{data.studentName}</span>
             </div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-sm font-medium text-[#111111]">Course</span>
-              <span className="ml-auto text-xs text-[#5B6B64]">{cert.courseTitle}</span>
+              <span className="ml-auto text-xs text-[#5B6B64]">{data.courseTitle}</span>
             </div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-sm font-medium text-[#111111]">Issue Date</span>
-              <span className="ml-auto text-xs text-[#5B6B64]">{cert.issueDate}</span>
+              <span className="ml-auto text-xs text-[#5B6B64]">{issueDate}</span>
             </div>
             <div className="flex items-center gap-3 mb-2">
               <span className="text-sm font-medium text-[#111111]">Status</span>

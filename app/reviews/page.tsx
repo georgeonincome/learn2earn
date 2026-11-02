@@ -1,30 +1,104 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+/**
+ * Reviews page — Phase 4: adds helpful-vote buttons backed by /api/reviews/[id]/helpful.
+ * Structure mirrored from click2skill Reviews-m3j_a8u5.js:
+ * hero "Learner reviews" + filter chips by cohort, reviews grid with star ratings,
+ * real review content, helpful-vote toggle, membership banner, Write review + support CTAs.
+ */
+
+import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Star, Quote, ArrowRight, MessageCircle } from 'lucide-react'
+import { Star, Quote, ArrowRight, MessageCircle, ChevronUp, ChevronDown } from 'lucide-react'
 import { REVIEWS, MEMBERSHIP_PLANS, SITE_CONFIG } from '@/lib/data'
 import { formatPrice } from '@/lib/utils'
 
-/* Reviews page — exact 1:1 from click2skill Reviews-m3j_a8u5.js:
-   hero "Learner reviews" + filter chips by cohort, reviews grid with star ratings,
-   real review content, membership banner, Write review + support CTAs.
-*/
-
 const firstName = SITE_CONFIG.founder.name.split(' ').slice(-1).join(' ')
+
+type ReviewWithHelpful = {
+  id: number
+  name: string
+  location: string
+  content: string
+  rating: number
+  cohort: string
+  verified?: boolean
+  helpfulCount: number
+  userVotedHelpful: boolean
+}
 
 export default function ReviewsPage() {
   const [activeFilter, setActiveFilter] = useState('All')
+  const [helpfulMap, setHelpfulMap] = useState<Record<number, { count: number; voted: boolean }>>({})
+  const [voting, setVoting] = useState<Set<number>>(new Set())
 
   const cohorts = useMemo(
     () => ['All', ...Array.from(new Set(REVIEWS.map(r => r.cohort ?? 'Course')))]
-    , [])
+    , []
+  )
+
+  // Fetch helpful vote counts from the API on mount
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const counts: Record<number, { count: number; voted: boolean }> = {}
+      for (const r of REVIEWS) {
+        try {
+          const res = await fetch(`/api/reviews/${r.id}/helpful`, { cache: 'no-store' })
+          if (res.ok) {
+            const data = await res.json()
+            counts[r.id] = { count: data.helpfulCount ?? 0, voted: data.helpful ?? false }
+          } else {
+            counts[r.id] = { count: 0, voted: false }
+          }
+        } catch {
+          counts[r.id] = { count: 0, voted: false }
+        }
+      }
+      setHelpfulMap(counts)
+    }
+    fetchCounts()
+  }, [])
 
   const filtered = useMemo(() => {
-    if (activeFilter === 'All') return REVIEWS
-    return REVIEWS.filter(r => r.cohort === activeFilter)
-  }, [activeFilter])
+    let list = REVIEWS.map((r) => ({
+      ...r,
+      helpfulCount: helpfulMap[r.id]?.count ?? 0,
+      userVotedHelpful: helpfulMap[r.id]?.voted ?? false,
+    }))
+    if (activeFilter === 'All') return list
+    return list.filter((r) => r.cohort === activeFilter)
+  }, [activeFilter, helpfulMap])
+
+  const handleHelpful = async (reviewId: number) => {
+    const review = REVIEWS.find((r) => r.id === reviewId)
+    if (!review) return
+    const current = helpfulMap[reviewId]
+    const currentlyVoted = current?.voted ?? false
+
+    setVoting((prev) => new Set([...prev, reviewId]))
+
+    try {
+      const res = await fetch(`/api/reviews/${reviewId}/helpful`, {
+        method: 'POST',
+      })
+      if (!res.ok) return
+      const data = await res.json()
+
+      setHelpfulMap((prev) => ({
+        ...prev,
+        [reviewId]: { count: data.helpfulCount ?? 0, voted: data.helpful ?? false },
+      }))
+    } catch {
+      // ignore
+    } finally {
+      setVoting((prev) => {
+        const next = new Set(prev)
+        next.delete(reviewId)
+        return next
+      })
+    }
+  }
 
   return (
     <div className="min-h-screen font-sans" style={{ backgroundColor: '#FAFAFA', color: '#111111' }}>
@@ -101,6 +175,43 @@ export default function ReviewsPage() {
                   <div className="font-bold text-[#111111]">{review.name}</div>
                   <div className="text-[#737373] text-xs">{review.cohort ?? 'Learner'}</div>
                 </figcaption>
+                <div className="mt-4 flex items-center gap-2">
+                  <button
+                    onClick={() => handleHelpful(review.id)}
+                    disabled={voting.has(review.id)}
+                    className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-[12px] font-semibold transition-colors ${
+                      review.userVotedHelpful
+                        ? 'border-[#0B6B3D] bg-[#F3FBF6] text-[#0B6B3D]'
+                        : 'border-[#E5E5E5] text-[#737373] hover:border-[#9DB0A7] hover:text-[#111111]'
+                    }`}
+                  >
+                    {voting.has(review.id) ? (
+                      <span className="flex items-center gap-1">
+                        <ChevronUp className="w-3 h-3" animate-pulse />
+                        Voting…
+                      </span>
+                    ) : (
+                      <>
+                        {review.userVotedHelpful ? (
+                          <span className="flex items-center gap-1">
+                            <ChevronDown className="w-3 h-3 text-[#0B6B3D]" />
+                            Helpful {review.helpfulCount}
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-1">
+                            <ChevronUp className="w-3 h-3 text-[#737373]" />
+                            Helpful {review.helpfulCount}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </button>
+                  {review.verified && (
+                    <span className="inline-flex items-center gap-1 rounded-full bg-[#E8F6EF] px-2.5 py-[3px] text-[12px] font-bold text-[#0B6B3D]">
+                      Verified learner
+                    </span>
+                  )}
+                </div>
               </article>
             ))}
           </div>

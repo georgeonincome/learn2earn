@@ -1,44 +1,43 @@
 'use client'
 
-import Link from 'next/link'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
-
 /**
- * My Certificates Page
+ * My Certificates Page — DB-backed (Phase 4).
  *
  * Route: /dashboard/certificates
  *
- * Displays earned certificates with download and verify options.
+ * Displays earned certificates from the database with download and verify options.
  */
 
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import DashboardLayout from '@/components/dashboard/DashboardLayout'
+import { CertificatePanel } from '@/components/certificates/CertificatePanel'
+
 export default function CertificatesPage() {
-  // Mock certificates - in production this comes from database
-  const certificates = [
-    {
-      id: 1,
-      certificateId: 'L2E-2026-001',
-      courseTitle: 'Digital Skills Training in Lusaka',
-      courseSlug: 'digital-skills-zambia',
-      issueDate: '2026-10-15',
-      isVerified: true,
-    },
-    {
-      id: 2,
-      certificateId: 'L2E-2026-002',
-      courseTitle: 'Computer Skills Zambia',
-      courseSlug: 'computer-skills-zambia',
-      issueDate: '2026-09-20',
-      isVerified: true,
-    },
-    {
-      id: 3,
-      certificateId: 'L2E-2026-003',
-      courseTitle: 'Copywriting Zambia',
-      courseSlug: 'copywriting-zambia',
-      issueDate: '2026-08-10',
-      isVerified: true,
-    },
-  ]
+  const [certs, setCerts] = useState<Array<{
+    id: string
+    certificateId: string
+    studentName: string
+    courseTitle: string
+    courseSlug: string | null
+    issueDate: string | null
+    isVerified: boolean
+    kind: 'course' | 'cohort' | 'book'
+  }>>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetch('/api/certificates')
+      .then((r) => r.json())
+      .then((data) => {
+        setCerts(data.certificates ?? [])
+        setLoading(false)
+      })
+      .catch((err) => {
+        console.error('[CertificatesPage] load error', err)
+        setLoading(false)
+      })
+  }, [])
 
   return (
     <DashboardLayout>
@@ -52,10 +51,12 @@ export default function CertificatesPage() {
         </Link>
       </div>
 
-      {certificates.length > 0 ? (
+      {loading ? (
+        <div className="text-center py-20 text-[#737373] text-sm">Loading certificates…</div>
+      ) : certs.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {certificates.map((cert) => (
-            <CertificateCard key={cert.id} certificate={cert} />
+          {certs.map((cert) => (
+            <CertificatePanel key={cert.id} certificate={cert} />
           ))}
         </div>
       ) : (
@@ -65,8 +66,7 @@ export default function CertificatesPage() {
           </div>
           <h2 className="text-xl font-bold">No Certificates Yet</h2>
           <p className="text-[#737373] mt-2">
-            Complete courses to earn certificates. Display them proudly on your
-            CV and LinkedIn.
+            Complete courses to earn certificates. Display them proudly on your CV and LinkedIn.
           </p>
           <Link
             href="/courses"
@@ -77,66 +77,5 @@ export default function CertificatesPage() {
         </div>
       )}
     </DashboardLayout>
-  )
-}
-
-interface CertificateCardProps {
-  certificate: {
-    id: number
-    certificateId: string
-    courseTitle: string
-    courseSlug: string
-    issueDate: string
-    isVerified: boolean
-  }
-}
-
-function CertificateCard({ certificate }: CertificateCardProps) {
-  const date = new Date(certificate.issueDate).toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  })
-
-  return (
-    <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B]">
-          <span className="w-6 h-6">🎓</span>
-        </div>
-        <span className="text-xs font-semibold text-[#1DB96B]">
-          Verified
-        </span>
-      </div>
-      <h3 className="text-lg font-bold">{certificate.courseTitle}</h3>
-      <p className="text-sm text-[#737373] mt-1">
-        Course completion certificate
-      </p>
-      <div className="mt-4 space-y-1 text-sm text-[#737373]">
-        <div className="flex justify-between">
-          <span>Certificate ID:</span>
-          <span className="font-mono text-xs">{certificate.certificateId}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Issued:</span>
-          <span>{date}</span>
-        </div>
-      </div>
-      <div className="mt-4 flex gap-2">
-        <button
-          onClick={() => {}}
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: '#1DB96B', color: '#fff', border: '1px solid #1DB96B', padding: '0 18px' }}
-        >
-          <span className="w-4 h-4">📄</span>
-          Download
-        </button>
-        <Link
-          href={`/verify/${certificate.certificateId}`}
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: '#FFFFFF', color: '#111111', border: '1px solid #E5E5E5', padding: '0 18px' }}
-        >
-          Verify
-        </Link>
-      </div>
-    </div>
   )
 }

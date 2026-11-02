@@ -302,6 +302,52 @@ export const cohortCertificates = sqliteTable(
 )
 
 // ---------------------------------------------------------------------------
+// Course certificates (reference: `course_certificates`)
+// Course completion certificates — parallel to cohort_certificates.
+// ---------------------------------------------------------------------------
+
+export const courseCertificates = sqliteTable(
+  'course_certificates',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    certificateId: text('certificate_id').notNull(), // public verification code
+    studentId: text('student_id').notNull().references(() => students.id),
+    courseId: text('course_id').notNull().references(() => courses.id),
+    enrollmentId: text('enrollment_id').references(() => enrollments.id),
+    studentName: text('student_name').notNull(),
+    courseTitle: text('course_title').notNull(),
+    courseSlug: text('course_slug').notNull(),
+    issueDate: text('issue_date'),
+    downloadUrl: text('download_url'),
+    isVerified: integer('is_verified', { mode: 'boolean' }).default(true),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('course_certificates_cert_id_uq').on(t.certificateId),
+    index('course_certificates_student_idx').on(t.studentId),
+  ],
+)
+
+// ---------------------------------------------------------------------------
+// Review helpful votes (reference: `review_helpful_votes` via Reviews chunk)
+// Track which users marked which reviews as helpful.
+// ---------------------------------------------------------------------------
+
+export const reviewHelpfulVotes = sqliteTable(
+  'review_helpful_votes',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    reviewId: text('review_id').notNull(),
+    userId: text('user_id').notNull().references(() => students.id),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('review_helpful_votes_review_user_uq').on(t.reviewId, t.userId),
+    index('review_helpful_votes_review_idx').on(t.reviewId),
+  ],
+)
+
+// ---------------------------------------------------------------------------
 // Cohort check-ins (reference: `cohort_checkins`)
 // ---------------------------------------------------------------------------
 

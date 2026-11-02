@@ -71,6 +71,7 @@ export interface Review {
   rating: number
   cohort: string
   verified?: boolean
+  helpfulCount?: number
 }
 
 export interface Faq {
