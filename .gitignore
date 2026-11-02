@@ -37,6 +37,9 @@ local.db
 local.db-wal
 local.db-shm
 
+# Runtime artifacts
+.data/
+
 # IDE
 .vscode
 .idea
