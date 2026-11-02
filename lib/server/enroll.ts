@@ -241,6 +241,56 @@ export async function autoEnrollOnPaymentSuccess(reference: string) {
     return { ok: true, enrollment: { id: enrollmentId } }
   }
 
+  // Bundle purchase → per-course enrollments, one per bundle_course
+  // (reference: BundleSuccess — "All courses in your bundle are unlocked in
+  // your dashboard" once the transaction is paid)
+  if (tx.bundle_id) {
+    const bundleCourses = await all<Row>(
+      'SELECT course_id FROM bundle_courses WHERE bundle_id = ? ORDER BY position ASC',
+      [String(tx.bundle_id)],
+    )
+    let enrolled = 0
+    for (const bc of bundleCourses) {
+      const courseId = String(bc.course_id)
+      const existing = await getEnrollment(studentId, courseId)
+      if (existing && existing.payment_status === 'paid') {
+        enrolled++
+        continue
+      }
+      if (existing) {
+        await run(
+          `UPDATE enrollments
+             SET payment_status = 'paid', enrollment_source = ?, amount_paid = ?,
+                 payment_method = ?, transaction_id = ?, enrolled_at = ?
+           WHERE id = ?`,
+          [String(tx.enrollment_source ?? REF_ENROLLMENT_SOURCE), Number(tx.amount ?? 0),
+            String(tx.payment_method ?? REF_PAYMENT_METHOD), String(tx.payment_reference),
+            nowIso(), existing.id],
+        )
+        enrolled++
+        continue
+      }
+      await run(
+        `INSERT INTO enrollments
+           (id, student_id, course_id, payment_status, enrollment_source, amount_paid,
+            payment_method, transaction_id, enrolled_at)
+         VALUES (?, ?, ?, 'paid', ?, ?, ?, ?, ?)`,
+        [
+          uuid(),
+          studentId,
+          courseId,
+          String(tx.enrollment_source ?? REF_ENROLLMENT_SOURCE),
+          Number(tx.amount ?? 0),
+          String(tx.payment_method ?? REF_PAYMENT_METHOD),
+          String(tx.payment_reference),
+          nowIso(),
+        ],
+      )
+      enrolled++
+    }
+    return { ok: true, bundleEnrollments: enrolled, alreadyEnrolled: enrolled === bundleCourses.length }
+  }
+
   if (!tx.course_id) return { ok: false, reason: 'not_a_course_purchase' as const }
 
   const existing = await getEnrollment(studentId, String(tx.course_id))

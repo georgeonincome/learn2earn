@@ -14,6 +14,7 @@ import {
   createPendingCohortTransaction,
   createPendingSubscriptionTransaction,
 } from '@/lib/server/enroll'
+import { createPendingBundleTransaction } from '@/lib/server/bundles'
 import { one } from '@/lib/server/sql'
 import { toZMW } from '@/lib/config'
 
@@ -64,6 +65,20 @@ export async function POST(request: NextRequest) {
         email: buyerEmail,
         fullName: buyerName,
         cohort: cohort as unknown as Record<string, unknown>,
+        amount,
+        transactionReference: reference,
+      })
+    } else if (type === 'bundle') {
+      // Bundles are seeded in ZMW already — no KES conversion.
+      const bundle = await one('SELECT * FROM bundles WHERE id = ? OR slug = ? LIMIT 1', [itemId, itemId])
+      if (!bundle) return NextResponse.json({ error: 'Bundle not found' }, { status: 404 })
+      amount = Number(bundle.price ?? 0)
+      itemName = String(bundle.name ?? 'Bundle')
+      await createPendingBundleTransaction({
+        studentId: (student?.id as string) ?? null,
+        email: buyerEmail,
+        fullName: buyerName,
+        bundle: bundle as unknown as import('@/lib/server/bundles').BundleRow,
         amount,
         transactionReference: reference,
       })

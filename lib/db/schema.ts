@@ -432,6 +432,7 @@ export const transactions = sqliteTable(
     discountAmount: real('discount_amount'),
     planId: text('plan_id'), // subscription purchases — Q3b flagged in docs/parity
     bookId: text('book_id'), // book purchases — Phase 3
+    bundleId: text('bundle_id'), // bundle purchases — Phase 5 (auto-enrolls every course in the bundle)
     paymentMethod: text('payment_method'),
     paymentStatus: text('payment_status'),
     source: text('source'), // "checkout" | "subscribe" | "cohort" ...
@@ -442,6 +443,46 @@ export const transactions = sqliteTable(
   (t) => [
     uniqueIndex('transactions_reference_uq').on(t.paymentReference),
     index('transactions_student_idx').on(t.studentId),
+  ],
+)
+
+// ---------------------------------------------------------------------------
+// Bundles (reference: `bundles` + `bundle_courses` + `bundle_orders`)
+// Supabase dump columns: bundles {id, slug, name, tagline, description, price,
+// anchor_price, is_active, cover_image_url, created_at}; bundle_courses
+// {bundle_id, course_id, position}. Orders are tracked as transactions rows
+// with bundle_id set (mirrors the book_id pattern from Phase 3) — the reference
+// `bundle_orders` table is empty in the dump.
+// ---------------------------------------------------------------------------
+
+export const bundles = sqliteTable(
+  'bundles',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    slug: text('slug').notNull(),
+    name: text('name').notNull(),
+    tagline: text('tagline'),
+    description: text('description'),
+    price: real('price'),
+    anchorPrice: real('anchor_price'),
+    isActive: integer('is_active', { mode: 'boolean' }).default(true),
+    coverImageUrl: text('cover_image_url'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [uniqueIndex('bundles_slug_uq').on(t.slug)],
+)
+
+export const bundleCourses = sqliteTable(
+  'bundle_courses',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    bundleId: text('bundle_id').notNull().references(() => bundles.id),
+    courseId: text('course_id').notNull().references(() => courses.id),
+    position: integer('position'),
+  },
+  (t) => [
+    uniqueIndex('bundle_courses_bundle_course_uq').on(t.bundleId, t.courseId),
+    index('bundle_courses_bundle_idx').on(t.bundleId),
   ],
 )
 
