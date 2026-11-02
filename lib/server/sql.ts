@@ -3,9 +3,9 @@ import { raw } from '@/lib/db/client'
 
 export type Row = Record<string, unknown>
 
-export async function all(sql: string, args: unknown[] = []): Promise<Row[]> {
+export async function all<T extends Row = Row>(sql: string, args: unknown[] = []): Promise<T[]> {
   const res = await raw.execute({ sql, args: args as any })
-  return res.rows as unknown as Row[]
+  return res.rows as unknown as T[]
 }
 
 export async function one<T extends Row = Row>(sql: string, args: unknown[] = []): Promise<T | null> {

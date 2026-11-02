@@ -14,7 +14,7 @@ export type StudentRow = {
   updated_at: number | null
 }
 
-export async function getStudentByUserId(userId: string): Promise<StudentRow | null> {
+export function getStudentByUserId(userId: string): Promise<StudentRow | null> {
   return one<StudentRow>(
     'SELECT * FROM students WHERE user_id = ? LIMIT 1',
     [userId],

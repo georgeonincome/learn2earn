@@ -1,19 +1,16 @@
-// Lesson route — deactivated until Phase 1 (CourseLessonRoute/CoursePlayer port).
-// The old scaffold used an integer-`courses`/`lessons` demo model that no longer
-// matches the reference data model (uuid ids, public_course_sections...). It had
-// no consumers; it is rebuilt 1:1 from the reference in Phase 1.
-import { NextResponse } from 'next/server'
+// GET lesson by UUID or internal id (reference shape for CoursePlayer data loading).
+// In the reference, CoursePlayer resolves lessons from a `courses` + `lessons` query.
+// This route is the server-side entry point.
+import { NextRequest, NextResponse } from 'next/server'
+import { getLessonById } from '@/lib/server/courses'
 
-export async function GET() {
-  return NextResponse.json(
-    { error: 'Not implemented yet — Phase 1 (Course Player) ships this endpoint.' },
-    { status: 501 },
-  )
-}
+export const runtime = 'nodejs'
 
-export async function PATCH() {
-  return NextResponse.json(
-    { error: 'Not implemented yet — Phase 1 (Course Player) ships this endpoint.' },
-    { status: 501 },
-  )
+export async function GET(request: NextRequest, ctx: { params: Promise<{ id: string }> }) {
+  const { id } = await ctx.params
+  const lesson = await getLessonById(id)
+  if (!lesson) {
+    return NextResponse.json({ error: 'Lesson not found' }, { status: 404 })
+  }
+  return NextResponse.json({ lesson })
 }

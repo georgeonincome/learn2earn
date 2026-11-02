@@ -1,89 +1,42 @@
 'use client'
 
 import Link from 'next/link'
-import { BookOpen, Check, Award, Flame, Play, Clock, Settings } from 'lucide-react'
-import { COURSES } from '@/lib/data'
-import { COURSE_LESSONS } from '@/lib/lessons-data'
-import { MEMBERSHIP_PLANS } from '@/lib/data'
-import { formatPrice } from '@/lib/utils'
+import { BookOpen, Check, Award, Flame, Play, Clock, Settings, BarChart3 } from 'lucide-react'
 import DashboardLayout from '@/components/dashboard/DashboardLayout'
 import { useSubscription } from '@/lib/subscription/useSubscription'
+import { useStudentPreferences } from '@/lib/subscription/studentPreferences'
+import { useEffect, useState } from 'react'
 
-/**
- * Student Dashboard — mirrors reference StudentDashboard-Dh-ypbFE.js
- *
- * Route: /dashboard
- *
- * Features:
- * - Welcome header with user info
- * - Stats cards (courses enrolled, lessons completed, certificates earned, streak days)
- * - Progress section with overall completion
- * - Active cohorts with countdown timers
- * - Upcoming lessons
- * - Announcements
- * - Quick actions
- */
-
-interface LessonWithProgress {
-  id: string
-  title: string
-  duration?: string
-  isPreview?: boolean
-  completed: boolean
+interface DashboardStats {
+  student: { id: string; name: string; email: string }
+  stats: {
+    coursesEnrolled: number
+    lessonsCompleted: number
+    lessonsTotal: number
+    progressPercent: number
+    currentStreak: number
+    longestStreak: number
+    totalPoints: number
+    level: number
+  }
+  enrollments: { id: string; courseId: string | null; paymentStatus: string | null; enrolledAt: string | null }[]
 }
 
 export default function DashboardPage() {
-  const userId = 1 // In production, this comes from auth session
-  const { plan, status, isActive, currentPeriodEnd, daysRemaining, refresh } =
-    useSubscription()
+  const { plan, status, isActive, daysRemaining, loading: subLoading } = useSubscription()
+  const { prefs } = useStudentPreferences()
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+  const [statsLoading, setStatsLoading] = useState(true)
 
-  // Calculate dashboard stats from mock data
-  const enrolledCourses = COURSES.filter((c) => c.featured).slice(0, 4)
-  const totalLessons = COURSES.reduce(
-    (acc, c) => acc + (COURSE_LESSONS[c.slug]?.length ?? 0),
-    0
-  )
-  const completedLessons = 3 // Mock: user has completed 3 lessons
-  const progressPercent =
-    totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
+  useEffect(() => {
+    fetch('/api/dashboard/stats')
+      .then((r) => { if (r.ok) return r.json(); return null })
+      .then((data) => { setStats(data); setStatsLoading(false) })
+      .catch((err) => { console.error('[Dashboard] stats error', err); setStatsLoading(false) })
+  }, [])
 
-  // Mock streak data
-  const currentStreak = 5
-  const longestStreak = 12
-
-  // Mock certificates earned
-  const certificatesEarned = 2
-
-  // Active cohorts
-  const activeCohorts = COURSES.filter((c) => c.featured).slice(0, 3)
-
-  // Announcements
-  const announcements = [
-    {
-      id: 1,
-      title: 'Welcome to Learn2Earn',
-      message:
-        'Start your digital skills journey with our practical courses. All courses are self-paced with lifetime access.',
-      publishedAt: new Date().toISOString(),
-      isRead: false,
-    },
-    {
-      id: 2,
-      title: 'New: AI Automation Bootcamp',
-      message:
-        'Build real automations with Make.com, Google Sheets, and AI. Live cohort starting soon.',
-      publishedAt: new Date(Date.now() - 86400000 * 2).toISOString(),
-      isRead: false,
-    },
-    {
-      id: 3,
-      title: 'Certificate Update',
-      message:
-        'All certificates now include verification links. Share them on LinkedIn and your CV.',
-      publishedAt: new Date(Date.now() - 86400000 * 5).toISOString(),
-      isRead: true,
-    },
-  ]
+  const name = stats?.student?.name ?? 'Student'
+  const isMember = isActive
 
   return (
     <DashboardLayout>
@@ -93,14 +46,25 @@ export default function DashboardPage() {
           <div>
             <h1 className="text-2xl font-extrabold">Dashboard</h1>
             <p className="text-[#737373] text-sm mt-1">
-              Welcome back, {plan?.name ? 'Member' : 'Student'}!
+              Welcome back, <span className="font-semibold text-[#111111]">{name}</span>!
+              {isMember && plan && (
+                <span className="ml-2 inline-flex items-center gap-1 text-xs font-medium text-[#1DB96B] bg-[#F3FBF6] px-2 py-0.5 rounded-full">
+                  <Award className="w-3 h-3" /> {plan.name} member
+                </span>
+              )}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-[#E8F6EF] text-[#1DB96B] font-bold text-sm">
-              G
-            </span>
-          </div>
+          {stats && (
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <div className="text-sm font-bold text-[#1DB96B]">Level {stats.stats.level}</div>
+                <div className="text-xs text-[#737373]">{stats.stats.totalPoints} XP</div>
+              </div>
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E8F6EF] text-[#1DB96B] font-bold text-sm">
+                {name.charAt(0).toUpperCase()}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -108,28 +72,28 @@ export default function DashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
           title="Courses Enrolled"
-          value={enrolledCourses.length}
-          icon="BookOpen"
+          value={stats?.stats.coursesEnrolled ?? 0}
+          icon={<BookOpen className="w-4 h-4" />}
           color="#1DB96B"
         />
         <StatCard
           title="Lessons Completed"
-          value={completedLessons}
-          icon="Check"
+          value={stats?.stats.lessonsCompleted ?? 0}
+          icon={<Check className="w-4 h-4" />}
           color="#1DB96B"
         />
         <StatCard
           title="Certificates"
-          value={certificatesEarned}
-          icon="Award"
+          value={0}
+          icon={<Award className="w-4 h-4" />}
           color="#F59E0B"
         />
         <StatCard
           title="Current Streak"
-          value={currentStreak}
-          icon="Flame"
+          value={stats?.stats.currentStreak ?? 0}
+          icon={<Flame className="w-4 h-4" />}
           color="#F59E0B"
-          subtitle={`Best: ${longestStreak} days`}
+          subtitle={`Best: ${stats?.stats.longestStreak ?? 0} days`}
         />
       </div>
 
@@ -139,56 +103,69 @@ export default function DashboardPage() {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-extrabold">Course Progress</h2>
             <span className="text-sm font-semibold text-[#1DB96B]">
-              {progressPercent}%
+              {stats?.stats.progressPercent ?? 0}%
             </span>
           </div>
           <div className="w-full bg-[#E5E5E5] rounded-full h-4">
             <div
               className="h-full bg-[#1DB96B] rounded-full transition-all duration-500"
-              style={{ width: `${progressPercent}%` }}
+              style={{ width: `${stats?.stats.progressPercent ?? 0}%` }}
             />
           </div>
           <div className="flex justify-between text-xs text-[#737373] mt-2">
-            <span>{completedLessons} of {totalLessons} lessons</span>
-            <span>{progressPercent}% complete</span>
+            <span>{stats?.stats.lessonsCompleted ?? 0} of {stats?.stats.lessonsTotal ?? 0} lessons completed</span>
+            <span>{stats?.stats.progressPercent ?? 0}% complete</span>
           </div>
         </div>
       </section>
 
-      {/* Active Cohorts */}
+      {/* Enrolled Courses */}
       <section className="mb-8">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-extrabold">Active Cohorts</h2>
-          <Link
-            href="/cohorts"
-            className="text-sm font-semibold text-[#1DB96B] hover:underline"
-          >
-            View all
+          <h2 className="text-xl font-extrabold">My Courses</h2>
+          <Link href="/courses" className="text-sm font-semibold text-[#1DB96B] hover:underline">
+            Browse courses
           </Link>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {activeCohorts.map((c) => (
-            <CohortCard key={c.slug} course={c} />
-          ))}
-        </div>
-      </section>
-
-      {/* Announcements */}
-      <section className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-extrabold">Announcements</h2>
-          <Link
-            href="/dashboard"
-            className="text-sm font-semibold text-[#1DB96B] hover:underline"
-          >
-            View all
-          </Link>
-        </div>
-        <div className="space-y-3">
-          {announcements.map((a) => (
-            <AnnouncementCard key={a.id} announcement={a} />
-          ))}
-        </div>
+        {statsLoading ? (
+          <div className="text-center py-8 text-[#737373] text-sm">Loading your courses…</div>
+        ) : stats && stats.enrollments.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {stats.enrollments.map((e) => (
+              <div key={e.id} className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5 hover:border-[#1DB96B] transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] text-xs font-bold">C</span>
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                    e.paymentStatus === 'free' ? 'bg-[#F3FBF6] text-[#1DB96B]' :
+                    e.paymentStatus === 'paid' ? 'bg-[#E8F6EF] text-[#1DB96B]' :
+                    'bg-[#F5F5F5] text-[#737373]'
+                  }`}>
+                    {e.paymentStatus === 'free' ? 'Free' : e.paymentStatus === 'paid' ? 'Purchased' : e.paymentStatus}
+                  </span>
+                </div>
+                <h3 className="font-bold text-sm truncate">Course enrollment</h3>
+                <p className="text-xs text-[#737373] mt-1">
+                  Enrolled {e.enrolledAt ? new Date(e.enrolledAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'recently'}
+                </p>
+                <Link
+                  href={`/courses/${e.courseId ?? ''}`}
+                  className="mt-3 inline-block text-xs font-semibold text-[#1DB96B] hover:underline"
+                >
+                  Go to course →
+                </Link>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-12 rounded-xl border border-[#E5E5E5] bg-[#FFFFFF]">
+            <BookOpen className="w-12 h-12 mx-auto mb-4 text-[#737373]" />
+            <h3 className="font-bold">No enrolled courses yet</h3>
+            <p className="text-sm text-[#737373] mt-1">Start your learning journey by enrolling in a course.</p>
+            <Link href="/courses" className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ background: '#1DB96B', color: '#fff', borderRadius: 8, minHeight: 44, padding: '0 18px' }}>
+              Browse Courses
+            </Link>
+          </div>
+        )}
       </section>
 
       {/* Quick Actions */}
@@ -199,28 +176,28 @@ export default function DashboardPage() {
             <QuickActionCard
               title="Start Learning"
               description="Continue your courses where you left off"
-              icon="Play"
+              icon={<Play className="w-4 h-4" />}
               href="/courses"
               color="#1DB96B"
             />
             <QuickActionCard
               title="View Certificates"
               description="Download your completion certificates"
-              icon="Award"
+              icon={<Award className="w-4 h-4" />}
               href="/dashboard/certificates"
               color="#F59E0B"
             />
             <QuickActionCard
               title="Join a Cohort"
               description="Live group-based programs with deadlines"
-              icon="Clock"
+              icon={<Clock className="w-4 h-4" />}
               href="/cohorts"
               color="#F59E0B"
             />
             <QuickActionCard
               title="Update Profile"
               description="Manage your account settings"
-              icon="Settings"
+              icon={<Settings className="w-4 h-4" />}
               href="/dashboard/settings"
               color="#737373"
             />
@@ -231,37 +208,24 @@ export default function DashboardPage() {
   )
 }
 
-interface StatCardProps {
-  title: string
-  value: number | string
-  icon: string
-  color: string
-  subtitle?: string
-}
-
-const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
-  BookOpen,
-  Check,
-  Award,
-  Flame,
-  Play,
-  Clock,
-  Settings,
-}
-
 function StatCard({
   title,
   value,
-  icon: iconName,
+  icon,
   color,
   subtitle,
-}: StatCardProps) {
-  const Icon = ICON_MAP[iconName] || BookOpen
+}: {
+  title: string
+  value: number | string
+  icon: React.ReactNode
+  color: string
+  subtitle?: string
+}) {
   return (
     <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5">
       <div className="flex items-center justify-between mb-3">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#1DB96B]/10 text-[#1DB96B]">
-          <Icon className="w-4 h-4" />
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ background: color + '15', color }}>
+          {icon}
         </div>
         <span className="text-xs font-semibold text-[#737373]">{title}</span>
       </div>
@@ -271,106 +235,26 @@ function StatCard({
   )
 }
 
-interface CohortCardProps {
-  course: any
-}
-
-function CohortCard({ course }: CohortCardProps) {
-  return (
-    <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5">
-      <div className="flex items-center justify-between mb-3">
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] text-xs font-bold">
-          C
-        </span>
-        <span className="text-xs font-medium text-[#737373]">Cohort</span>
-      </div>
-      <h3 className="text-lg font-bold">{course.title}</h3>
-      <p className="text-sm text-[#737373] mt-2">
-        {course.category ?? 'Digital Skills'}
-      </p>
-      <div className="mt-4 flex items-center justify-between">
-        <span className="text-sm font-bold">{formatPrice(course.price)}</span>
-        <Link
-          href={`/courses/${course.slug}`}
-          className="text-xs font-semibold text-[#1DB96B] hover:underline"
-        >
-          Join Cohort
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-interface AnnouncementCardProps {
-  announcement: {
-    id: number
-    title: string
-    message: string
-    publishedAt: string
-    isRead: boolean
-  }
-}
-
-function AnnouncementCard({ announcement }: AnnouncementCardProps) {
-  const date = new Date(announcement.publishedAt).toLocaleDateString(
-    'en-GB',
-    {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
-    }
-  )
-  return (
-    <div className="rounded-lg border border-[#E5E5E5] bg-[#FFFFFF] p-4">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h3 className="font-bold">{announcement.title}</h3>
-          <p className="text-sm text-[#737373] mt-1">
-            {announcement.message}
-          </p>
-        </div>
-        <div className="flex flex-col items-end">
-          <span className="text-xs text-[#737373]">{date}</span>
-          {!announcement.isRead && (
-            <span className="flex h-2 w-2 items-center justify-center rounded-full bg-[#1DB96B] text-white text-[10px] font-bold">
-              NEW
-            </span>
-          )}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-interface QuickActionCardProps {
+function QuickActionCard({ title, description, icon, href, color }: {
   title: string
   description: string
-  icon: string
+  icon: React.ReactNode
   href: string
   color: string
-}
-
-function QuickActionCard({
-  title,
-  description,
-  icon: iconName,
-  href,
-  color,
-}: QuickActionCardProps) {
-  const Icon = ICON_MAP[iconName] || BookOpen
+}) {
   return (
-    <a
+    <Link
       href={href}
-      className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5 hover:border-[#1DB96B] hover:bg-[#F3FBF6] transition-all cursor-pointer group"
+      className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5 hover:border-[#1DB96B] hover:bg-[#F3FBF6] transition-all cursor-pointer group block no-underline text-inherit"
     >
-      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] mb-3">
-        <Icon className="w-4 h-4" />
+      <div className="flex h-8 w-8 items-center justify-center rounded-full" style={{ background: color + '15', color }}>
+        {icon}
       </div>
-      <h3 className="font-bold">{title}</h3>
+      <h3 className="font-bold mt-3 text-[#111111]">{title}</h3>
       <p className="text-sm text-[#737373] mt-2">{description}</p>
-      <span className="mt-4 inline-block text-xs font-semibold text-[#1DB96B] hover:underline">
+      <span className="mt-4 inline-block text-xs font-semibold text-[#1DB96B]">
         Go →
       </span>
-    </a>
+    </Link>
   )
 }

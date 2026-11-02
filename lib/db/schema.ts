@@ -287,6 +287,163 @@ export const studentPreferences = sqliteTable(
 )
 
 // ---------------------------------------------------------------------------
+// Phase 1 additions — Courses, Lessons, Quizzes & Gamification
+// ---------------------------------------------------------------------------
+
+export const courses = sqliteTable('courses', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  slug: text('slug').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  excerpt: text('excerpt'),
+  category: text('category'),
+  tags: text('tags'),
+  price: real('price'),
+  originalPrice: real('original_price'),
+  currency: text('currency').default('ZMW'),
+  duration: text('duration'),
+  lessonsCount: integer('lessons_count').default(0),
+  level: text('level').default('beginner'),
+  status: text('status').default('draft'),
+  featured: integer('featured', { mode: 'boolean' }).default(false),
+  image: text('image'),
+  curriculum: text('curriculum', { mode: 'json' }),
+  isPublished: integer('is_published', { mode: 'boolean' }).default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+})
+
+export const courseSections = sqliteTable(
+  'course_sections',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    courseId: text('course_id').notNull().references(() => courses.id),
+    title: text('title').notNull(),
+    description: text('description'),
+    sectionOrder: integer('section_order').default(0),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('course_sections_course_idx').on(t.courseId)],
+)
+
+export const lessons = sqliteTable(
+  'lessons',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    courseId: text('course_id').notNull().references(() => courses.id),
+    sectionId: text('section_id').references(() => courseSections.id),
+    title: text('title').notNull(),
+    lessonOrder: integer('lesson_order').default(0),
+    videoUrl: text('video_url'),
+    notes: text('notes'),
+    documentUrl: text('document_url'),
+    durationMinutes: integer('duration_minutes'),
+    lessonType: text('lesson_type').default('video'),
+    content: text('content'),
+    isPreview: integer('is_preview', { mode: 'boolean' }).default(false),
+    quizData: text('quiz_data', { mode: 'json' }),
+    videoProvider: text('video_provider'),
+    description: text('description'),
+    learningOutcomes: text('learning_outcomes', { mode: 'json' }),
+    timestamps: text('timestamps', { mode: 'json' }),
+    seoKeywords: text('seo_keywords'),
+    adminNotes: text('admin_notes'),
+    deletedAt: integer('deleted_at', { mode: 'timestamp' }),
+    videoProcessing: text('video_processing'),
+    sourceSessionId: text('source_session_id'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('lessons_course_idx').on(t.courseId), index('lessons_section_idx').on(t.sectionId)],
+)
+
+export const courseLessonQuizzes = sqliteTable(
+  'course_lesson_quizzes',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    lessonId: text('lesson_id').notNull().references(() => lessons.id),
+    courseId: text('course_id').references(() => courses.id),
+    title: text('title'),
+    passingScore: integer('passing_score').default(70),
+    timeLimitMinutes: integer('time_limit_minutes'),
+    questions: text('questions', { mode: 'json' }),
+    isPublished: integer('is_published', { mode: 'boolean' }).default(false),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('quiz_lesson_idx').on(t.lessonId)],
+)
+
+export const courseLessonQuizAttempts = sqliteTable(
+  'course_lesson_quiz_attempts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    quizId: text('quiz_id').notNull().references(() => courseLessonQuizzes.id),
+    lessonId: text('lesson_id').notNull().references(() => lessons.id),
+    courseId: text('course_id').references(() => courses.id),
+    studentId: text('student_id').notNull().references(() => students.id),
+    enrollmentId: text('enrollment_id').references(() => enrollments.id),
+    score: integer('score').default(0),
+    maxScore: integer('max_score').default(0),
+    percentage: integer('percentage').default(0),
+    passed: integer('passed', { mode: 'boolean' }).default(false),
+    answers: text('answers', { mode: 'json' }),
+    startedAt: text('started_at'),
+    timeSpentSeconds: integer('time_spent_seconds'),
+    attemptDate: text('attempt_date'),
+    attemptNumber: integer('attempt_number').default(1),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [index('quiz_attempt_student_idx').on(t.studentId), index('quiz_attempt_lesson_idx').on(t.lessonId)],
+)
+
+// Gamification — points, streaks, achievements
+
+export const achievementDefinitions = sqliteTable('achievement_definitions', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  code: text('code').notNull(),
+  name: text('name').notNull(),
+  description: text('description'),
+  icon: text('icon'),
+  pointsReward: integer('points_reward').default(0),
+  criteria: text('criteria', { mode: 'json' }),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+})
+
+export const studentPoints = sqliteTable(
+  'student_points',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    studentId: text('student_id').notNull().references(() => students.id),
+    totalPoints: integer('total_points').default(0),
+    level: integer('level').default(1),
+    pointsToNextLevel: integer('points_to_next_level').default(100),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [uniqueIndex('student_points_student_uq').on(t.studentId)],
+)
+
+export const studentStreaks = sqliteTable(
+  'student_streaks',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    studentId: text('student_id').notNull().references(() => students.id),
+    currentStreak: integer('current_streak').default(0),
+    longestStreak: integer('longest_streak').default(0),
+    lastActivityDate: text('last_activity_date'),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [uniqueIndex('student_streaks_student_uq').on(t.studentId)],
+)
+
+export const studentAchievements = sqliteTable('student_achievements', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  studentId: text('student_id').notNull().references(() => students.id),
+  achievementId: text('achievement_id').notNull().references(() => achievementDefinitions.id),
+  earnedAt: text('earned_at'),
+  createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+})
+
+// ---------------------------------------------------------------------------
 // Legacy local demo tables (kept only so pre-phase routes compile; they get
 // replaced by the reference model phases 1–4). NOT part of the reference model.
 // ---------------------------------------------------------------------------

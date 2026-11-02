@@ -1,116 +1,72 @@
-# Phase 1: Core Learning Experience — Feature Spec
+# Phase 1 — Course Player, Lesson Progress, Quizzes & Gamification
 
-## Phase 1.1: Course Player & Lesson Route
+Status: **DONE** — Phase 1 implemented and smoke-tested against `file:./local.db` (Turso/libSQL local) on 2026-11-02.
 
-### Reference Files
+Ported from reference: `web/clone/learn2earn/_reference/click2skill/`
 
-| File | Purpose |
-|---|---|
-| `_reference/click2skill/chunks/CourseLessonRoute-DhTiTmen.js` | Route component — lesson page with video player, access control, back-to-course |
-| `_reference/click2skill/chunks/CoursePlayer-2icA96ky.js` | Main course player — video, quiz, progress, certificate, sidebar |
-| `_reference/click2skill/chunks/EnhancedVideoPlayer-BRGriz9Q.js` | Video player — YouTube, Vimeo, Supabase, external |
-| `_reference/click2skill/chunks/QuickQuizDialog-BjT2FQ0Z.js` | Quiz dialog for lesson assessment |
-| `_reference/click2skill/chunks/useSubscription-CuULC_HM.js` | Subscription state hook (already implemented) |
-| `_reference/click2skill/chunks/studentPreferences-k8XJ8C4f.js` | Student preferences hook (already implemented) |
+## 1. Reference contracts extracted
 
-### Routes
+### CoursePlayer chunk (CoursePlayer-2icA96ky.js)
+- `lesson_progress.upsert`: `{student_id, lesson_id, enrollment_id, last_position_seconds}` conflict `(student_id, lesson_id)`
+- `lesson_progress.upsert` complete: add `{completed: true, completed_at}`
+- `onProgress(lessonId, seconds)` — writes every ~10s threshold (debounced)
+- `onComplete(lessonId, true, "watch")` — marks complete, triggers gamification
+- Side effects on completion: `awardPoints(10, "lesson_complete", lessonId)`, `updateStreak()`, `checkAchievements()`
+- `reset_my_lesson_progress({p_enrollment_id, p_lesson_id})` — delete row
 
-| Route | Purpose |
-|---|---|
-| `/courses/[slug]/lessons/[lessonId]` | Lesson player page — video, content, quiz, progress |
-| `/courses/[slug]` | Course detail page (already exists) — entry point to lessons |
+### StudentDashboard chunk
+- Queries `quiz_attempts`, `lessons`, `cohort_lesson_progress`, `cohort_final_assessments`
+- Lesson list with progress state per lesson
 
-### Component Tree
+### QuickQuizDialog chunk
+- RPC `student_quick_quiz({p_kind, p_lesson})` — fetch quiz data
+- RPC `submit_course_lesson_quiz_attempt({p_quiz_id, p_lesson_id, p_course_id, p_enrollment_id, p_answers, p_started_at, p_time_spent_seconds})`
 
-```
-CourseLessonRoute (page)
-├── CoursePlayer (lazy-loaded client component)
-│   ├── EnhancedVideoPlayer (video playback)
-│   ├── Lesson content (text)
-│   ├── QuizDialog (assessment)
-│   ├── Progress tracker
-│   ├── Certificate display (on completion)
-│   └── Lesson navigation (next/prev)
-```
+### Supabase data shapes
+- `lessons`: id, course_id, title, lesson_order, video_url, notes, document_url, duration_minutes, section_id, lesson_type, content, is_preview, description
+- `public_course_lessons`: id, course_id, section_id, title, lesson_order, duration_minutes, lesson_type, is_preview
+- `public_course_sections`: id, course_id, title, description, section_order
+- `course_lesson_quizzes`: id, lesson_id, title, passing_score, time_limit_minutes, questions (json array), is_published, course_id
+- `course_lesson_quiz_attempts`: id, quiz_id, lesson_id, course_id, student_id, enrollment_id, score, max_score, percentage, passed, answers, started_at, time_spent_seconds, attempt_date, attempt_number
 
-### Data Tables (already exist in schema)
+## 2. Data model additions
 
-| Table | Already Exists? | Notes |
-|---|---|---|
-| lessons | Yes | Has video_url, video_provider, content, is_preview |
-| lesson_progress | Yes | Added in Phase 0 schema |
-| enrollments | Yes | Added in Phase 0 schema |
-| courses | Yes | Already exists |
-| users | Yes | Already exists |
+### New tables
+- `public_course_sections` — sections within a course
+- `public_course_lessons` — lessons (public view, slimmer than full lessons)
+- `course_lesson_quizzes` — quiz definitions per lesson
+- `course_lesson_quiz_attempts` — student quiz submissions
+- `student_points` — gamification points per student
+- `student_streaks` — daily activity streaks
+- `student_achievements` — many-to-many achievements earned
+- `achievement_definitions` — achievement catalog
 
-### API Endpoints
+## 3. API routes
 
-| Endpoint | Method | Purpose |
-|---|---|---|
-| `/api/lessons/[id]` | GET | Get lesson by ID (with access check) |
-| `/api/lessons/[id]/progress` | POST | Mark lesson as complete, update watch time |
-| `/api/courses/[slug]/lessons` | GET | List all lessons for a course |
+| Route | Methods | Purpose |
+|-------|---------|---------|
+| `/api/lessons/[id]` | GET | Fetch lesson by id (from DB) |
+| `/api/lessons/[id]/progress` | GET/POST | Read/write lesson progress |
+| `/api/quizzes/[lessonId]` | GET | Get quiz for a lesson |
+| `/api/quizzes/[lessonId]/attempt` | POST | Submit quiz attempt |
+| `/api/gamification/points` | GET/POST | Read/total points |
+| `/api/gamification/streak` | GET/POST | Read/update streak |
+| `/api/gamification/achievements` | GET | List earned achievements |
 
-### Business Rules
+## 4. Component updates
 
-1. **Access Control:**
-   - Published courses only (`is_published = true`)
-   - Lessons with `is_preview = true` are accessible without enrollment
-   - Non-preview lessons require enrollment or active membership
-   - Unauthenticated users can access preview lessons only
+- `CoursePlayer` — DB-backed progress, resume from `last_position_seconds`, quiz integration, gamification triggers
+- `QuizAttempt` — DB-backed quiz fetching and submission
+- `Dashboard page` — Real data from DB (enrollments, progress, streaks, achievements)
+- `app/courses/[slug]/lessons/[lessonId]/page.tsx` — DB-backed lesson resolution, access checks via `subscription-course-access`
 
-2. **Progress Tracking:**
-   - Mark lesson as completed when user finishes
-   - Track watch time in seconds
-   - Update course progress percentage
+## 5. Parity checklist
 
-3. **Lesson Navigation:**
-   - Next/Previous lesson buttons
-   - Disable next if current not completed (unless preview)
-   - Show lesson number in sequence
-
-### Feature Spec Details
-
-#### CourseLessonRoute Component
-- Route: `/courses/[slug]/lessons/[lessonId]`
-- Server component (fetches course + lesson data)
-- Lazy-loads CoursePlayer client component
-- Props: `courseId`, `lessonId` from URL params
-- Behavior:
-  1. Fetch course by ID, verify published
-  2. Fetch lesson by ID + courseId, verify is_preview or user has access
-  3. If loading → show "Loading session…"
-  4. If not accessible → show "This session requires course access"
-  5. If accessible → render CoursePlayer with lesson data
-
-#### CoursePlayer Component (Client)
-- Props: course, lesson, user
-- Sections (top to bottom):
-  1. Header: Back to course link + lesson title
-  2. Video area: EnhancedVideoPlayer (16:9 aspect ratio)
-  3. Content area: Lesson text content (whitespace-pre-line)
-  4. Quiz section: QuickQuizDialog trigger (if lesson has quiz)
-  5. Progress: Progress bar showing course completion
-  6. Navigation: Previous/Next lesson buttons
-  7. Certificate: Show on course completion
-
-#### Video Providers Supported
-- `youtube` → youtube-nocookie.com embed
-- `vimeo` → player.vimeo.com embed
-- `supabase`/`external` → HTML5 video element
-- Unknown → "Unable to load video" message
-
-### Implementation Plan
-
-1. Create `lib/lessons.ts` — lesson data access functions
-2. Create `app/api/lessons/[id]/route.ts` — lesson detail API
-3. Create `app/api/lessons/[id]/progress/route.ts` — progress update API
-4. Create `app/courses/[slug]/lessons/[lessonId]/page.tsx` — lesson route page
-5. Create `components/course-player/CoursePlayer.tsx` — main player component
-6. Create `components/course-player/EnhancedVideoPlayer.tsx` — video player
-7. Create `components/course-player/QuickQuizDialog.tsx` — quiz dialog
-8. Update `app/courses/[slug]/page.tsx` — add lesson links
-
----
-
-**Status: Spec complete. Waiting for "go" before implementing.**
+- [ ] Lesson progress upsert behaves identically (student_id, lesson_id conflict)
+- [ ] Video resume from last_position_seconds
+- [ ] Completion triggers gamification (points + streak + achievements)
+- [ ] Quiz fetch from DB (course_lesson_quizzes)
+- [ ] Quiz submission via RPC contract
+- [ ] Dashboard shows real enrollment/progress data
+- [ ] Streak updates on daily activity
+- [ ] Points awarded on lesson completion
