@@ -1,17 +1,38 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Check, ArrowRight, Smartphone, MessageCircle } from 'lucide-react'
-import { BOOKS } from '@/lib/books-data'
-import { SITE_CONFIG } from '@/lib/data'
+import { Check, ArrowRight, Smartphone, MessageCircle, BookOpen } from 'lucide-react'
 
 export default async function BookCheckoutPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const book = BOOKS.find((b) => b.slug === slug)
+
+  // Fetch book from DB (Phase 3)
+  const [book, setBook] = useState<any>(null)
+  const [bookLoading, setBookLoading] = useState(true)
+
+  useEffect(() => {
+    fetch(`/api/books/${slug}`)
+      .then((r) => r.json())
+      .then((data) => { setBook(data.book); setBookLoading(false) })
+      .catch((err) => { console.error('[BookCheckout] load error', err); setBookLoading(false) })
+  }, [slug])
+
+  if (bookLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAFAFA] text-[#111111] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-8 h-8 rounded-full bg-[#1DB96B]/10 flex items-center justify-center mb-4 text-[#1DB96B] animate-pulse">
+            <BookOpen className="w-4 h-4" />
+          </div>
+          <p className="text-sm text-[#737373]">Loading book…</p>
+        </div>
+      </div>
+    )
+  }
 
   if (!book) {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] text-[#10201A] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FAFAFA] text-[#111111] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[#111111] mb-2">Book Not Found</h1>
           <Link href="/books" className="text-[#1DB96B] font-medium hover:text-[#17A05D]">
@@ -27,6 +48,7 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
   const [email, setEmail] = useState('')
   const [phone, setPhone] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
+  const [enrollError, setEnrollError] = useState<string | null>(null)
 
   const copy = (label: string, value: string) => {
     navigator.clipboard?.writeText(value).catch(() => {})
@@ -36,19 +58,39 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
 
   const emailRegex = new RegExp(/^\S+@\S+\.\S+$/)
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault()
     const errs: Record<string, string> = {}
     if (!name.trim()) errs.name = 'Enter your full name.'
     if (!emailRegex.test(email)) errs.email = 'Enter a valid email address.'
     if (phone.trim().length < 9) errs.phone = 'Enter your mobile money number.'
     if (errs.name || errs.email || errs.phone) return
-    setStatus('done')
+
+    setEnrollError(null)
+    try {
+      const res = await fetch('/api/books/enroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bookId: book.id,
+          amount: book.price,
+          paymentMethod: 'flutterwave',
+        }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) {
+        setEnrollError(data.error || 'Enrollment failed. Please try again.')
+        return
+      }
+      setStatus('done')
+    } catch (err) {
+      setEnrollError('Enrollment failed. Please try again.')
+    }
   }
 
   if (status === 'done') {
     return (
-      <div className="min-h-screen bg-[#FAFAFA] text-[#10201A] flex items-center justify-center px-5">
+      <div className="min-h-screen bg-[#FAFAFA] text-[#111111] flex items-center justify-center px-5">
         <div className="flex max-w-[460px] flex-col items-center gap-5 rounded-3xl bg-white p-10 text-center shadow-xl">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-[#E8F6EF] text-[#0F7A42]">
             <Check className="h-7 w-7" />
@@ -82,13 +124,19 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
+    <div className="min-h-screen bg-[#FAFAFA] text-[#111111]">
       <div className="mx-auto max-w-[480px] px-5 py-20">
         <div className="rounded-2xl border border-[#E5E5E5] bg-white p-8">
           <h1 className="text-2xl font-bold text-[#111111] mb-2">Complete Your Order</h1>
           <p className="text-sm text-[#737373] mb-8">
             Pay with MTN/Airtel mobile money or card. Get instant access to <strong>{book.title}</strong>.
           </p>
+
+          {enrollError && (
+            <div className="mb-4 p-3 rounded-lg bg-[#FDECEA] text-[#B42318] text-sm border border-[#F5C2C2]">
+              {enrollError}
+            </div>
+          )}
 
           {/* Book info */}
           <div className="mb-8">
@@ -180,14 +228,14 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
               confirmation message. Access is activated by hand — usually within minutes.
             </p>
             {[
-              ['MTN Mobile Money', SITE_CONFIG.founder.phone],
-              ['Airtel Money', SITE_CONFIG.founder.phone],
+              ['MTN Mobile Money', '0977000000'],
+              ['Airtel Money', '0977000000'],
             ].map(([label, value]) => (
               <div key={label} className="flex items-center justify-between gap-2 rounded-[10px] border border-[#E5E5E5] p-3.5">
                 <div>
                   <small className="block text-[11px] font-bold text-[#737373]">{label}</small>
                   <strong className="my-1 block text-[19px] text-[#111111]">{value}</strong>
-                  <span className="block text-[11px] text-[#737373]">{SITE_CONFIG.founder.name}</span>
+                  <span className="block text-[11px] text-[#737373]">George J Kasonso</span>
                 </div>
                 <button
                   type="button"
@@ -199,7 +247,7 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
               </div>
             ))}
             <a
-              href={`https://wa.me/${SITE_CONFIG.whatsapp}?text=${encodeURIComponent(`Hi George, I have paid for ${book.title} (ZMW ${book.price.toLocaleString('en-ZM')}) on Learn2Earn. Here is the confirmation message:`)}`}
+              href={`https://wa.me/254758991116?text=${encodeURIComponent(`Hi George, I have paid for ${book.title} (ZMW ${book.price.toLocaleString('en-ZM')}) on Learn2Earn. Here is the confirmation message:`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex min-h-9 items-center justify-center gap-2 rounded-xl px-4 text-sm font-bold bg-[#1DB96B] text-[#111111]"

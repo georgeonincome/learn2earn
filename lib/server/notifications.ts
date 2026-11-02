@@ -14,13 +14,18 @@ export type NotificationEvent =
       user: { id: string; email: string; name?: string }
       cohort: { id: string; title: string; start_date?: string; end_date?: string; total_days?: number }
     }
+  | {
+      type: 'book_purchase'
+      user: { id: string; email: string; name?: string }
+      book: { id: string; title: string; author: string; price: number }
+    }
   | { type: 'abandoned_checkout'; user: { email: string }; context: Record<string, unknown> }
 
 function logPath(): string {
   return process.env.EMAIL_LOG_PATH || '.data/email-log.jsonl'
 }
 
-const VALID_TYPES = ['free_enrollment', 'cohort_enrollment', 'abandoned_checkout']
+const VALID_TYPES = ['free_enrollment', 'cohort_enrollment', 'book_purchase', 'abandoned_checkout']
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export async function sendNotificationEmail(event: NotificationEvent): Promise<void> {

@@ -1,16 +1,17 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+/**
+ * Books catalog — DB-backed (Phase 3).
+ * Fetches books from /api/books instead of static BOOKS import.
+ * Same view sequence as /courses and /cohorts:
+ * pill tabs (books active) → title + search → category chips → count → grid.
+ */
+
+import { useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Search, X, ArrowRight, BookOpen } from 'lucide-react'
-import { BOOKS } from '@/lib/books-data'
 import CatalogTabs from '@/components/catalog/CatalogTabs'
-import type { Book } from '@/lib/books-data'
-
-/* Books catalog — same view sequence as /courses and /cohorts:
-   pill tabs (books active) → title + search → category chips → count → grid.
-   Cards use the same square-thumbnail / eyebrow / price / CTA card style. */
 
 const C = {
   pageBg: '#FAFAFA',
@@ -36,16 +37,44 @@ const SORTS = [
 
 type SortValue = (typeof SORTS)[number]['value']
 
-const fmtKES = (n?: number) => (n == null ? '' : `ZMW ${n.toLocaleString('en-ZM')}`)
+const fmtZMW = (n?: number | null) => (n == null ? '' : `ZMW ${n.toLocaleString('en-ZM')}`)
+
+interface Book {
+  id: string
+  slug: string
+  title: string
+  author: string
+  description: string
+  excerpt: string
+  price: number
+  originalPrice: number | null
+  category: string
+  tags: string[]
+  image: string
+  pdfUrl: string | null
+  pages: number | null
+  language: string
+  publishedDate: string | null
+  featured: boolean
+  inPlan: boolean
+}
 
 export default function BooksPage() {
-  const [books] = useState<Book[]>(BOOKS)
+  const [books, setBooks] = useState<Book[]>([])
+  const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [debounced, setDebounced] = useState('')
   const [category, setCategory] = useState('all')
   const [sort, setSort] = useState<SortValue>('newest')
 
-  useMemo(() => {
+  useEffect(() => {
+    fetch('/api/books')
+      .then((r) => r.json())
+      .then((data) => { setBooks(data.books ?? []); setLoading(false) })
+      .catch((err) => { console.error('[BooksPage] load error', err); setLoading(false) })
+  }, [])
+
+  useEffect(() => {
     const t = setTimeout(() => setDebounced(query), 250)
     return () => clearTimeout(t)
   }, [query])
@@ -71,10 +100,22 @@ export default function BooksPage() {
         list.sort((a, b) => b.price - a.price)
         break
       default:
-        list.sort((a, b) => Number(a.id) - Number(b.id))
+        list.sort((a, b) => a.title.localeCompare(b.title))
     }
     return list
   }, [books, debounced, category, sort])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen font-sans" style={{ background: C.pageBg, color: C.text }}>
+        <main className="pt-28 pb-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
+            <div className="text-center py-20 text-[#737373] text-sm">Loading books…</div>
+          </div>
+        </main>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen font-sans" style={{ background: C.pageBg, color: C.text }}>
@@ -246,12 +287,12 @@ export default function BooksPage() {
                     {/* price row */}
                     <div className="flex items-center gap-2 flex-wrap mb-3">
                       <span className="text-lg font-medium" style={{ color: C.primary }}>
-                        {b.price === 0 ? 'Free' : fmtKES(b.price)}
+                        {b.price === 0 ? 'Free' : fmtZMW(b.price)}
                       </span>
                       {showSave && (
                         <>
                           <span className="text-sm line-through" style={{ color: C.textMuted }} aria-hidden="true">
-                            {fmtKES(b.originalPrice)}
+                            {fmtZMW(b.originalPrice)}
                           </span>
                           <span
                             className="text-[11px] font-medium px-2 py-0.5"
@@ -268,7 +309,7 @@ export default function BooksPage() {
                       className="inline-flex items-center justify-center gap-1.5 w-full text-sm font-semibold transition-colors"
                       style={{ minHeight: 44, borderRadius: C.radiusBtn, background: C.primary, color: '#fff', border: `1px solid ${C.primary}`, padding: '0 18px' }}
                     >
-                      View book · {fmtKES(b.price)} <ArrowRight className="w-4 h-4" />
+                      View book · {fmtZMW(b.price)} <ArrowRight className="w-4 h-4" />
                     </Link>
                   </div>
                 </article>

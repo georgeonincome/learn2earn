@@ -385,6 +385,7 @@ export const transactions = sqliteTable(
     originalPrice: real('original_price'),
     discountAmount: real('discount_amount'),
     planId: text('plan_id'), // subscription purchases — Q3b flagged in docs/parity
+    bookId: text('book_id'), // book purchases — Phase 3
     paymentMethod: text('payment_method'),
     paymentStatus: text('payment_status'),
     source: text('source'), // "checkout" | "subscribe" | "cohort" ...
@@ -621,6 +622,63 @@ export const studentAchievements = sqliteTable('student_achievements', {
   earnedAt: text('earned_at'),
   createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
 })
+
+// ---------------------------------------------------------------------------
+// Phase 3 — Books: Catalog, Purchase, Download & Verification
+// Books are a Learn2Earn-specific feature (no direct Click2Skill reference table).
+// Mirrors the Book / BookEnrollment types from lib/types.ts.
+// ---------------------------------------------------------------------------
+
+export const books = sqliteTable(
+  'books',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    slug: text('slug').notNull(),
+    title: text('title').notNull(),
+    author: text('author').notNull(),
+    description: text('description').notNull(),
+    excerpt: text('excerpt').notNull(),
+    price: real('price').notNull(), // ZMW
+    originalPrice: real('original_price'),
+    category: text('category').notNull(),
+    tags: text('tags', { mode: 'json' }),
+    image: text('image').notNull(),
+    pdfUrl: text('pdf_url'),
+    pages: integer('pages'),
+    language: text('language').default('English').notNull(),
+    publishedDate: text('published_date'),
+    featured: integer('featured', { mode: 'boolean' }).default(false),
+    inPlan: integer('in_plan', { mode: 'boolean' }).default(false),
+    learningOutcomes: text('learning_outcomes', { mode: 'json' }),
+    faqs: text('faqs', { mode: 'json' }),
+    isPublished: integer('is_published', { mode: 'boolean' }).default(true),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('books_slug_uq').on(t.slug),
+    index('books_category_idx').on(t.category),
+  ],
+)
+
+export const bookEnrollments = sqliteTable(
+  'book_enrollments',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    studentId: text('student_id').notNull().references(() => students.id),
+    bookId: text('book_id').notNull().references(() => books.id),
+    purchasedAt: text('purchased_at'),
+    amount: real('amount').notNull(),
+    currency: text('currency').default('ZMW').notNull(),
+    downloadCount: integer('download_count').default(0),
+    lastAccessedAt: text('last_accessed_at'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).default(sql`(unixepoch())`),
+  },
+  (t) => [
+    uniqueIndex('book_enrollments_student_book_uq').on(t.studentId, t.bookId),
+    index('book_enrollments_book_idx').on(t.bookId),
+  ],
+)
 
 // ---------------------------------------------------------------------------
 // Legacy local demo tables (kept only so pre-phase routes compile; they get
