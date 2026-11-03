@@ -1,15 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { Mail, ArrowRight, Lock, MessageCircle, Phone, ChevronRight } from 'lucide-react'
+import { Mail, Lock, ArrowRight, MessageCircle, Phone, ChevronRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/data'
 
-/* Auth page — exact 1:1 from click2skill Auth-DhBBJHb7.js:
+/* Auth page — email + password login (no 2FA code flow):
    - Desktop: dark left aside panel (#0E2A1E) + main card on right (#F6F7F5)
    - Mobile: full-screen centered card
-   - Topbar: back button + logo
-   - Steps: start → email → code → profile → done
-   - 6-digit code email auth, no password needed (default)
+   - Topbar: logo
+   - Simple email + password sign in
+   - Register link for new accounts
+   - Forgot password link
    - WhatsApp support link
    - No Navbar, No Footer (own layout)
 */
@@ -34,40 +35,77 @@ const CHECK_ICON = (
   </svg>
 )
 
-type AuthStep = 'start' | 'email' | 'code' | 'profile' | 'password' | 'member' | 'forgot_sent'
-
 export default function AuthPage() {
-  const [step, setStep] = useState<AuthStep>('start')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [memberNo, setMemberNo] = useState('')
-  const [name, setName] = useState('')
-  const [whatsapp, setWhatsapp] = useState('')
-  const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [resendSeconds, setResendSeconds] = useState(0)
+  const [mode, setMode] = useState<'signin' | 'register'>('signin')
 
-  const handleBack = () => {
-    if (step === 'start' || step === 'profile') {
-      return
-    }
-    setStep('start')
-    setError('')
-  }
+  const [name, setName] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
-  const handleSendCode = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email.trim())) {
-      setError('Enter a full email address, for example you@gmail.com')
-      return
-    }
     setLoading(true)
     setError('')
-    setTimeout(() => {
+    try {
+      if (mode === 'register') {
+        if (!name.trim()) {
+          setError('Please enter your full name')
+          setLoading(false)
+          return
+        }
+        if (password !== confirmPassword) {
+          setError('Passwords do not match')
+          setLoading(false)
+          return
+        }
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim().toLowerCase(), password, fullName: name.trim() }),
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          setError(data.error || 'Registration failed')
+          setLoading(false)
+          return
+        }
+        // Auto-login after registration
+        const loginRes = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+        })
+        if (!loginRes.ok) {
+          setError(data.error || 'Account created. Please sign in.')
+          setLoading(false)
+          return
+        }
+        if (typeof window !== 'undefined') {
+          window.location.href = '/dashboard'
+        }
+      } else {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          setError(data.error || 'Invalid email or password')
+          setLoading(false)
+          return
+        }
+        if (typeof window !== 'undefined') {
+          window.location.href = '/dashboard'
+        }
+      }
+    } catch {
+      setError('An unexpected error occurred')
       setLoading(false)
-      setStep('code')
-    }, 1000)
+    }
   }
 
   const firstName = SITE_CONFIG.founder.name.split(' ').slice(-1).join(' ')
@@ -107,31 +145,23 @@ export default function AuthPage() {
       <main className="flex min-h-[100dvh] flex-col px-5 pb-8 pt-4 sm:px-8 lg:min-h-0 lg:items-center lg:justify-center lg:py-12">
         <div className="w-full lg:max-w-[440px] lg:rounded-3xl lg:bg-white lg:p-10 lg:shadow-[0_20px_60px_rgba(16,32,26,.08)]">
           {/* Topbar */}
-          <div className="flex items-center justify-between">
-            {(step !== 'start' && step !== 'profile') ? (
-              <button
-                onClick={handleBack}
-                className="-ml-2 inline-flex items-center gap-1.5 rounded-lg px-2 py-2 text-sm font-semibold text-[#5B6B64] hover:text-[#10201A]"
-              >
-                <ChevronRight className="h-4 w-4 rotate-180" /> Back
-              </button>
-            ) : (
-              <span />
-            )}
+          <div className="flex items-center justify-between mb-6">
             <div className="h-6 w-auto lg:hidden">{LOGO_SVG_DARK}</div>
           </div>
 
-          {/* Step: start */}
-          {step === 'start' && (
-            <section className="mt-6 lg:mt-2">
-              <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.02em]">
-                Sign in or create your account
+          {mode === 'signin' ? (
+            <section>
+              <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.02em] mb-1">
+                Welcome back
               </h1>
-              <p className="mt-2 text-[15px] text-[#5B6B64]">
-                We send a 6 digit code to your email. No password needed.
+              <p className="text-[15px] text-[#5B6B64] mb-6">
+                Sign in to access your courses and continue learning.
               </p>
-              <form className="mt-6" onSubmit={handleSendCode} noValidate>
-                <label className="block text-sm font-semibold">Email address</label>
+              <form onSubmit={handleSubmit} noValidate>
+                {error && (
+                  <p className="mb-4 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
+                )}
+                <label className="block text-sm font-semibold mb-1.5">Email address</label>
                 <input
                   id="auth-email"
                   type="email"
@@ -142,291 +172,130 @@ export default function AuthPage() {
                   value={email}
                   onChange={e => { setEmail(e.target.value); setError('') }}
                   placeholder="you@gmail.com"
-                  className="mt-1.5 w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  aria-invalid={!!error}
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
                 />
-                {error && (
-                  <p className="mt-2 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
-                )}
+                <label className="block text-sm font-semibold mt-4 mb-1.5">Password</label>
+                <input
+                  id="auth-password"
+                  type="password"
+                  autoComplete="current-password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
+                />
                 <button
+                  type="submit"
                   disabled={loading}
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:cursor-not-allowed disabled:opacity-60 mt-4 ${loading ? 'opacity-60' : ''}`}
-                >
-                  {loading ? 'Sending your code…' : 'Continue with email'}
-                </button>
-              </form>
-              {!loading && (
-                <>
-                  <div className="my-5 flex items-center gap-3 text-xs font-semibold text-[#9AA7A1]">
-                    <span className="h-px flex-1 bg-[#E3E8E5]" />
-                    or
-                    <span className="h-px flex-1 bg-[#E3E8E5]" />
-                  </div>
-                  <button
-                    onClick={() => { setStep('password'); setError('') }}
-                    className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#D9E0DC] bg-white px-4 py-3.5 text-[15px] font-semibold text-[#10201A] hover:border-[#9DB0A7]"
-                  >
-                    Continue with Google
-                  </button>
-                  <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm">
-                    <button
-                      onClick={() => { setStep('password'); setError('') }}
-                      className="font-semibold text-[#0B854C] hover:underline rounded"
-                    >
-                      Use a password
-                    </button>
-                    <button
-                      onClick={() => { setStep('member'); setError('') }}
-                      className="font-semibold text-[#0B854C] hover:underline rounded"
-                    >
-                      Use my member number
-                    </button>
-                  </div>
-                </>
-              )}
-            </section>
-          )}
-
-          {/* Step: password */}
-          {step === 'password' && (
-            <section className="mt-6 lg:mt-2">
-              <h1 className="text-[26px] font-extrabold tracking-[-0.02em]">Sign in with a password</h1>
-              <form className="mt-6 space-y-4" onSubmit={e => {
-                e.preventDefault()
-                setLoading(true)
-                setError('')
-                setTimeout(() => {
-                  setLoading(false)
-                  setStep('start')
-                }, 1000)
-              }}>
-                <label className="block text-sm font-semibold">
-                  Email address
-                  <input
-                    type="email"
-                    inputMode="email"
-                    autoComplete="username"
-                    autoCapitalize="none"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  />
-                </label>
-                <label className="block text-sm font-semibold">
-                  Password
-                  <input
-                    type="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="mt-1.5 w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  />
-                </label>
-                {error && (
-                  <p className="mt-2 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
-                )}
-                <button
-                  disabled={loading}
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:opacity-60 ${loading ? 'opacity-60' : ''}`}
+                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:opacity-60 mt-6 ${loading ? 'opacity-60' : ''}`}
                 >
                   {loading ? 'Signing in…' : 'Sign in'}
                 </button>
               </form>
-              <div className="mt-5 flex flex-wrap justify-between gap-2 text-sm">
+              <p className="mt-5 text-center text-sm text-[#5B6B64]">
+                Don't have an account?{' '}
                 <button
-                  onClick={() => { setError('Enter your email first, then tap Forgot password.') }}
-                  className="font-semibold text-[#0B854C] hover:underline rounded"
+                  onClick={() => { setMode('register'); setError('') }}
+                  className="font-semibold text-[#0B854C] hover:underline"
                 >
-                  Forgot password?
+                  Create account
                 </button>
-                <button
-                  onClick={() => { setStep('start'); setError('') }}
-                  className="font-semibold text-[#0B854C] hover:underline rounded"
-                >
-                  Get a code instead
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* Step: code */}
-          {step === 'code' && (
-            <section className="mt-6 lg:mt-2">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#E8F6EF] text-[#0B854C]">
-                <svg className="h-6 w-6" aria-hidden="true">
-                  <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                </svg>
-              </span>
-              <h1 className="mt-4 text-[26px] font-extrabold tracking-[-0.02em]">Check your email</h1>
-              <p className="mt-2 text-[15px] text-[#5B6B64]">
-                We sent a 6 digit code to <b className="break-all text-[#10201A]">{email}</b>. It works for 10 minutes.
               </p>
-              <label htmlFor="auth-code" className="mt-6 block text-sm font-semibold">Your code</label>
-              <div className="relative mt-1.5">
-                <div className="grid grid-cols-6 gap-2" aria-hidden="true">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <span
-                      key={i}
-                      className={`grid h-14 place-items-center rounded-xl border-2 bg-white font-mono text-2xl font-semibold tabular-nums ${code.length > i ? 'border-[#9DB0A7]' : 'border-[#D9E0DC]'}`}
-                    >
-                      {code[i] || ''}
-                    </span>
-                  ))}
-                </div>
+            </section>
+          ) : (
+            <section>
+              <h1 className="text-[28px] font-extrabold leading-tight tracking-[-0.02em] mb-1">
+                Create your account
+              </h1>
+              <p className="text-[15px] text-[#5B6B64] mb-6">
+                Start learning digital skills with Learn2Earn.
+              </p>
+              <form onSubmit={handleSubmit} noValidate>
+                {error && (
+                  <p className="mb-4 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
+                )}
+                <label className="block text-sm font-semibold mb-1.5">Full name</label>
                 <input
-                  id="auth-code"
-                  value={code}
-                  onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  pattern="[0-9]*"
-                  maxLength={6}
-                  className="absolute inset-0 h-full w-full cursor-text bg-transparent text-transparent caret-transparent opacity-0 outline-none"
+                  id="auth-name"
+                  type="text"
+                  autoComplete="name"
+                  autoCapitalize="words"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  placeholder="George J. Kasonso"
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
                 />
-              </div>
-              <p className="sr-only">Type or paste the 6 digit code. It checks by itself when complete.</p>
-              {error && (
-                <p className="mt-3 inline-flex items-center gap-2 text-sm text-[#5B6B64]">{error}</p>
-              )}
-              <div className="mt-4 flex flex-wrap justify-between gap-2 text-sm">
-                {resendSeconds > 0 ? (
-                  <span className="text-[#7A8A83]">Resend in {resendSeconds}s</span>
-                ) : (
-                  <button
-                    onClick={() => { setResendSeconds(60); setError('') }}
-                    className="font-semibold text-[#0B854C] hover:underline rounded"
-                  >
-                    Send a new code
-                  </button>
-                )}
+                <label className="block text-sm font-semibold mt-4 mb-1.5">Email address</label>
+                <input
+                  id="auth-register-email"
+                  type="email"
+                  inputMode="email"
+                  autoComplete="email"
+                  autoCapitalize="none"
+                  spellCheck={false}
+                  value={email}
+                  onChange={e => { setEmail(e.target.value); setError('') }}
+                  placeholder="you@gmail.com"
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
+                />
+                <label className="block text-sm font-semibold mt-4 mb-1.5">Password</label>
+                <input
+                  id="auth-register-password"
+                  type="password"
+                  autoComplete="new-password"
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
+                />
+                <label className="block text-sm font-semibold mt-4 mb-1.5">Confirm password</label>
+                <input
+                  id="auth-confirm-password"
+                  type="password"
+                  autoComplete="new-password"
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
+                  required
+                />
                 <button
-                  onClick={() => { setStep('start'); setError('') }}
-                  className="font-semibold text-[#0B854C] hover:underline rounded"
-                >
-                  Wrong email? Change it
-                </button>
-              </div>
-            </section>
-          )}
-
-          {/* Step: profile */}
-          {step === 'profile' && (
-            <section className="mt-6 lg:mt-2">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#E8F6EF] text-[#0B854C]">
-                <svg className="h-6 w-6" aria-hidden="true">
-                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                </svg>
-              </span>
-              <h1 className="mt-4 text-[26px] font-extrabold tracking-[-0.02em]">Welcome to Learn2Earn</h1>
-              <p className="mt-2 text-[15px] text-[#5B6B64]">One last thing before you start.</p>
-              <form className="mt-6 space-y-4" onSubmit={e => {
-                e.preventDefault()
-                setLoading(true)
-                setError('')
-                setTimeout(() => {
-                  setLoading(false)
-                }, 1000)
-              }}>
-                <label className="block text-sm font-semibold">
-                  Full name
-                  <input
-                    autoFocus
-                    autoComplete="name"
-                    autoCapitalize="words"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    placeholder="For example George J. Kasonso"
-                    className="mt-1.5 w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  />
-                  <span className="mt-1.5 block text-xs font-normal text-[#5B6B64]">Written exactly like this on your certificates.</span>
-                </label>
-                <label className="block text-sm font-semibold">
-                  WhatsApp number <span className="font-normal text-[#7A8A83]">(optional)</span>
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    autoComplete="tel"
-                    value={whatsapp}
-                    onChange={e => setWhatsapp(e.target.value)}
-                    placeholder="097 123 4567"
-                    className="mt-1.5 w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none placeholder:text-[#9AA7A1] focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  />
-                  <span className="mt-1.5 block text-xs font-normal text-[#5B6B64]">Only for class reminders. We never share it.</span>
-                </label>
-                {error && (
-                  <p className="mt-2 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
-                )}
-                <button
+                  type="submit"
                   disabled={loading}
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:opacity-60 ${loading ? 'opacity-60' : ''}`}
+                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:opacity-60 mt-6 ${loading ? 'opacity-60' : ''}`}
                 >
-                  {loading ? 'Starting…' : 'Start learning'}
+                  {loading ? 'Creating account…' : 'Create account'}
                 </button>
               </form>
-            </section>
-          )}
-
-          {/* Step: member */}
-          {step === 'member' && (
-            <section className="mt-6 lg:mt-2">
-              <h1 className="text-[26px] font-extrabold tracking-[-0.02em]">Use your member number</h1>
-              <p className="mt-2 text-[15px] text-[#5B6B64]">We send a code to the email on your membership, so only you can sign in.</p>
-              <form className="mt-6" onSubmit={e => {
-                e.preventDefault()
-                setLoading(true)
-                setError('')
-                setTimeout(() => {
-                  setLoading(false)
-                  setStep('code')
-                }, 1000)
-              }}>
-                <label className="block text-sm font-semibold" htmlFor="auth-member">Member number</label>
-                <div className="relative mt-1.5">
-                  <span className="pointer-events-none absolute left-3.5 top-1/2 mt-[3px] -translate-y-1/2 font-mono text-base text-[#5B6B64]">C2S-</span>
-                  <input
-                    id="auth-member"
-                    inputMode="numeric"
-                    autoComplete="off"
-                    value={memberNo}
-                    onChange={e => setMemberNo(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                    placeholder="0148"
-                    className="w-full rounded-xl border border-[#D9E0DC] bg-white px-3.5 py-3 text-base text-[#10201A] outline-none pl-[3.6rem] font-mono tracking-wider focus:border-[#0B854C] focus:ring-4 focus:ring-[#0B854C]/10"
-                  />
-                </div>
-                {error && (
-                  <p className="mt-2 rounded-lg bg-[#FDECEA] px-3 py-2 text-sm text-[#B42318]">{error}</p>
-                )}
+              <p className="mt-5 text-center text-sm text-[#5B6B64]">
+                Already have an account?{' '}
                 <button
-                  disabled={loading}
-                  className={`flex w-full items-center justify-center gap-2 rounded-xl bg-[#0B854C] px-4 py-3.5 text-[15px] font-bold text-white hover:bg-[#087A45] disabled:opacity-60 mt-4 ${loading ? 'opacity-60' : ''}`}
+                  onClick={() => { setMode('signin'); setError('') }}
+                  className="font-semibold text-[#0B854C] hover:underline"
                 >
-                  {loading ? 'Sending your code…' : 'Send me a code'}
+                  Sign in
                 </button>
-              </form>
-            </section>
-          )}
-
-          {/* Step: forgot_sent */}
-          {step === 'forgot_sent' && (
-            <section className="mt-6 lg:mt-2">
-              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-[#E8F6EF] text-[#0B854C]">
-                <svg className="h-6 w-6" aria-hidden="true">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.124" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                  <path d="M22 4L12 18.02-9 11.12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                </svg>
-              </span>
-              <h1 className="mt-4 text-[26px] font-extrabold tracking-[-0.02em]">Check your email</h1>
-              <p className="mt-2 text-[15px] text-[#5B6B64]">
-                If <b className="text-[#10201A]">{email}</b> has an account, we sent a link to set a new password. It works for 1 hour.
               </p>
-              <button
-                onClick={() => { setStep('start'); setError('') }}
-                className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#D9E0DC] bg-white px-4 py-3.5 text-[15px] font-semibold text-[#10201A] hover:border-[#9DB0A7] mt-6"
-              >
-                Sign in with a code instead
-              </button>
             </section>
           )}
+
+          <div className="mt-8 flex items-center gap-3 text-xs font-semibold text-[#9AA7A1]">
+            <span className="h-px flex-1 bg-[#E3E8E5]" />
+            or
+            <span className="h-px flex-1 bg-[#E3E8E5]" />
+          </div>
+
+          <button
+            onClick={() => { setError('') }}
+            className="flex w-full items-center justify-center gap-2.5 rounded-xl border border-[#D9E0DC] bg-white px-4 py-3.5 text-[15px] font-semibold text-[#10201A] hover:border-[#9DB0A7] transition-colors"
+          >
+            Continue with Google
+          </button>
 
           {/* Support footer */}
           <p className="mt-10 text-center text-sm text-[#5B6B64]">
