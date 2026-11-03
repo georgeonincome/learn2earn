@@ -16,6 +16,12 @@ export type CohortSession = {
   quiz: { questions: number; done: boolean } | null
   resources: { name: string; type: string; url: string }[]
   position: number
+  // Full cohort_lessons row fields (used by the player UI)
+  video_url: string | null
+  video_provider: string | null
+  description: string | null
+  content: string | null
+  quiz_questions: unknown[]
 }
 
 export type CohortPlayerData = {
@@ -35,16 +41,34 @@ export async function getCohortPlayer(cohortId: string, studentId?: string | nul
   )
   if (!cohort) return null
 
-  const sessions = await all<Row>(
-    'SELECT * FROM cohort_lessons WHERE cohort_id = ? ORDER BY starts_at ASC',
-    [cohortId],
-  )
+  // Sessions + done flags: LEFT JOIN the viewer's enrollment progress so the
+  // player shows completed sessions (reference RPC joins progress per student;
+  // cohort_lessons has no is_completed column of its own).
+  let sessions: Row[]
+  if (studentId) {
+    sessions = await all<Row>(
+      `SELECT l.*, p.is_completed AS prog_done
+         FROM cohort_lessons l
+         LEFT JOIN cohort_enrollments ce
+                ON ce.student_id = ? AND ce.cohort_id = l.cohort_id
+         LEFT JOIN cohort_lesson_progress p
+                ON p.lesson_id = l.id AND p.enrollment_id = ce.id
+        WHERE l.cohort_id = ?
+        ORDER BY l.starts_at ASC`,
+      [studentId, cohort.id],
+    )
+  } else {
+    sessions = await all<Row>(
+      'SELECT * FROM cohort_lessons WHERE cohort_id = ? ORDER BY starts_at ASC',
+      [cohort.id],
+    )
+  }
 
   let enrollmentId: string | null = null
   if (studentId) {
     const existing = await one<Row>(
       'SELECT id FROM cohort_enrollments WHERE cohort_id = ? AND student_id = ? LIMIT 1',
-      [cohortId, studentId],
+      [cohort.id, studentId],
     )
     enrollmentId = existing ? String(existing.id) : null
   }
@@ -56,10 +80,17 @@ export async function getCohortPlayer(cohortId: string, studentId?: string | nul
       title: String(s.title),
       startsAt: String(s.starts_at),
       minutes: Number(s.minutes ?? 25),
-      videoId: null, // resolved from video_url client-side
-      done: Boolean(s.is_completed),
-      quiz: null, // resolved from quiz_questions client-side
-      resources: [],
+      videoId: (s.video_url as string) ?? null,
+      done: Boolean(s.prog_done),
+      quiz: Array.isArray(parseJson(s.quiz_questions)) ? { questions: parseJson(s.quiz_questions).length, done: false } : null,
+      // Full row fields — the player reads video_url / video_provider /
+      // content / description / resources / quiz_questions (row style).
+      video_url: (s.video_url as string) ?? null,
+      video_provider: (s.video_provider as string) ?? 'external',
+      description: (s.description as string) ?? null,
+      content: (s.content as string) ?? null,
+      resources: parseResources(s.resources),
+      quiz_questions: parseJson(s.quiz_questions),
       position: Number(s.position ?? 0),
     })),
     enrollmentId,
@@ -71,6 +102,30 @@ export async function getCohortPlayer(cohortId: string, studentId?: string | nul
       whatsappGroupUrl: (cohort.whatsapp_group_url as string) ?? null,
     },
     now,
+  }
+}
+
+function parseResources(v: unknown): { name: string; type: string; url: string }[] {
+  const arr = parseJson(v)
+  return arr
+    .map((r) => {
+      const o = (r && typeof r === 'object' ? r : {}) as Record<string, unknown>
+      return {
+        name: String(o.name ?? ''),
+        type: String(o.type ?? 'file'),
+        url: String(o.url ?? ''),
+      }
+    })
+    .filter((r) => r.url)
+}
+
+function parseJson(v: unknown): unknown[] {
+  if (Array.isArray(v)) return v as unknown[]
+  try {
+    const parsed = JSON.parse(String(v ?? '[]'))
+    return Array.isArray(parsed) ? parsed : []
+  } catch {
+    return []
   }
 }
 

@@ -14,6 +14,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Check, ChevronDown, ShieldCheck, Smartphone, MessageCircle } from 'lucide-react'
 import { trackViewContent, trackInitiateCheckout, trackPurchase } from '@/lib/marketing'
+import { SITE_CONFIG } from '@/lib/data'
+
+// wa.me requires international dialing format: strip the leading 0, prefix +260.
+const WHATSAPP_INTL = `260${SITE_CONFIG.whatsapp.slice(1)}`
 
 // Bundle supplied to the landing page — mirrors lib/server/bundles BundleWithCourses,
 // serialized for client use.
@@ -252,7 +256,7 @@ export function BundleLanding({ bundle }: { bundle: BundleWithCoursesType }) {
 
         <div className="mt-10 flex flex-col items-center justify-between gap-4 sm:flex-row">
           <a
-            href="https://wa.me/260774742019?text=Hi%20George%2C%20I%20have%20a%20question%20about%20the%20bundle"
+            href={`https://wa.me/${WHATSAPP_INTL}?text=Hi%20George%2C%20I%20have%20a%20question%20about%20the%20bundle`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm font-bold text-[#0B6B3D] hover:underline"
