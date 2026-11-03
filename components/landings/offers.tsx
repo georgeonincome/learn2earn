@@ -9,7 +9,10 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Sparkles, X } from 'lucide-react'
+import { SITE_CONFIG } from '@/lib/data'
 import { trackInitiateCheckout } from '@/lib/marketing'
+
+const WHATSAPP_INTL = `260${SITE_CONFIG.whatsapp.slice(1)}`
 
 export function ExitIntentOffer({
   title,
@@ -67,7 +70,7 @@ export function ExitIntentOffer({
           Yes! {ctaText}
         </Link>
         <a
-          href="https://wa.me/260979982819?text=Hi%20George%2C%20tell%20me%20about%20this%20offer"
+          href={`https://wa.me/${WHATSAPP_INTL}?text=Hi%20George%2C%20tell%20me%20about%20this%20offer`}
           target="_blank"
           rel="noopener noreferrer"
           className="mb-3 flex w-full items-center justify-center rounded-lg border border-[#1DB96B]/50 px-5 py-3 text-sm font-bold text-[#1DB96B] hover:bg-[#1DB96B]/10"

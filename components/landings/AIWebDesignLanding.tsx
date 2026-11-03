@@ -5,6 +5,7 @@ import {
   Check, X, Lightbulb, Zap, Target, Timer, Laptop, Bot, Rocket,
   GraduationCap, Users, PlayCircle, Briefcase, Sparkles, AlertTriangle,
 } from 'lucide-react'
+import { SITE_CONFIG } from '@/lib/data'
 import { CountdownBadge } from '@/components/landings/offers'
 
 /**
@@ -18,8 +19,9 @@ import { CountdownBadge } from '@/components/landings/offers'
 const PRICE = 'ZMW 443'
 const NORMAL = 'ZMW 1,953'
 const CHECKOUT = '/checkout?course=ai-web-design'
+const WHATSAPP_INTL = `260${SITE_CONFIG.whatsapp.slice(1)}`
 const WHATSAPP =
-  'https://wa.me/260979982819?text=Hi%20George!%20I%20have%20a%20question%20about%20the%20AI%20Web%20Design%20course'
+  `https://wa.me/${WHATSAPP_INTL}?text=Hi%20George!%20I%20have%20a%20question%20about%20the%20AI%20Web%20Design%20course`
 
 const heroPoints = [
   'No HTML, CSS, or JavaScript required',
