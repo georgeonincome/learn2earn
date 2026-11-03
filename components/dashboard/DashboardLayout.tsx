@@ -17,6 +17,13 @@ import {
   Settings,
   Mail,
   Ticket,
+  Book,
+  Play,
+  Zap,
+  Send,
+  Megaphone,
+  FileCheck,
+  Users,
 } from 'lucide-react'
 
 const DASHBOARD_NAV = [
@@ -26,6 +33,13 @@ const DASHBOARD_NAV = [
   { label: 'Certificates', href: '/dashboard/certificates', icon: Award },
   { label: 'Reviews', href: '/dashboard/reviews', icon: FileText },
   { label: 'Plan', href: '/dashboard/plan', icon: Ticket },
+  { label: 'Reading Lab', href: '/dashboard/reading-lab', icon: Book },
+  { label: 'AM Challenge', href: '/dashboard/am-challenge', icon: Play },
+  { label: 'SkillCheck', href: '/dashboard/skillcheck', icon: Zap },
+  { label: 'Support', href: '/dashboard/support', icon: Mail },
+  { label: 'Announcements', href: '/dashboard/announcements', icon: Megaphone },
+  { label: 'Assignments', href: '/dashboard/assignments', icon: FileCheck },
+  { label: 'Transcripts', href: '/dashboard/transcripts', icon: Users },
   { label: 'Settings', href: '/dashboard/settings', icon: Settings },
 ]
 
@@ -79,6 +93,22 @@ export default function DashboardLayout({
                     <FileText className="w-4 h-4" />
                   ) : item.icon === Ticket ? (
                     <Ticket className="w-4 h-4" />
+                  ) : item.icon === Settings ? (
+                    <Settings className="w-4 h-4" />
+                  ) : item.icon === Book ? (
+                    <Book className="w-4 h-4" />
+                  ) : item.icon === Play ? (
+                    <Play className="w-4 h-4" />
+                  ) : item.icon === Zap ? (
+                    <Zap className="w-4 h-4" />
+                  ) : item.icon === Mail ? (
+                    <Mail className="w-4 h-4" />
+                  ) : item.icon === Megaphone ? (
+                    <Megaphone className="w-4 h-4" />
+                  ) : item.icon === FileCheck ? (
+                    <FileCheck className="w-4 h-4" />
+                  ) : item.icon === Users ? (
+                    <Users className="w-4 h-4" />
                   ) : (
                     <Settings className="w-4 h-4" />
                   )}

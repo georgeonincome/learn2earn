@@ -594,7 +594,6 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
 
           {/* Related courses */}
           <section className="border-t border-[var(--cv-line)] bg-[var(--cv-paper)]">
-            <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
               <div className="mb-6 flex items-end justify-between gap-4">
                 <h2 className="text-2xl font-extrabold tracking-normal">Learners also take</h2>
                 <Link href="/courses" className="shrink-0 text-sm font-semibold text-[#0B854C] hover:underline">
@@ -632,7 +631,8 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                   </li>
                 ))}
               </ul>
-              {plan && (
+              <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+                {plan && (
                 <p className="mt-8 rounded-xl bg-[#F6F7F5] px-5 py-4 text-sm leading-relaxed text-[var(--cv-body)]">
                   All of these are included in the membership: {COURSES.length} courses for {formatPrice(plan.price)}
                   for {plan.duration}.{' '}
@@ -641,6 +641,25 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                   </Link>
                 </p>
               )}
+            </div>
+          </section>
+
+          {/* Rate this class */}
+          <section className="border-t border-[var(--cv-line)] bg-[var(--cv-paper)]">
+            <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6">
+              <h2 className="text-2xl font-extrabold tracking-normal mb-6">Rate this class</h2>
+              <p className="text-sm text-[var(--cv-muted)] mb-6">Help other learners decide — how was your experience?</p>
+              <div className="flex items-center gap-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    className="w-10 h-10 flex items-center justify-center rounded-full bg-[#10201A] text-[#FFFFFF] hover:bg-[#1DB96B] transition-colors"
+                  >
+                    ★
+                  </button>
+                ))}
+              </div>
+              <p className="mt-4 text-xs text-[var(--cv-muted)]">Your rating helps the community. Thank you, {firstName}.</p>
             </div>
           </section>
         </main>

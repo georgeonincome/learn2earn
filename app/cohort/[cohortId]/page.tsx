@@ -55,6 +55,15 @@ export default async function CohortPlayerPage({ params }: { params: Promise<{ c
                 <span className="w-4 h-4" />
               </a>
             )}
+            <a
+              href={`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(data.cohort.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden rounded-lg p-2 text-[#1E9E57] hover:bg-[#E8F6EF] sm:block"
+              aria-label="Add to Google Calendar"
+            >
+              <span className="w-4 h-4" />
+            </a>
           </div>
         </div>
       </header>

@@ -1,102 +1,122 @@
-import Link from 'next/link'
-import { COURSES } from '@/lib/data'
-import { BookOpen, Play, Lock, ArrowRight, TrendingUp } from 'lucide-react'
+'use client'
 
-export default function AdminCourses() {
+/**
+ * Admin Courses — DB-backed course studio list (reference `admin_courses_overview`).
+ * Publish / unpublish / archive / restore per course.
+ */
+
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { Play, Lock, Archive, RefreshCw, Plus, ChevronRight, Trash2 } from 'lucide-react'
+
+type Course = {
+  id: string; slug: string; title: string; description?: string
+  status: string; sort_order: number; regular_price: number; sale_price?: number
+  include_in_plan: number; created_at: string
+}
+
+const STATUS_LABEL: Record<string, { label: string; color: string }> = {
+  draft: { label: 'Draft', color: '#737373' },
+  published: { label: 'Published', color: '#1DB96B' },
+  unlisted: { label: 'Unlisted', color: '#F59E0B' },
+  archived: { label: 'Archived', color: '#DC2626' },
+}
+
+export default function AdminCoursesPage() {
+  const [courses, setCourses] = useState<Course[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    fetch('/api/admin/courses')
+      .then((r) => r.ok ? r.json() : [])
+      .then((data: any) => { if (!cancelled) setCourses(data ?? []) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+    return () => { cancelled = true }
+  }, [])
+
+  const setStatus = async (id: string, status: string) => {
+    await fetch(`/api/admin/courses/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: status }),
+    })
+    setCourses(courses.map((c) => c.id === id ? { ...c, status } : c))
+  }
+
+  if (loading) return <div className="text-center py-20 text-[#737373]">Loading courses…</div>
+
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-extrabold text-[#111111]">Courses</h1>
-          <p className="text-[#737373] text-sm">Manage all published courses and course content.</p>
+          <h1 className="text-2xl font-extrabold">Courses</h1>
+          <p className="text-[#737373] text-sm mt-1">Create, publish and manage courses.</p>
         </div>
         <Link
-          href="/courses"
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1DB96B] text-[#111111] text-sm font-bold hover:bg-[#17A05D] transition-colors"
+          href="/admin/courses/new"
+          className="inline-flex items-center gap-2 rounded-lg bg-[#1DB96B] px-4 py-2 text-sm font-bold text-white hover:bg-[#17A05D]"
         >
-          View Courses <ArrowRight className="w-4 h-4" />
+          <Plus className="w-4 h-4" /> New course
         </Link>
       </div>
 
-      <div className="bg-white rounded-xl border border-[#E5E5E5] p-6">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
-            <thead>
-              <tr className="border-b border-[#E5E5E5]">
-                <th className="py-4 text-sm font-bold text-[#737373]">Course</th>
-                <th className="py-4 text-sm font-bold text-[#737373]">Category</th>
-                <th className="py-4 text-sm font-bold text-[#737373]">Price</th>
-                <th className="py-4 text-sm font-bold text-[#737373]">Level</th>
-                <th className="py-4 text-sm font-bold text-[#737373]">Status</th>
-                <th className="py-4 text-sm font-bold text-[#737373]">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {COURSES.map((course) => (
-                <tr key={course.slug} className="border-b border-[#F3F4F6] hover:bg-[#FAFAFA] transition-colors">
-                  <td className="py-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg bg-[#EEF1EE] flex items-center justify-center text-center">
-                        {course.title.slice(0, 1)}
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-[#111111]">{course.title}</p>
-                        <p className="text-xs text-[#737373]">{course.slug}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="py-4">
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#F3FBF6', color: '#0F7A42' }}>
-                      {course.category}
-                    </span>
-                  </td>
-                  <td className="py-4 text-sm font-medium text-[#111111]">
-                    ZMW {course.price.toLocaleString('en-ZM')}
-                  </td>
-                  <td className="py-4 text-sm text-[#737373]">{course.level}</td>
-                  <td className="py-4">
-                    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: '#E8F6EF', color: '#0F7A42' }}>
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#1DB96B]" /> Published
-                    </span>
-                  </td>
-                  <td className="py-4">
-                    <div className="flex items-center gap-2">
-                      <Link
-                        href={`/courses/${course.slug}`}
-                        className="text-xs font-medium text-[#1DB96B] hover:underline"
-                      >
-                        View
-                      </Link>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-xl border border-[#E5E5E5] p-6">
-        <h2 className="text-lg font-bold text-[#111111] mb-6">Course Statistics</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {[
-            { label: 'Total Courses', value: COURSES.length, icon: BookOpen },
-            { label: 'Published', value: COURSES.filter(c => c.featured).length, icon: Play },
-            { label: 'In Membership Plan', value: COURSES.filter(c => c.featured).length, icon: TrendingUp },
-          ].map((stat) => (
-            <div key={stat.label} className="p-5 rounded-xl bg-[#FAFAFA] border border-[#E5E5E5]">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-bold text-[#111111]">{stat.value}</p>
-                  <p className="text-xs text-[#737373]">{stat.label}</p>
-                </div>
-                <div className="w-8 h-8 rounded-full bg-[#1DB96B]/10 flex items-center justify-center">
-                  <stat.icon className="w-4 h-4 text-[#1DB96B]" />
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF]">
+        <table className="w-full text-left text-sm">
+          <thead>
+            <tr className="border-b border-[#E5E5E5] bg-[#F9F9F9]">
+              <th className="px-4 py-3 font-semibold text-[#737373]">Title</th>
+              <th className="px-4 py-3 font-semibold text-[#737373]">Slug</th>
+              <th className="px-4 py-3 font-semibold text-[#737373]">Status</th>
+              <th className="px-4 py-3 font-semibold text-[#737373] text-right">Price</th>
+              <th className="px-4 py-3 font-semibold text-[#737373] text-center">Plan</th>
+              <th className="px-4 py-3 font-semibold text-[#737373] text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {courses.length === 0 ? (
+              <tr><td colSpan={6} className="px-4 py-12 text-center text-[#737373]">No courses yet.</td></tr>
+            ) : (
+              courses.map((c) => {
+                const st = STATUS_LABEL[c.status] ?? STATUS_LABEL.draft
+                return (
+                  <tr key={c.id} className="border-b border-[#E5E5E5] hover:bg-[#F3FBF6] transition-colors group">
+                    <td className="px-4 py-3">
+                      <Link href={`/admin/courses/${c.id}`} className="font-semibold text-[#111111] hover:underline">{c.title}</Link>
+                    </td>
+                    <td className="px-4 py-3 text-[#737373]">{c.slug}</td>
+                    <td className="px-4 py-3">
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${st.color === '#1DB96B' ? 'bg-[#F3FBF6] text-[#1DB96B]' : st.color === '#DC2626' ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#F5F5F5] text-[#737373]'}`}>
+                        {st.label}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-right text-[#737373]">
+                      ZMW {((c.sale_price ?? c.regular_price) * 0.155).toFixed(0)}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      {c.include_in_plan === 1 ? <span className="text-xs font-bold text-[#1DB96B]">In plan</span> : <span className="text-xs text-[#737373]">—</span>}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      {c.status === 'published' && (
+                        <button onClick={() => setStatus(c.id, 'unlisted')} className="text-xs text-[#DC2626] hover:underline mr-2">Unpublish</button>
+                      )}
+                      {c.status === 'unlisted' && (
+                        <button onClick={() => setStatus(c.id, 'published')} className="text-xs text-[#1DB96B] hover:underline mr-2">Publish</button>
+                      )}
+                      {c.status === 'archived' && (
+                        <button onClick={() => setStatus(c.id, 'draft')} className="text-xs text-[#1DB96B] hover:underline mr-2">Restore</button>
+                      )}
+                      {c.status !== 'archived' && (
+                        <button onClick={() => setStatus(c.id, 'archived')} className="text-xs text-[#DC2626] hover:underline">Archive</button>
+                      )}
+                      <Link href={`/admin/courses/${c.id}`} className="ml-2 text-xs text-[#737373] hover:underline">Edit</Link>
+                    </td>
+                  </tr>
+                )
+              })
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   )
