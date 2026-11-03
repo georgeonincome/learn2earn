@@ -166,11 +166,11 @@ export default function HomePage() {
 
         {/* ============ LIVE CLASS BAND ============ */}
         <div className="aib-poster-theme">
-          <section aria-labelledby="ai-beginners-heading" className="bg-[hsl(var(--echelon-ink-raised))] text-[hsl(0_100%_99%)]">
+          <section aria-labelledby="ai-beginners-heading" className="bg-[hsl(0_24%_8%)] text-[hsl(0_100%_99%)]">
             <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                 <div>
-                  <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--echelon-action))] px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] text-[hsl(var(--echelon-action))]">
+                  <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#1DB96B] px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] text-[#1DB96B]">
                     Live class · {dateRange(LIVE_CLASS.startDate, LIVE_CLASS.endDate)}
                   </p>
                   <h2 id="ai-beginners-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl text-[hsl(0_100%_99%)]">
@@ -181,22 +181,22 @@ export default function HomePage() {
                     {LIVE_CLASS.description}
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <Link href={`/cohorts/${LIVE_CLASS.slug}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 font-bold text-sm text-[hsl(var(--echelon-ink))] bg-[hsl(var(--echelon-action))] hover:bg-[hsl(var(--echelon-action-hover))] transition-all">
+                    <Link href={`/cohorts/${LIVE_CLASS.slug}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 font-bold text-sm text-[#10201A] bg-[#1DB96B] hover:bg-[#0B854C] transition-all">
                       Reserve my seat <ArrowRight className="h-4 w-4" />
                     </Link>
                     <p className="text-sm text-[hsl(0_100%_99%)]">
-                      <b className="text-[hsl(var(--echelon-on-dark))]">{fmt(LIVE_CLASS.price)}</b> · {LIVE_CLASS.schedule}
+                      <b className="text-[#10201A] bg-[#0B854C]">{fmt(LIVE_CLASS.price)}</b> · {LIVE_CLASS.schedule}
                     </p>
                   </div>
                 </div>
-                <figure className="overflow-hidden rounded-2xl border border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink))]">
+                <figure className="overflow-hidden rounded-2xl border border-[#24221D] bg-[#10201A]">
                   <Image src="/images/gallery-8.jpg" alt={`${LIVE_CLASS.title} poster — live class starting ${dateRange(LIVE_CLASS.startDate, LIVE_CLASS.endDate)}, ${LIVE_CLASS.schedule}`} width={1080} height={1080} loading="lazy" className="h-auto w-full" />
                 </figure>
               </div>
               <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12">
                 {LIVE_CLASS.lessons.map(v => (
-                  <li key={v} className="flex items-start gap-3 rounded-xl border border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink))] p-4 text-sm font-medium text-[hsl(var(--echelon-on-dark))]">
-                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[hsl(var(--echelon-action))]" /> {v}
+                  <li key={v} className="flex items-start gap-3 rounded-xl border border-[#24221D] bg-[#10201A] p-4 text-sm font-medium text-[#10201A] bg-[#0B854C]">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#1DB96B]" /> {v}
                   </li>
                 ))}
               </ul>
@@ -204,11 +204,11 @@ export default function HomePage() {
           </section>
 
           {/* ============ MEMBERSHIP HIGHLIGHTS ============ */}
-          <section className="border-y border-[hsl(var(--echelon-line-dark))] bg-[hsl(var(--echelon-ink-raised))] text-[hsl(0_100%_99%)]">
+          <section className="border-y border-[#24221D] bg-[#171F1B] text-[hsl(0_100%_99%)]">
             <div className="mx-auto grid max-w-7xl grid-cols-2 px-5 sm:px-8 lg:grid-cols-4 lg:px-12">
               {[[String(courseCount), "Published courses"], ["2", "Access plans"], ["Self-paced", "Learn on your schedule"], ["Direct", "Support from George"]].map(([v, g]) => (
-                <div key={g} className="border-b border-r border-[hsl(var(--echelon-line-dark))] px-3 py-7 text-center lg:border-b-0">
-                  <p className="text-2xl font-extrabold text-[hsl(var(--echelon-green))] sm:text-3xl">{v}</p>
+                <div key={g} className="border-b border-r border-[#24221D] px-3 py-7 text-center lg:border-b-0">
+                  <p className="text-2xl font-extrabold text-[#0B854C] sm:text-3xl">{v}</p>
                   <p className="mt-2 text-xs text-[hsl(0_100%_99%)]">{g}</p>
                 </div>
               ))}
