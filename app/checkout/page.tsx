@@ -98,7 +98,7 @@ function CheckoutContent() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ item, amount: effectivePrice, customer: { name, email, phone }, channel: showingUpgraded ? 'membership' : item?.kind }),
     })
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : {})
       .then(() => setStatus('done'))
       .catch(() => setStatus('done'))
   }

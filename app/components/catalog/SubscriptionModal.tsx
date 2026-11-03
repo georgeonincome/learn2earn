@@ -75,7 +75,7 @@ export default function SubscriptionModal({ course, onClose }: SubscriptionModal
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ reference }),
       })
-      const data = await response.json()
+      const data = response.ok ? await response.json() : { status: 'pending' }
       if (data.status === 'completed') {
         return 'success'
       } else if (data.status === 'failed') {
@@ -129,8 +129,8 @@ export default function SubscriptionModal({ course, onClose }: SubscriptionModal
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ plan: plan.id, email }),
     })
-      .then(r => r.json())
-      .then(data => {
+      .then((r: any) => r.ok ? r.json() : {})
+      .then((data: any) => {
         setProcessing(false)
         if (data.link && data.txRef) {
           // Open Paystack/Flutterwave popup

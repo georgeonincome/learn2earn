@@ -72,7 +72,7 @@ export default function BooksPage() {
 
   useEffect(() => {
     fetch('/api/books')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : { books: [] })
       .then((data) => { setBooks(data.books ?? []); setLoading(false) })
       .catch((err) => { console.error('[BooksPage] load error', err); setLoading(false) })
   }, [])

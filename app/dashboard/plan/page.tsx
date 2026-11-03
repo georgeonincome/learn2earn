@@ -18,8 +18,8 @@ export default function DashboardPlanPage() {
   useEffect(() => {
     let cancelled = false
     Promise.all([
-      fetch('/api/dashboard/plan').then((r) => r.json()),
-      fetch('/api/dashboard/courses?tab=browse').then((r) => r.json()),
+      fetch('/api/dashboard/plan').then((r) => r.ok ? r.json() : null),
+      fetch('/api/dashboard/courses?tab=browse').then((r) => r.ok ? r.json() : { plans: [] }),
     ]).then(([s, b]: any) => {
       if (cancelled) return
       setSummary(s)

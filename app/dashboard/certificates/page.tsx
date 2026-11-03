@@ -28,7 +28,7 @@ export default function CertificatesPage() {
 
   useEffect(() => {
     fetch('/api/certificates')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : { certificates: [] })
       .then((data) => {
         setCerts(data.certificates ?? [])
         setLoading(false)

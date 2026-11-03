@@ -21,7 +21,7 @@ export default function SettingsPage() {
   const load = useCallback(() => {
     setLoading(true)
     fetch('/api/dashboard/settings')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : null)
       .then((d: any) => { setData(d); setLoading(false) })
       .catch(() => setLoading(false))
   }, [])
@@ -33,7 +33,7 @@ export default function SettingsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action, ...body }),
     })
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : { ok: false })
       .then((d: any) => {
         if (d.ok) {
           setSaved(true)

@@ -29,7 +29,7 @@ export default function AdminOtpPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ action: 'consume', code }),
     })
-    const d = await res.json()
+    const d = res.ok ? await res.json() : { ok: false }
     alert(d.ok ? `OTP valid for user ${d.userId}` : d.error || 'Invalid code')
     setCodes(codes.filter((c) => c.code !== code))
   }

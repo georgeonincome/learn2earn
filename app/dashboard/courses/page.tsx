@@ -27,7 +27,7 @@ export default function DashboardCoursesPage() {
   useEffect(() => {
     let cancelled = false
     fetch('/api/dashboard/courses?tab=mine')
-      .then((r) => r.json())
+      .then((r) => r.ok ? r.json() : { courses: [], planActive: false, planEnded: false, planName: null })
       .then((data: any) => {
         if (cancelled) return
         setCourses(data.courses ?? [])
