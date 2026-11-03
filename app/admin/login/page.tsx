@@ -40,7 +40,8 @@ export default function AdminLogin() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       })
-      const data = await res.json()
+      let data: any = {}
+      try { data = await res.json() } catch { /* ignore parse errors on error responses */ }
       if (!res.ok) {
         setError(data.error || 'Login failed')
         setLoading(false)
