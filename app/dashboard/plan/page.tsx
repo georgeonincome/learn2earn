@@ -1,155 +1,115 @@
-import Link from 'next/link'
-import { MEMBERSHIP_PLANS } from '@/lib/data'
-import { formatPrice } from '@/lib/utils'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+'use client'
 
 /**
- * Subscription Plan Page
- *
- * Route: /dashboard/plan
- *
- * Displays current membership plan and upgrade options.
+ * Dashboard /plan — real plan status from /api/dashboard/plan:
+ * status pills, days left, plan time used bar, and the renew/subscribe flow.
  */
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { ChevronRight, RefreshCw, Lock, CreditCard, Calendar } from 'lucide-react'
 
-export default function PlanPage() {
-  const currentPlan = MEMBERSHIP_PLANS.find((p) => p.popular) ?? MEMBERSHIP_PLANS[0]
+type Plan = { id: string; code: string; name: string; duration_days: number; price_kes: number; is_visible: boolean; is_recommended: boolean; sort_order: number }
+
+export default function DashboardPlanPage() {
+  const [summary, setSummary] = useState<any>(null)
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    let cancelled = false
+    Promise.all([
+      fetch('/api/dashboard/plan').then((r) => r.json()),
+      fetch('/api/dashboard/courses?tab=browse').then((r) => r.json()),
+    ]).then(([s, b]: any) => {
+      if (cancelled) return
+      setSummary(s)
+      setPlans(b?.plans ?? [])
+      setLoading(false)
+    }).catch(() => setLoading(false))
+    return () => { cancelled = true }
+  }, [])
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>
+
+  const ended = summary.state === 'expired' || summary.state === 'cancelled'
+  const active = summary.state === 'active'
 
   return (
-    <DashboardLayout>
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-2xl font-extrabold">Membership Plan</h1>
-        <Link
-          href="/subscribe"
-          className="text-sm font-semibold text-[#1DB96B] hover:underline"
-        >
-          Change Plan
-        </Link>
-      </div>
-
-      {/* Current Plan */}
-      <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6 mb-8">
-        <h2 className="text-xl font-extrabold mb-4">Current Plan</h2>
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-bold">{currentPlan.name}</h3>
-            <p className="text-sm text-[#737373]">{currentPlan.duration} membership</p>
+    <>
+      <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
+        <nav className="border-b border-gray-200 bg-white">
+          <div className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-4">
+            <Link href="/dashboard" className="text-[#1DB96B] font-semibold hover:underline">← Dashboard</Link>
+            <div className="h-6 w-px bg-gray-200 mx-2" />
+            <h1 className="text-xl font-bold">My plan</h1>
           </div>
-          <div className="text-right">
-            <div className="text-2xl font-bold">{formatPrice(currentPlan.price)}</div>
-            {currentPlan.originalPrice && (
-              <span className="text-sm text-[#737373] line-through">
-                {formatPrice(currentPlan.originalPrice)}
-              </span>
+        </nav>
+
+        <main className="mx-auto max-w-5xl px-4 py-8">
+        <p className="text-gray-600 mb-8">All {summary.plans?.length} courses, your member number and your payments.</p>
+
+        {/* status card */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <h2 className="font-bold">My plan</h2>
+            <span className={`px-2 py-0.5 rounded text-xs font-bold ${
+              active ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'
+            }`}>
+              {active ? 'Active' : ended ? 'Ended' : 'None'}
+            </span>
+            {active && summary.daysRemaining != null && (
+              <span className="text-xs text-gray-500">{summary.daysRemaining} days left</span>
             )}
           </div>
+          <div className="mb-4">
+            <p className="text-xs text-gray-400">Plan time used</p>
+            <div className="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+              <div className="h-full bg-[#1DB96B]" style={{ width: active ? Math.min(100, 100 - (summary.daysRemaining ?? 0)) : 0 }} />
+            </div>
+            <p className="text-xs text-gray-500 mt-1">Started {summary.startedAt ?? '—'} · {summary.daysTotal != null ? `${summary.daysTotal - (summary.daysRemaining ?? 0)} of ${summary.daysTotal} days left` : ''}</p>
+          </div>
         </div>
-        <div className="mt-4">
-          <h4 className="text-sm font-semibold mb-2">What's Included:</h4>
-          <ul className="space-y-2">
-            {currentPlan.features.map((f) => (
-              <li key={f} className="flex items-center gap-2 text-sm text-[#737373]">
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] text-xs">
-                  ✓
-                </span>
-                {f}
-              </li>
-            ))}
-          </ul>
+
+        {/* plans */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 mb-8">
+          <h2 className="font-bold mb-4">{ended ? 'Renew your plan' : 'Choose a plan'}</h2>
+          <p className="text-sm text-gray-500 mb-6">Pay once with MTN/Airtel money or card. We never charge you automatically.</p>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {plans.map((p) => {
+              const recommended = p.is_recommended
+              return (
+                <div key={p.code} className={`rounded-xl border p-5 flex flex-col gap-3 ${recommended ? 'border-[#1DB96B] bg-[#1DB96B]/05' : 'border-gray-200 bg-white'}`}>
+                  {recommended && <span className="text-[10px] font-bold text-[#1DB96B] uppercase tracking-wider">Best value</span>}
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-2xl font-bold">ZMW {(p.price_kes * 0.155).toFixed(0)}</span>
+                    <span className="text-xs text-gray-500">{p.duration_days} days</span>
+                  </div>
+                  <p className="text-xs text-gray-500">{p.name}</p>
+                  <button
+                    onClick={() => {
+                      const url = new URL('/subscribe', window.location.origin)
+                      url.searchParams.set('plan', p.code)
+                      window.location.href = url.toString()
+                    }}
+                    className={`w-full rounded-md px-4 py-2 text-xs font-bold transition ${
+                      recommended ? 'bg-[#1DB96B] text-white hover:bg-[#17A05D]' : 'bg-white border border-gray-200 text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {ended ? 'Renew plan' : 'Subscribe'}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
         </div>
-        <div className="mt-4">
-          <Link
-            href="/subscribe"
-            className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: '#1DB96B', color: '#fff', border: '1px solid #1DB96B', padding: '0 18px' }}
-          >
-            Manage Subscription
-          </Link>
+
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h2 className="font-bold mb-4">Payments</h2>
+          <p className="text-sm text-gray-500 mb-4">Manage your purchases with full transparency.</p>
+          <p className="text-sm text-gray-400">Receipts and payment history appear here as you purchase courses and plans.</p>
         </div>
+      </main>
       </div>
-
-      {/* All Plans */}
-      <section className="mb-8">
-        <h2 className="text-xl font-extrabold mb-6">All Plans</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {MEMBERSHIP_PLANS.map((p) => (
-            <PlanCard key={p.id} plan={p} isPopular={p.popular} />
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section>
-        <h2 className="text-xl font-extrabold mb-4">Frequently Asked Questions</h2>
-        <div className="space-y-2">
-          <FaqItem
-            question="Can I cancel my membership?"
-            answer="Yes, you can cancel anytime. Your access continues until the end of your billing period."
-          />
-          <FaqItem
-            question="What happens when my membership ends?"
-            answer="Your membership access expires, but any courses you purchased individually stay in your account."
-          />
-          <FaqItem
-            question="Can I pay with mobile money?"
-            answer="Yes, we accept MTN, Airtel, and Zamtel mobile money, as well as card payments."
-          />
-        </div>
-      </section>
-    </DashboardLayout>
-  )
-}
-
-interface PlanCardProps {
-  plan: any
-  isPopular: boolean
-}
-
-function PlanCard({ plan, isPopular }: PlanCardProps) {
-  return (
-    <div className={`rounded-xl border p-6 ${
-      isPopular ? 'border-[#1DB96B] bg-[#F3FBF6]' : 'border-[#E5E5E5] bg-[#FFFFFF]'
-    }`}>
-      <div className="flex justify-between items-start mb-4">
-        <h3 className="text-lg font-bold">{plan.name}</h3>
-        {isPopular && (
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#1DB96B] text-white text-xs font-bold">
-            Popular
-          </span>
-        )}
-      </div>
-      <div className="text-3xl font-bold">{formatPrice(plan.price)}</div>
-      <p className="text-sm text-[#737373] mt-2">{plan.duration} membership</p>
-      <ul className="mt-4 space-y-2">
-        {plan.features.map((f: string) => (
-          <li key={f} className="flex items-center gap-2 text-sm text-[#737373]">
-            <span className="flex h-4 w-4 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] text-xs">
-              ✓
-            </span>
-            {f}
-          </li>
-        ))}
-      </ul>
-      <div className="mt-4">
-        <Link
-          href={`/subscribe?plan=${plan.id}`}
-          className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: isPopular ? '#1DB96B' : '#FFFFFF', color: isPopular ? '#fff' : '#111111', border: `1px solid ${isPopular ? '#1DB96B' : '#E5E5E5'}`, padding: '0 18px' }}
-        >
-          {isPopular ? 'Get This Plan' : 'Choose Plan'}
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-interface FaqItemProps {
-  question: string
-  answer: string
-}
-
-function FaqItem({ question, answer }: FaqItemProps) {
-  return (
-    <div className="border-b border-[#E5E5E5] pb-4 last:border-0">
-      <h3 className="text-sm font-bold">{question}</h3>
-      <p className="text-sm text-[#737373] mt-1">{answer}</p>
-    </div>
+      </>
   )
 }

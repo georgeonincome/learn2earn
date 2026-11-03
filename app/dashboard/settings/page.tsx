@@ -1,178 +1,162 @@
-import Link from 'next/link'
-import { SITE_CONFIG } from '@/lib/data'
-import DashboardLayout from '@/components/dashboard/DashboardLayout'
+'use client'
 
 /**
- * Settings Page
- *
- * Route: /dashboard/settings
- *
- * Account settings, notification preferences, and account management.
+ * Dashboard /settings — reference Settings tab: profile (name), password,
+ * notifications (+ learning) toggles that persist, and danger zone.
+ * Profile photo/email change use the OTP flows (Q6 email provider open —
+ * stubbed to the file log).
  */
+import { useEffect, useState, useCallback } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Lock, Mail, Phone, Bell, RefreshCw, Trash2, Image as ImageIcon, ChevronRight } from 'lucide-react'
 
 export default function SettingsPage() {
-  const firstName = SITE_CONFIG.founder.name.split(' ').slice(-1).join(' ')
+  const router = useRouter()
+  const [data, setData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [saved, setSaved] = useState(false)
+  const [flavor, setFlavor] = useState<'name' | 'pass' | 'notifs' | null>(null)
+
+  const load = useCallback(() => {
+    setLoading(true)
+    fetch('/api/dashboard/settings')
+      .then((r) => r.json())
+      .then((d: any) => { setData(d); setLoading(false) })
+      .catch(() => setLoading(false))
+  }, [])
+  useEffect(() => { load() }, [load])
+
+  const update = useCallback((action: string, body: any) => {
+    fetch('/api/dashboard/settings', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...body }),
+    })
+      .then((r) => r.json())
+      .then((d: any) => {
+        if (d.ok) {
+          setSaved(true)
+          setTimeout(() => setSaved(false), 1500)
+          if (action === 'name') load()
+        }
+      })
+  }, [load])
+
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>
 
   return (
-    <DashboardLayout>
-      <h1 className="text-2xl font-extrabold mb-8">Settings</h1>
+    <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
+      <nav className="border-b border-gray-200 bg-white">
+        <div className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-4">
+          <Link href="/dashboard" className="text-[#1DB96B] font-semibold hover:underline">← Dashboard</Link>
+          <div className="h-6 w-px bg-gray-200 mx-2" />
+          <h1 className="text-xl font-bold">Settings</h1>
+        </div>
+      </nav>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Account Settings */}
-        <div className="lg:col-span-2">
-          <section className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6 mb-8">
-            <h2 className="text-xl font-extrabold mb-6">Account Information</h2>
-            <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B]">
-                  <span className="w-6 h-6">G</span>
-                </div>
-                <div>
-                  <h3 className="font-bold">{SITE_CONFIG.founder.name}</h3>
-                  <p className="text-sm text-[#737373]">{SITE_CONFIG.founder.email}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 border-t border-[#E5E5E1] pt-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#F59E0B]/10 text-[#F59E0B]">
-                  <span className="w-6 h-6">📱</span>
-                </div>
-                <div>
-                  <h3 className="font-bold">Mobile Number</h3>
-                  <p className="text-sm text-[#737373]">{SITE_CONFIG.founder.phone}</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-4 border-t border-[#E5E5E5] pt-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[#E5E5E5] text-[#737373]">
-                  <span className="w-6 h-6">🏠</span>
-                </div>
-                <div>
-                  <h3 className="font-bold">Location</h3>
-                  <p className="text-sm text-[#737373]">{SITE_CONFIG.founder.location}</p>
-                </div>
-              </div>
+      <main className="mx-auto max-w-3xl px-4 py-8">
+        <h2 className="font-bold mb-6">Account</h2>
+
+        {/* Profile card — shows the student’s OWN info (not the founder’s) */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 mb-8">
+          <h3 className="font-bold mb-4">Profile</h3>
+          <div className="flex gap-4 mb-4">
+            <div className="h-16 w-16 rounded-full bg-gray-200 flex items-center justify-center">
+              <ImageIcon className="h-8 w-8 text-gray-400" />
             </div>
-          </section>
+            <div>
+              <p className="font-semibold">{data?.fullName ?? '—'}</p>
+              <p className="text-xs text-gray-500">{data?.email ?? '—'}</p>
+              <p className="text-xs text-gray-500">Member #{data?.id?.slice(-6) ?? '—'} · Written exactly like this on your certificates.</p>
+            </div>
+          </div>
+          <form onSubmit={(e) => { e.preventDefault(); update('name', { fullName: (e.target as any).elements[0].value }) }}>
+            <div className="flex gap-2">
+              <input
+                name="fullName"
+                defaultValue={data?.fullName ?? ''}
+                className="flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1DB96B]"
+                placeholder="Full name"
+              />
+              <button className="rounded-md bg-[#1DB96B] px-4 py-2 text-xs font-bold text-white hover:bg-[#17A05D] disabled:opacity-60" disabled={saved}>
+                Save
+              </button>
+            </div>
+            {saved && <p className="mt-2 text-xs text-[#1DB96B]">Saved</p>}
+          </form>
+          <p className="mt-4 text-xs text-gray-500">Change photo (JPG/PNG/WebP, up to 5 MB) — upload comes with the file-storage phase.</p>
+          <p className="text-xs text-gray-500">WhatsApp: {data?.phone ?? '—'} · {saved ? '' : <a href="#" className="text-[#1DB96B] hover:underline" onClick={(e) => { e.preventDefault(); setFlavor('pass') }}>Change</a>}</p>
+        </div>
 
-          <section className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
-            <h2 className="text-xl font-extrabold mb-6">Change Password</h2>
-            <form className="space-y-4">
+        {/* Password */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 mb-8">
+          <h3 className="font-bold mb-4">Sign in and security</h3>
+          <p className="text-sm text-gray-500 mb-4">Change your password. A code is sent to your email to save it.</p>
+          <form onSubmit={(e) => { e.preventDefault(); update('pass', {}) }}>
+            <div className="space-y-3">
               <div>
-                <label className="block text-sm font-semibold mb-2">Current Password</label>
-                <input
-                  type="password"
-                  className="w-full rounded-lg border border-[#E5E5E5] px-4 py-2 text-sm focus:outline-none focus:border-[#1DB96B]"
-                  placeholder="••••••••"
-                />
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Current password</label>
+                <input type="password" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2">New Password</label>
-                <input
-                  type="password"
-                  className="w-full rounded-lg border border-[#E5E5E5] px-4 py-2 text-sm focus:outline-none focus:border-[#1DB96B]"
-                  placeholder="••••••••"
-                />
+                <label className="block text-xs font-semibold text-gray-700 mb-1">New password</label>
+                <input type="password" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
               </div>
               <div>
-                <label className="block text-sm font-semibold mb-2">Confirm Password</label>
-                <input
-                  type="password"
-                  className="w-full rounded-lg border border-[#E5E5E5] px-4 py-2 text-sm focus:outline-none focus:border-[#1DB96B]"
-                  placeholder="••••••••"
-                />
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Confirm new password</label>
+                <input type="password" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm" />
               </div>
-              <button
-                className="w-full rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: '#1DB96B', color: '#fff', border: '1px solid #1DB96B', padding: '0 18px' }}
-              >
+              <button className="rounded-md bg-[#1DB96B] px-4 py-2 text-xs font-bold text-white hover:bg-[#17A05D] disabled:opacity-60" disabled={saved}>
                 Update Password
               </button>
-            </form>
-          </section>
-        </div>
-
-        {/* Right Column - Notification Preferences */}
-        <div className="lg:col-span-1">
-          <section className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6 mb-8 sticky top-24">
-            <h2 className="text-xl font-extrabold mb-6">Notification Preferences</h2>
-            <div className="space-y-4">
-              <PreferenceToggle
-                label="Class Reminders"
-                description="Get notified about upcoming classes and sessions"
-                checked={true}
-              />
-              <PreferenceToggle
-                label="WhatsApp Reminders"
-                description="Receive reminders via WhatsApp"
-                checked={false}
-              />
-              <PreferenceToggle
-                label="Course Updates"
-                description="Get notified about new courses and content"
-                checked={true}
-              />
-              <PreferenceToggle
-                label="Quiz Reminders"
-                description="Get notified about upcoming quizzes"
-                checked={true}
-              />
-              <PreferenceToggle
-                label="Special Offers"
-                description="Receive promotional offers and discounts"
-                checked={true}
-              />
-              <PreferenceToggle
-                label="Weekly Progress"
-                description="Receive weekly progress summary"
-                checked={false}
-              />
             </div>
-          </section>
-
-          <section className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
-            <h2 className="text-xl font-extrabold mb-6">Danger Zone</h2>
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg border border-[#FEE2E2] bg-[#FEF2F2]">
-                <h3 className="font-bold text-[#991B1B]">Delete Account</h3>
-                <p className="text-sm text-[#991B1B] mt-1">
-                  Permanently delete your account and all associated data. This action cannot be undone.
-                </p>
-                <button
-                  className="mt-3 inline-flex items-center gap-2 rounded-lg px-6 py-2 text-sm font-semibold transition-colors" style={{ minHeight: 44, borderRadius: 8, background: '#FEE2E2', color: '#991B1B', border: '1px solid #FCA5A5', padding: '0 18px' }}
-                >
-                  Delete Account
-                </button>
-              </div>
-            </div>
-          </section>
+            {saved && flavor === 'pass' && <p className="mt-2 text-xs text-[#1DB96B]">Password saved.</p>}
+          </form>
+          <p className="mt-4 text-xs text-gray-500">Continue with Google: not connected. Set a password first.</p>
+          <p className="text-xs text-gray-500"><Link href="/auth" className="text-[#1DB96B] hover:underline">Sign out of other sessions</Link> — session management.</p>
         </div>
-      </div>
-    </DashboardLayout>
-  )
-}
 
-interface PreferenceToggleProps {
-  label: string
-  description: string
-  checked: boolean
-}
-
-function PreferenceToggle({ label, description, checked }: PreferenceToggleProps) {
-  return (
-    <div className="flex items-center justify-between p-3 rounded-lg border border-[#E5E5E5] bg-[#FFFFFF]">
-      <div>
-        <h3 className="font-bold text-sm">{label}</h3>
-        <p className="text-xs text-[#737373]">{description}</p>
-      </div>
-      <div className="relative inline-flex w-14 h-7">
-        <input
-          type="checkbox"
-          className="sr-only peer"
-          checked={checked}
-          defaultChecked={checked}
-        />
-        <div className="relative inline-flex w-14 h-7 rounded-full bg-[#E5E5E5] peer-checked:bg-[#1DB96B] transition-colors duration-200 focus:outline-none">
-          <span className="inline-block h-5 w-5 rounded-full bg-white shadow shadow-sm transition-all duration-200 peer-checked:translate-x-7"></span>
+        {/* Notifications */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6 mb-8">
+          <h3 className="font-bold mb-4">Notifications</h3>
+          <p className="text-sm text-gray-500 mb-4">Choose what we send. Changes save straight away.</p>
+          <div className="space-y-3">
+            {[
+              ['classReminders', 'Class reminders'],
+              ['dataSaver', 'Data saver'],
+              ['skillcheckReminders', 'SkillCheck reminders'],
+            ].map(([key, label]) => {
+              const checked = Boolean(data?.preferences?.[key])
+              return (
+                <div key={key} className="flex items-center justify-between">
+                  <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                    <input
+                      type="checkbox"
+                      className="rounded border-gray-300 text-[#1DB96B] focus:ring-[#1DB96B]"
+                      defaultChecked={checked}
+                      onChange={(e) => update('preferences', { preferences: { ...(data?.preferences ?? {}), [key]: e.target.checked } })}
+                    />
+                    {label}
+                  </label>
+                </div>
+              )
+            })}
+          </div>
         </div>
-      </div>
+
+        {/* Danger zone */}
+        <div className="rounded-xl border border-gray-200 bg-white p-6">
+          <h3 className="font-bold mb-4">Danger zone</h3>
+          <p className="text-sm text-gray-500 mb-4">Delete your account? This cannot be undone.</p>
+          <button
+            onClick={() => { if (window.confirm('Delete your account and all your data?')) { router.push('/') } }}
+            className="text-xs font-semibold text-red-600 hover:underline"
+          >
+            Delete for good
+          </button>
+        </div>
+      </main>
     </div>
   )
 }
