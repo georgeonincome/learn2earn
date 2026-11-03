@@ -173,7 +173,7 @@ export default function HomePage() {
                   <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-[hsl(var(--echelon-action))] px-4 py-1.5 text-xs font-extrabold uppercase tracking-[0.16em] text-[hsl(var(--echelon-action))]">
                     Live class · {dateRange(LIVE_CLASS.startDate, LIVE_CLASS.endDate)}
                   </p>
-                  <h2 id="ai-beginners-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl">
+                  <h2 id="ai-beginners-heading" className="font-head text-3xl font-extrabold leading-tight sm:text-4xl text-[hsl(0_100%_99%)]">
                     {LIVE_CLASS.title.replace(/ Class$/, '')}{' '}
                     <span className="aib-gradient-text">Class</span>
                   </h2>
