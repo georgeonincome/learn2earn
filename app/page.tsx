@@ -181,11 +181,11 @@ export default function HomePage() {
                     {LIVE_CLASS.description}
                   </p>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-                    <Link href={`/cohorts/${LIVE_CLASS.slug}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 font-bold text-sm text-[#10201A] bg-[#1DB96B] hover:bg-[#0B854C] transition-all">
+                    <Link href={`/cohorts/${LIVE_CLASS.slug}`} className="inline-flex h-12 items-center justify-center gap-2 rounded-lg px-6 font-bold text-sm text-[hsl(0_100%_99%)] bg-[#1DB96B] hover:bg-[#0B854C] transition-all">
                       Reserve my seat <ArrowRight className="h-4 w-4" />
                     </Link>
                     <p className="text-sm text-[hsl(0_100%_99%)]">
-                      <b className="text-[#10201A] bg-[#0B854C]">{fmt(LIVE_CLASS.price)}</b> · {LIVE_CLASS.schedule}
+                      <b className="text-[hsl(0_100%_99%)] bg-[#0B854C]">{fmt(LIVE_CLASS.price)}</b> · {LIVE_CLASS.schedule}
                     </p>
                   </div>
                 </div>
@@ -195,7 +195,7 @@ export default function HomePage() {
               </div>
               <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-12">
                 {LIVE_CLASS.lessons.map(v => (
-                  <li key={v} className="flex items-start gap-3 rounded-xl border border-[#24221D] bg-[#10201A] p-4 text-sm font-medium text-[#10201A] bg-[#0B854C]">
+                  <li key={v} className="flex items-start gap-3 rounded-xl border border-[#24221D] bg-[#10201A] p-4 text-sm font-medium text-[hsl(0_100%_99%)] bg-[#0B854C]">
                     <Check className="mt-0.5 h-4 w-4 shrink-0 text-[#1DB96B]" /> {v}
                   </li>
                 ))}
