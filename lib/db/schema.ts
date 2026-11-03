@@ -447,6 +447,31 @@ export const transactions = sqliteTable(
 )
 
 // ---------------------------------------------------------------------------
+// Course funnels (reference: `course_funnels` — exact dump columns)
+// Rich HTML `description`; benefits/testimonials are JSON strings.
+// ---------------------------------------------------------------------------
+
+export const courseFunnels = sqliteTable(
+  'course_funnels',
+  {
+    id: text('id').primaryKey(),
+    courseId: text('course_id'),
+    slug: text('slug').notNull(),
+    headline: text('headline'),
+    subheadline: text('subheadline'),
+    description: text('description'), // rich HTML (allowlist-sanitized on render)
+    ctaText: text('cta_text'),
+    heroImageUrl: text('hero_image_url'),
+    benefits: text('benefits', { mode: 'json' }),
+    testimonials: text('testimonials', { mode: 'json' }),
+    isActive: integer('is_active', { mode: 'boolean' }).default(true),
+    createdAt: text('created_at'),
+    updatedAt: text('updated_at'),
+  },
+  (t) => [uniqueIndex('course_funnels_slug_uq').on(t.slug)],
+)
+
+// ---------------------------------------------------------------------------
 // Bundles (reference: `bundles` + `bundle_courses` + `bundle_orders`)
 // Supabase dump columns: bundles {id, slug, name, tagline, description, price,
 // anchor_price, is_active, cover_image_url, created_at}; bundle_courses
