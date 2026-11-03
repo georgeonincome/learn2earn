@@ -66,7 +66,8 @@ export default function AuthPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email.trim().toLowerCase(), password, fullName: name.trim() }),
         })
-        const data = await res.json()
+        let data: any = {}
+        try { data = await res.json() } catch { /* ignore parse errors on error responses */ }
         if (!res.ok) {
           setError(data.error || 'Registration failed')
           setLoading(false)
@@ -78,8 +79,10 @@ export default function AuthPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
         })
+        let loginData: any = {}
+        try { loginData = await loginRes.json() } catch { /* ignore parse errors on error responses */ }
         if (!loginRes.ok) {
-          setError(data.error || 'Account created. Please sign in.')
+          setError(loginData.error || 'Account created. Please sign in.')
           setLoading(false)
           return
         }
@@ -92,7 +95,8 @@ export default function AuthPage() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email: email.trim().toLowerCase(), password }),
         })
-        const data = await res.json()
+        let data: any = {}
+        try { data = await res.json() } catch { /* ignore parse errors on error responses */ }
         if (!res.ok) {
           setError(data.error || 'Invalid email or password')
           setLoading(false)
