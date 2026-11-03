@@ -1,20 +1,20 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { Mail, Lock, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/data'
 
 /* Admin login page — exact 1:1 from click2skill AdminAuth-DD9DuOs3.js:
-   - Gradient dark background (gray-900 to black)
+   - Gradient dark background (gray-900 to black), no white anywhere
    - Centered card (gray-900/90 backdrop-blur, border-gray-700)
-   - Shield icon in purple/green circle
+   - Shield icon in green circle
    - "Administrator Access" title + subtitle
    - Email + Password form with show/hide toggle
    - "Secure Login" button
    - 2FA Required info box
    - "All access attempts are logged and monitored"
    - No Navbar, No Footer (own layout)
+   - Responsive: works on mobile, tablet, desktop
 */
 
 const SHIELD_ICON = (
@@ -56,24 +56,27 @@ export default function AdminLogin() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4">
-      <div className="w-full max-w-md border-gray-700 bg-gray-900/90 backdrop-blur rounded-2xl p-8 shadow-2xl">
-        <div className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
-            <div className="p-3 bg-[#1DB96B]/10 rounded-full">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-md border-gray-700 bg-gray-900/90 backdrop-blur-md rounded-2xl p-6 sm:p-8 shadow-2xl border border-white/5">
+        {/* Header */}
+        <div className="space-y-3 text-center mb-6">
+          <div className="flex items-center justify-center mb-3">
+            <div className="p-3 bg-[#1DB96B]/10 rounded-full border border-[#1DB96B]/20">
               {SHIELD_ICON}
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-center text-white">Administrator Access</h2>
-          <p className="text-center text-gray-400">Secure login for authorized personnel only</p>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Administrator Access</h2>
+          <p className="text-gray-400 text-sm">Secure login for authorized personnel only</p>
         </div>
 
+        {/* Error */}
         {error && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+          <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
             {error}
           </div>
         )}
 
+        {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="email" className="block text-sm font-medium text-gray-200">Email Address</label>
@@ -84,7 +87,7 @@ export default function AdminLogin() {
               value={email}
               onChange={e => setEmail(e.target.value)}
               required
-              className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 w-full rounded-xl border border-gray-700 px-4 py-3 text-sm"
+              className="w-full rounded-xl border border-gray-700 bg-gray-800/50 text-white placeholder:text-gray-500 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1DB96B]/20 focus:border-[#1DB96B] transition-all"
             />
           </div>
           <div className="space-y-2">
@@ -97,12 +100,12 @@ export default function AdminLogin() {
                 value={password}
                 onChange={e => setPassword(e.target.value)}
                 required
-                className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 w-full rounded-xl border border-gray-700 px-4 py-3 text-sm pr-10"
+                className="w-full rounded-xl border border-gray-700 bg-gray-800/50 text-white placeholder:text-gray-500 pr-10 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1DB96B]/20 focus:border-[#1DB96B] transition-all"
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
               >
                 {showPassword ? (
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
@@ -115,12 +118,13 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#1DB96B] hover:bg-[#1DB96B]/90 text-white font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-60"
+            className="w-full bg-[#1DB96B] hover:bg-[#17A05D] text-[#111111] font-bold text-sm py-3 rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
           >
             {loading ? 'Authenticating...' : 'Secure Login'}
           </button>
         </form>
 
+        {/* 2FA info */}
         <div className="mt-6 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
           <div className="flex items-center gap-2 text-amber-400 text-sm">
             {SHIELD_ICON}
@@ -129,7 +133,8 @@ export default function AdminLogin() {
           <p className="text-xs text-gray-400 mt-1">An OTP will be sent to your email for verification</p>
         </div>
 
-        <div className="mt-4 text-center">
+        {/* Footer note */}
+        <div className="mt-6 text-center">
           <p className="text-xs text-gray-500">All access attempts are logged and monitored</p>
         </div>
       </div>
