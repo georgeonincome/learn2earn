@@ -65,7 +65,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     <div className="flex min-h-screen bg-[#FAFAFA] text-[#111111]">
       {!isAuthPage && (
         <aside className="hidden lg:flex lg:flex-col lg:fixed lg:top-0 lg:left-0 lg:h-screen lg:w-64 lg:border-r lg:border-[#E5E5E5] lg:bg-white lg:overflow-hidden z-20">
-          <div className="p-6">
+          {/* Logo — pinned top */}
+          <div className="p-6 shrink-0">
             <Link href="/" className="flex items-center gap-2 mb-8">
               <div className="w-8 h-8 bg-[#1DB96B] rounded-lg flex items-center justify-center">
                 <svg viewBox="0 0 24 24" className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -75,29 +76,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <span className="font-head font-extrabold text-lg">Learn2Earn</span>
             </Link>
-            <nav className="flex-1 overflow-y-auto space-y-1">
-              {NAV_ITEMS.map((item) => {
-                const Icon = item.icon
-                const active = pathname === item.href || pathname.startsWith(item.href + '/')
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors',
-                      active
-                        ? 'bg-[#1DB96B]/10 text-[#0B854C]'
-                        : 'text-[#737373] hover:bg-[#F3FBF6] hover:text-[#111111]'
-                    )}
-                  >
-                    <Icon className="w-5 h-5 shrink-0" />
-                    {item.label}
-                    {active && <ArrowRight className="ml-auto w-4 h-4" />}
-                  </Link>
-                )
-              })}
-            </nav>
           </div>
+
+          {/* Nav links — scrollable independently */}
+          <nav className="flex-1 overflow-y-auto p-0 space-y-1">
+            {NAV_ITEMS.map((item) => {
+              const Icon = item.icon
+              const active = pathname === item.href || pathname.startsWith(item.href + '/')
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors',
+                    active
+                      ? 'bg-[#1DB96B]/10 text-[#0B854C]'
+                      : 'text-[#737373] hover:bg-[#F3FBF6] hover:text-[#111111]'
+                  )}
+                >
+                  <Icon className="w-5 h-5 shrink-0" />
+                  {item.label}
+                  {active && <ArrowRight className="ml-auto w-4 h-4" />}
+                </Link>
+              )
+            })}
+          </nav>
           <div className="p-6 border-t border-[#E5E5E5] shrink-0">
             <button
               onClick={handleLogout}
