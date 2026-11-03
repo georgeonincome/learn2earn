@@ -19,7 +19,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ slug: s
       {/* Hero */}
       <section className="bg-[#0A0D14] text-white py-20 sm:py-28 px-4">
         <div className="mx-auto max-w-5xl text-center">
-          <span className="inline-block text-xs font-extrabold uppercase tracking-[0.14em] text-[#1DB96B] bg-[#1DB96B]/20 px-3 py-1 rounded-full mb-4">
+          <span className="inline-block text-xs font-extrabold uppercase tracking-[0.14em] text-[#0B854C] bg-[#1DB96B]/20 px-3 py-1 rounded-full mb-4">
             Live Class
           </span>
           <h1 className="text-3xl sm:text-5xl font-extrabold mb-4">
@@ -48,7 +48,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ slug: s
           <div className="grid md:grid-cols-3 gap-6">
             {funnel.features.map((feature: string, i: number) => (
               <div key={i} className="p-6 rounded-2xl border border-[#E5E5E5] bg-white">
-                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[#1DB96B] mb-4 bg-[#E3F6EF]">
+                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[#0B854C] mb-4 bg-[#E3F6EF]">
                   ▶
                 </div>
                 <h3 className="text-lg font-bold text-[#111111] mb-2">{feature}</h3>
@@ -67,7 +67,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ slug: s
           <div className="grid md:grid-cols-3 gap-8">
             {funnel.testimonials.map((t: any, i: number) => (
               <div key={i} className="p-6 rounded-2xl border border-[#E5E5E5] bg-[#F3F4F6]">
-                <div className="flex items-center gap-2 text-[#1DB96B] mb-3">
+                <div className="flex items-center gap-2 text-[#0B854C] mb-3">
                   {[1, 2, 3, 4, 5].map((star, si) => (
                     <span key={si} className="w-3 h-3 fill-[#1DB96B]">★</span>
                   ))}

@@ -91,18 +91,18 @@ export default function DashboardCoursesPage() {
               {courses.length === 0 ? (
                 <div className="col-span-3 rounded-xl border border-gray-200 bg-white p-8 text-center">
                   <p className="text-gray-400">You have not started a course yet.</p>
-                  <Link href="/courses" className="mt-4 text-[#1DB96B] font-semibold hover:underline">Browse all courses →</Link>
+                  <Link href="/courses" className="mt-4 text-[#0B854C] font-semibold hover:underline">Browse all courses →</Link>
                 </div>
               ) : (
                 courses.map((c) => (
                   <div key={c.id} className="rounded-xl border border-gray-200 bg-white p-4 flex flex-col gap-3">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-2">
-                        <Play className="h-5 w-5 shrink-0 text-[#1DB96B]" />
+                        <Play className="h-5 w-5 shrink-0 text-[#0B854C]" />
                         <h2 className="font-semibold">{c.title}</h2>
                       </div>
                       {c.progress >= 100 ? (
-                        <span className="rounded-md bg-[#1DB96B]/10 px-2 py-0.5 text-xs font-bold text-[#1DB96B]">Finished</span>
+                        <span className="rounded-md bg-[#1DB96B]/10 px-2 py-0.5 text-xs font-bold text-[#0B854C]">Finished</span>
                       ) : c.progress > 0 ? (
                         <span className="rounded-md bg-gray-100 px-2 py-0.5 text-xs font-bold text-gray-600">{Math.round(c.progress)}% done</span>
                       ) : (
@@ -118,7 +118,7 @@ export default function DashboardCoursesPage() {
                         {c.status === 'paid' ? 'Continue' : 'Start'} <ChevronRight className="h-3 w-3" />
                       </Link>
                       {(!c.owned && !c.inPlan && !planActive) && (
-                        <Link href="/dashboard/plan" className="text-xs text-[#1DB96B] hover:underline">Subscribe to open</Link>
+                        <Link href="/dashboard/plan" className="text-xs text-[#0B854C] hover:underline">Subscribe to open</Link>
                       )}
                     </div>
                   </div>

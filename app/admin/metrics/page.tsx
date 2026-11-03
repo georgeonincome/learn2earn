@@ -85,7 +85,7 @@ export default function AdminMetricsPage() {
                     <div className="text-xs text-[#737373]">{a.count} item{ a.count !== 1 ? 's' : '' }</div>
                   </div>
                 </div>
-                <Link href={a.route} className="rounded-md bg-[#F3FBF6] px-3 py-1 text-xs font-bold text-[#1DB96B] hover:bg-[#E0F5EC]">Go →</Link>
+                <Link href={a.route} className="rounded-md bg-[#F3FBF6] px-3 py-1 text-xs font-bold text-[#0B854C] hover:bg-[#E0F5EC]">Go →</Link>
               </div>
             ))}
           </div>

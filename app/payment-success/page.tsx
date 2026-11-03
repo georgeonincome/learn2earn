@@ -14,7 +14,7 @@ export default function PaymentSuccessPage() {
           Your payment has been processed successfully. You now have access to your courses. Nothing renews automatically.
         </p>
         <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-8">
-          <h3 className="text-sm font-extrabold text-[#1DB96B] mb-3 uppercase tracking-[0.12em]">Order Confirmation</h3>
+          <h3 className="text-sm font-extrabold text-[#0B854C] mb-3 uppercase tracking-[0.12em]">Order Confirmation</h3>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-[#737373]">Order ID</span>
             <span className="font-mono text-sm font-medium text-[#111111]">L2E-2026-10-28-001</span>

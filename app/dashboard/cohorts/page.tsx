@@ -89,7 +89,7 @@ function CohortCard({ cohort, status }: CohortCardProps) {
   return (
     <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5">
       <div className="flex items-center justify-between mb-3">
-        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E5E5E5]/10 text-[#1DB96B] text-xs font-bold">
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#E5E5E5]/10 text-[#0B854C] text-xs font-bold">
           C
         </span>
         <span className="text-xs font-semibold text-[#737373]">

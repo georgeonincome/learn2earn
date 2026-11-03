@@ -61,7 +61,7 @@ export default function AdminRolesPage() {
                   <td className="px-4 py-3">{r.email}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                      r.role === 'super_admin' ? 'bg-[#F3FBF6] text-[#1DB96B]' :
+                      r.role === 'super_admin' ? 'bg-[#F3FBF6] text-[#0B854C]' :
                       r.role === 'finance' ? 'bg-[#FEE2E2] text-[#DC2626]' :
                       r.role === 'support' ? 'bg-[#FEF3C7] text-[#92400E]' :
                       r.role === 'instructor' ? 'bg-[#E0E7FF] text-[#3730A3]' :
@@ -88,7 +88,7 @@ export default function AdminRolesPage() {
 
       <div className="bg-[#F3FBF6] rounded-lg p-4">
         <h3 className="font-bold text-lg mb-2">Permission model</h3>
-        <p className="text-sm text-[#1DB96B]">29 granular permission keys across 5 roles.</p>
+        <p className="text-sm text-[#0B854C]">29 granular permission keys across 5 roles.</p>
         <ul className="text-sm text-[#737373] list-disc list-inside mt-2 space-y-1">
           <li><b>super_admin</b> — full access (all 29 keys)</li>
           <li><b>manager</b> — restricted operational view (no financial/certificates)</li>

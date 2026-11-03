@@ -34,11 +34,11 @@ export default function SMMGuidePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="rounded-lg border border-[#E5E5E5] p-4">
             <div className="text-xs font-semibold text-[#737373]">New manager — content management</div>
-            <div className="text-2xl font-extrabold text-[#1DB96B]">ZMW 1,500–2,500 / client / month</div>
+            <div className="text-2xl font-extrabold text-[#0B854C]">ZMW 1,500–2,500 / client / month</div>
           </div>
           <div className="rounded-lg border border-[#E5E5E5] p-4">
             <div className="text-xs font-semibold text-[#737373]">With ads management added</div>
-            <div className="text-2xl font-extrabold text-[#1DB96B]">ZMW 4,000+ / month retainers</div>
+            <div className="text-2xl font-extrabold text-[#0B854C]">ZMW 4,000+ / month retainers</div>
           </div>
         </div>
         <p className="text-[#737373] text-sm">Charge per month, not per post — monthly pricing pushes you toward building systems rather than chasing individual posts.</p>

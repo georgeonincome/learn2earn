@@ -35,7 +35,7 @@ export default function WelcomeCoursePage({ searchParams }: { searchParams: { [k
             </div>
             <span className="font-head font-extrabold text-xl">Learn2Earn</span>
           </div>
-          <Link href="/courses" className="text-[#1DB96B] font-semibold hover:underline">← Back to courses</Link>
+          <Link href="/courses" className="text-[#0B854C] font-semibold hover:underline">← Back to courses</Link>
         </div>
       </nav>
 
@@ -66,21 +66,21 @@ export default function WelcomeCoursePage({ searchParams }: { searchParams: { [k
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#1DB96B] mb-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#0B854C] mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="font-bold mb-2">Instant access</h3>
             <p className="text-sm text-[#737373]">Start session one the moment you enrol.</p>
           </div>
           <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#1DB96B] mb-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#0B854C] mb-4">
               <Clock className="w-6 h-6" />
             </div>
             <h3 className="font-bold mb-2">Learn at your pace</h3>
             <p className="text-sm text-[#737373]">Lifetime access — watch lessons as many times as you want.</p>
           </div>
           <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#1DB96B] mb-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#F3FBF6] text-[#0B854C] mb-4">
               <ShieldCheck className="w-6 h-6" />
             </div>
             <h3 className="font-bold mb-2">Certificate included</h3>

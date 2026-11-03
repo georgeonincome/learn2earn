@@ -46,11 +46,11 @@ export default function TermsPage() {
 
           <p className="mt-14 text-sm text-[#737373] border-t pt-6">
             Questions? Message {SITE_CONFIG.founder.name} on WhatsApp at{' '}
-            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#1DB96B] hover:underline">
+            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#0B854C] hover:underline">
               {SITE_CONFIG.founder.phone}
             </Link>{' · '}
-            <Link href="/privacy-policy" className="text-[#1DB96B] hover:underline">Privacy Policy</Link>{' · '}
-            <Link href="/refund-policy" className="text-[#1DB96B] hover:underline">Refund Policy</Link>
+            <Link href="/privacy-policy" className="text-[#0B854C] hover:underline">Privacy Policy</Link>{' · '}
+            <Link href="/refund-policy" className="text-[#0B854C] hover:underline">Refund Policy</Link>
           </p>
         </div>
       </main>

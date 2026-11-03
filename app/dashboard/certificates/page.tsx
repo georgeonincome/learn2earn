@@ -45,7 +45,7 @@ export default function CertificatesPage() {
         <h1 className="text-2xl font-extrabold">My Certificates</h1>
         <Link
           href="/courses"
-          className="text-sm font-semibold text-[#1DB96B] hover:underline"
+          className="text-sm font-semibold text-[#0B854C] hover:underline"
         >
           Browse Courses
         </Link>

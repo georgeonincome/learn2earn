@@ -43,7 +43,7 @@ export default function AnnouncementsPage() {
               <div key={a.id} className="px-4 py-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{a.title}</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${a.is_published === 1 ? 'bg-[#F3FBF6] text-[#1DB96B]' : 'bg-[#F5F5F5] text-[#737373]'}`}>{a.is_published === 1 ? 'Published' : 'Draft'}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${a.is_published === 1 ? 'bg-[#F3FBF6] text-[#0B854C]' : 'bg-[#F5F5F5] text-[#737373]'}`}>{a.is_published === 1 ? 'Published' : 'Draft'}</span>
                 </div>
                 <p className="text-sm text-[#737373]">{a.message}</p>
                 <div className="mt-2 flex items-center gap-2 text-xs text-[#737373]">

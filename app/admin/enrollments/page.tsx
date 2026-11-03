@@ -100,7 +100,7 @@ export default function AdminEnrollmentsPage() {
                   <td className="px-4 py-3 text-[#737373]">{e.course_id}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                      e.payment_status === 'paid' ? 'bg-[#F3FBF6] text-[#1DB96B]' : 'bg-[#F5F5F5] text-[#737373]'
+                      e.payment_status === 'paid' ? 'bg-[#F3FBF6] text-[#0B854C]' : 'bg-[#F5F5F5] text-[#737373]'
                     }`}>{e.payment_status}</span>
                   </td>
                   <td className="px-4 py-3 text-right text-[#737373]">{e.enrollment_source}</td>

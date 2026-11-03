@@ -2,7 +2,6 @@
 
 /**
  * Books catalog — DB-backed (Phase 3).
- * Fetches books from /api/books instead of static BOOKS import.
  * Same view sequence as /courses and /cohorts:
  * pill tabs (books active) → title + search → category chips → count → grid.
  */
@@ -18,7 +17,9 @@ const C = {
   surface: '#FFFFFF',
   border: '#E5E5E5',
   shadow: '0 2px 8px rgba(0,0,0,0.06)',
+  shadowHover: '0 4px 12px rgba(0,0,0,0.08)',
   primary: '#1DB96B',
+  primaryHover: '#17A05D',
   badgeBg: '#E8F8F0',
   badgeText: '#0F7A42',
   text: '#111111',
@@ -27,6 +28,7 @@ const C = {
   radiusCard: 12,
   radiusBtn: 8,
   radiusPill: 9999,
+  textAction: '#0B854C',
 }
 
 const SORTS = [
@@ -66,6 +68,7 @@ export default function BooksPage() {
   const [debounced, setDebounced] = useState('')
   const [category, setCategory] = useState('all')
   const [sort, setSort] = useState<SortValue>('newest')
+  const [limit, setLimit] = useState(24)
 
   useEffect(() => {
     fetch('/api/books')
@@ -105,6 +108,9 @@ export default function BooksPage() {
     return list
   }, [books, debounced, category, sort])
 
+  const visible = filtered.slice(0, limit)
+  const hasMore = filtered.length > limit
+
   if (loading) {
     return (
       <div className="min-h-screen font-sans" style={{ background: C.pageBg, color: C.text }}>
@@ -124,8 +130,7 @@ export default function BooksPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-6">
           <CatalogTabs active="books" />
           <p className="text-xs mt-2" style={{ color: C.textMuted }}>
-            <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Books</strong> = instant PDF downloads,
-            study at your own pace.
+            <strong style={{ color: C.textSecondary, fontWeight: 500 }}>Books</strong> = instant PDF downloads, study at your own pace.
           </p>
         </div>
 
@@ -135,7 +140,7 @@ export default function BooksPage() {
             <h1 className="text-2xl lg:text-3xl font-bold" style={{ color: C.text }}>
               Browse E-Books
             </h1>
-            <div className="flex items-center">
+            <div className="relative flex-1 max-w-md">
               <input
                 autoFocus
                 type="text"
@@ -155,55 +160,58 @@ export default function BooksPage() {
               {query ? (
                 <button
                   onClick={() => setQuery('')}
-                  className="p-2"
+                  className="absolute right-3 top-1/2 -mt-2.5 p-2"
                   style={{ color: C.textSecondary }}
                   aria-label="Clear search"
                 >
                   <X className="w-5 h-5" />
                 </button>
-              ) : (
-                <span className="p-2" style={{ color: C.textMuted }}>
-                  <Search className="w-5 h-5" />
-                </span>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
 
-        {/* Category chips + sort */}
+        {/* Category chips */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-4">
-          <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between">
-            <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide w-full sm:w-auto -mx-1 px-1">
+          <div className="flex overflow-x-auto gap-2 pb-1 scrollbar-hide w-full sm:w-auto -mx-1 px-1">
+            <button
+              onClick={() => setCategory('all')}
+              className="shrink-0 text-sm transition-colors"
+              style={{
+                padding: '8px 16px', borderRadius: C.radiusPill,
+                background: category === 'all' ? C.primary : '#fff',
+                color: category === 'all' ? '#fff' : C.text,
+                border: `1px solid ${category === 'all' ? C.primary : C.border}`,
+                fontWeight: category === 'all' ? 500 : 400, minHeight: 40, cursor: 'pointer',
+              }}
+            >
+              All ({books.length})
+            </button>
+            {[...countsByCategory.entries()].map(([name, count]) => (
               <button
-                onClick={() => setCategory('all')}
+                key={name}
+                onClick={() => setCategory(name)}
                 className="shrink-0 text-sm transition-colors"
                 style={{
                   padding: '8px 16px', borderRadius: C.radiusPill,
-                  background: category === 'all' ? C.primary : '#fff',
-                  color: category === 'all' ? '#fff' : C.text,
-                  border: `1px solid ${category === 'all' ? C.primary : C.border}`,
-                  fontWeight: category === 'all' ? 500 : 400, minHeight: 40, cursor: 'pointer',
+                  background: category === name ? C.primary : '#fff',
+                  color: category === name ? '#fff' : C.text,
+                  border: `1px solid ${category === name ? C.primary : C.border}`,
+                  fontWeight: category === name ? 500 : 400, minHeight: 40, cursor: 'pointer',
                 }}
               >
-                All ({books.length})
+                {name} ({count})
               </button>
-              {[...countsByCategory.entries()].map(([name, count]) => (
-                <button
-                  key={name}
-                  onClick={() => setCategory(name)}
-                  className="shrink-0 text-sm transition-colors"
-                  style={{
-                    padding: '8px 16px', borderRadius: C.radiusPill,
-                    background: category === name ? C.primary : '#fff',
-                    color: category === name ? '#fff' : C.text,
-                    border: `1px solid ${category === name ? C.primary : C.border}`,
-                    fontWeight: category === name ? 500 : 400, minHeight: 40, cursor: 'pointer',
-                  }}
-                >
-                  {name} ({count})
-                </button>
-              ))}
-            </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Count + sort */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-5">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <p className="text-sm" style={{ color: C.textMuted }}>
+              {filtered.length} {filtered.length === 1 ? 'book' : 'books'}
+            </p>
             <select
               value={sort}
               onChange={e => setSort(e.target.value as SortValue)}
@@ -229,17 +237,10 @@ export default function BooksPage() {
           </div>
         </div>
 
-        {/* Count */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 mb-5">
-          <p className="text-sm" style={{ color: C.textMuted }}>
-            {filtered.length} {filtered.length === 1 ? 'book' : 'books'}
-          </p>
-        </div>
-
-        {/* Grid — same card style as /courses */}
+        {/* Grid */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: 20 }}>
-            {filtered.map(b => {
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(270px, 1fr))', gap: 20 }}>
+            {visible.map(b => {
               const showSave = !!b.originalPrice && b.originalPrice > b.price
               const savePct = showSave && b.originalPrice ? Math.round(((b.originalPrice - b.price) / b.originalPrice) * 100) : 0
 
@@ -273,7 +274,7 @@ export default function BooksPage() {
                     </div>
                   </Link>
                   <div className="p-4">
-                    <p className="text-xs font-semibold mb-1" style={{ color: C.primary }}>
+                    <p className="text-xs font-semibold mb-1" style={{ color: C.textAction }}>
                       {b.category}
                     </p>
                     <Link href={`/books/${b.slug}`}>
@@ -286,7 +287,7 @@ export default function BooksPage() {
                     </div>
                     {/* price row */}
                     <div className="flex items-center gap-2 flex-wrap mb-3">
-                      <span className="text-lg font-medium" style={{ color: C.primary }}>
+                      <span className="text-lg font-medium" style={{ color: C.textAction }}>
                         {b.price === 0 ? 'Free' : fmtZMW(b.price)}
                       </span>
                       {showSave && (
@@ -317,7 +318,19 @@ export default function BooksPage() {
             })}
           </div>
 
-          {filtered.length === 0 && (
+          {hasMore && (
+            <div className="mt-10 text-center">
+              <button
+                onClick={() => setLimit(l => l + 24)}
+                className="inline-flex items-center gap-2 text-sm font-semibold px-6"
+                style={{ minHeight: 44, borderRadius: C.radiusBtn, background: '#fff', color: C.text, border: `1px solid ${C.border}`, cursor: 'pointer' }}
+              >
+                Show more <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+
+          {visible.length === 0 && (
             <div className="text-center py-20" style={{ color: C.textMuted }}>
               <BookOpen className="w-10 h-10 mx-auto mb-4" style={{ color: C.textMuted }} />
               <p className="font-semibold" style={{ color: C.text }}>No books match your filters</p>

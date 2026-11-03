@@ -185,7 +185,7 @@ function BasicsPanel({ course, updateField }: { course: Course; updateField: (f:
               type="checkbox"
               checked={course.include_in_plan === 1}
               onChange={(e) => updateField('include_in_plan', e.target.checked ? 1 : 0)}
-              className="rounded border-[#E5E5E5] text-[#1DB96B] focus:ring-[#1DB96B]"
+              className="rounded border-[#E5E5E5] text-[#0B854C] focus:ring-[#1DB96B]"
             />
             Include in the Learn2Earn plan
           </label>
@@ -236,7 +236,7 @@ function ContentPanel({ courseId, sections, lessons, setSections, setLessons }: 
             <div className="flex items-center justify-between px-4 py-3 bg-[#F9F9F9] border-b border-[#E5E5E5]">
               <span className="font-semibold">{sec.title}</span>
               <div className="flex gap-1">
-                <button onClick={() => addLesson(sec.id)} className="text-xs text-[#1DB96B] hover:underline">+ Add lesson</button>
+                <button onClick={() => addLesson(sec.id)} className="text-xs text-[#0B854C] hover:underline">+ Add lesson</button>
               </div>
             </div>
             <div className="divide-y divide-[#E5E5E5]">
@@ -253,7 +253,7 @@ function ContentPanel({ courseId, sections, lessons, setSections, setLessons }: 
                       </div>
                     </div>
                     <div className="flex gap-1">
-                      <Link href={`/admin/courses/${courseId}/sections/${sec.id}/lessons/${l.id}`} className="text-xs text-[#1DB96B] hover:underline">Edit</Link>
+                      <Link href={`/admin/courses/${courseId}/sections/${sec.id}/lessons/${l.id}`} className="text-xs text-[#0B854C] hover:underline">Edit</Link>
                       <button onClick={() => deleteLesson(sec.id, l.id)} className="text-xs text-[#DC2626] hover:underline">Delete</button>
                     </div>
                   </div>
@@ -323,7 +323,7 @@ function PricingPanel({ course, updateField }: { course: Course; updateField: (f
         </div>
       </div>
       <div className="bg-[#F3FBF6] rounded-lg p-4">
-        <p className="text-xs text-[#1DB96B] font-semibold mb-1">Preview (ZMW at 0.155)</p>
+        <p className="text-xs text-[#0B854C] font-semibold mb-1">Preview (ZMW at 0.155)</p>
         <p className="text-2xl font-extrabold text-[#111111]">
           ZMW {((course.sale_price ?? course.regular_price) * 0.155).toFixed(0)}
           {course.sale_price && course.sale_price < course.regular_price ? ` (was ZMW ${(course.regular_price * 0.155).toFixed(0)})` : ''}
@@ -355,10 +355,10 @@ function PublishPanel({ course, updateField, saveCourse }: { course: Course; upd
       {checks.map((c) => (
         <div key={c.id} className="flex items-center gap-3 px-3 py-2 rounded-lg border border-transparent hover:border-[#E5E5E5] transition-colors">
           <span className={`w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${
-            c.ok ? 'bg-[#F3FBF6] text-[#1DB96B]' : 'bg-[#FEE2E2] text-[#DC2626]'
+            c.ok ? 'bg-[#F3FBF6] text-[#0B854C]' : 'bg-[#FEE2E2] text-[#DC2626]'
           }`}>{c.ok ? '✓' : '!'}</span>
           <span className="text-sm font-semibold">{c.label}</span>
-          <span className={`ml-auto text-xs ${c.ok ? 'text-[#1DB96B]' : 'text-[#DC2626]'}`}>{c.ok ? 'All working' : 'Must fix'}</span>
+          <span className={`ml-auto text-xs ${c.ok ? 'text-[#0B854C]' : 'text-[#DC2626]'}`}>{c.ok ? 'All working' : 'Must fix'}</span>
         </div>
       ))}
       <div className="pt-4 border-t border-[#E5E5E5]">

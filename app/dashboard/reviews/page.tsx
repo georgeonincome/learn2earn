@@ -40,7 +40,7 @@ export default function DashboardReviewsPage() {
     <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
       <nav className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-4">
-          <Link href="/dashboard" className="text-[#1DB96B] font-semibold hover:underline">← Dashboard</Link>
+          <Link href="/dashboard" className="text-[#0B854C] font-semibold hover:underline">← Dashboard</Link>
           <div className="h-6 w-px bg-gray-200 mx-2" />
           <h1 className="text-xl font-bold">Reviews</h1>
         </div>
@@ -111,7 +111,7 @@ export default function DashboardReviewsPage() {
               <div key={r.id} className="mb-4 rounded-xl border border-gray-200 bg-white p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{r.itemTitle}</span>
-                  <span className={`text-xs font-bold ${r.status === 'published' ? 'text-[#1DB96B]' : 'text-amber-500'}`}>
+                  <span className={`text-xs font-bold ${r.status === 'published' ? 'text-[#0B854C]' : 'text-amber-500'}`}>
                     {r.status === 'published' ? 'Published' : r.status === 'pending' ? 'Waiting for approval' : 'Not shown publicly'}
                   </span>
                 </div>
@@ -119,7 +119,7 @@ export default function DashboardReviewsPage() {
                 <p className="text-sm text-gray-600 mb-2">{r.text}</p>
                 <p className="text-xs text-gray-400">{new Date(r.createdAt ?? r.created_at).toLocaleDateString()} {r.adminReply ? `· Reply from Learn2Earn: ${r.adminReply}` : ''}</p>
                 {r.status === 'pending' && (
-                  <button className="text-xs text-[#1DB96B] hover:underline mt-2 block">Edit</button>
+                  <button className="text-xs text-[#0B854C] hover:underline mt-2 block">Edit</button>
                 )}
               </div>
             ))

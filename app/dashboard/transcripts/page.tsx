@@ -59,7 +59,7 @@ export default function TranscriptsPage() {
             <div key={t.id} className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-4">
               <div className="flex items-center justify-between mb-3">
                 <span className="font-semibold">{t.item_title}</span>
-                <span className="text-xs font-bold text-[#1DB96B]">
+                <span className="text-xs font-bold text-[#0B854C]">
                   {Math.round((t.lessons_completed / Math.max(t.lessons_total, 1)) * 100)}% complete
                 </span>
               </div>
@@ -70,13 +70,22 @@ export default function TranscriptsPage() {
               </div>
               <div className="flex gap-2">
                 {t.share_token && (
-                  <Link href={`/verify/${t.share_token}`} className="rounded-lg border border-[#E5E5E5] px-4 py-2 text-sm text-[#737373] hover:bg-[#F3FBF6]">
-                    View public
+                  <>
+                    <Link href={`/verify/${t.share_token}`} className="rounded-lg border border-[#E5E5E5] px-4 py-2 text-sm text-[#737373] hover:bg-[#F3FBF6]">
+                      View public
+                    </Link>
+                    <a
+                      href={`/api/dashboard/transcripts/${t.id}/download`}
+                      className="rounded-lg bg-[#1DB96B] px-4 py-2 text-sm font-bold text-white text-center hover:bg-[#17A05D]">
+                      Download PDF
+                    </a>
+                  </>
+                )}
+                {!t.share_token && (
+                  <Link href={`/courses/${t.item_title.toLowerCase().replace(/\s+/g, '-')}`} className="rounded-lg bg-[#1DB96B] px-4 py-2 text-sm font-bold text-white text-center hover:bg-[#17A05D]">
+                    Open course
                   </Link>
                 )}
-                <Link href={`/courses/${t.item_title.toLowerCase().replace(/\s+/g, '-')}`} className="rounded-lg bg-[#1DB96B] px-4 py-2 text-sm font-bold text-white text-center hover:bg-[#17A05D]">
-                  Open course
-                </Link>
               </div>
             </div>
           ))}

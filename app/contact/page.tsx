@@ -19,7 +19,7 @@ export default function ContactPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B] bg-[#E8F8F0] px-3 py-1 rounded-full inline-block mb-4">
+              <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#0B854C] bg-[#E8F8F0] px-3 py-1 rounded-full inline-block mb-4">
                 Talk to {firstName}
               </p>
               <h1 className="font-head text-4xl md:text-5xl font-extrabold leading-[1.05] mb-6">
@@ -80,7 +80,7 @@ export default function ContactPage() {
                 rel={m.external ? 'noopener noreferrer' : undefined}
                 className="bg-white border border-[#E5E5E5] rounded-xl p-6 flex flex-col gap-3 hover:shadow-md transition-all"
               >
-                <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center text-[#1DB96B]">
+                <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center text-[#0B854C]">
                   {m.icon}
                 </div>
                 <h3 className="font-semibold text-[#111111]">{m.label}</h3>
@@ -99,7 +99,7 @@ export default function ContactPage() {
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="flex-1">
                 <div className="flex items-center gap-3 mb-4">
-                  <MapPin className="w-5 h-5 text-[#1DB96B]" />
+                  <MapPin className="w-5 h-5 text-[#0B854C]" />
                   <span className="font-semibold text-[#111111]">{SITE_CONFIG.founder.location}</span>
                 </div>
                 <p className="text-[#404040] text-sm mb-4 leading-relaxed">
@@ -157,7 +157,7 @@ export default function ContactPage() {
             ].map((m) => (
               <div key={m.label} className="bg-white border border-[#E5E5E5] rounded-xl p-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center text-[#1DB96B]">
+                  <div className="w-10 h-10 bg-[#E8F8F0] rounded-xl flex items-center justify-center text-[#0B854C]">
                     {m.icon}
                   </div>
                   <h3 className="font-semibold text-[#111111]">{m.label}</h3>
@@ -166,7 +166,7 @@ export default function ContactPage() {
                   href={m.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-[#1DB96B] font-semibold hover:underline"
+                  className="text-sm text-[#0B854C] font-semibold hover:underline"
                 >
                   {m.value}
                 </a>

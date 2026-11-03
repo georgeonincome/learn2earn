@@ -152,7 +152,7 @@ export default function AdminUsers() {
                   <p className="text-xs text-[#737373]">{stat.label}</p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-[#1DB96B]/10 flex items-center justify-center">
-                  <stat.icon className="w-4 h-4 text-[#1DB96B]" />
+                  <stat.icon className="w-4 h-4 text-[#0B854C]" />
                 </div>
               </div>
             </div>

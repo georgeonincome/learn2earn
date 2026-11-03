@@ -44,7 +44,7 @@ export default function SkillCheckPage() {
               <div className="flex items-center justify-between mb-3">
                 <span className="font-semibold">{c.title}</span>
                 <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                  c.is_free === 1 ? 'bg-[#F3FBF6] text-[#1DB96B]' : 'bg-[#F5F5F5] text-[#737373]'
+                  c.is_free === 1 ? 'bg-[#F3FBF6] text-[#0B854C]' : 'bg-[#F5F5F5] text-[#737373]'
                 }`}>{c.is_free === 1 ? 'Free taster' : 'Full check'}</span>
               </div>
               <p className="text-sm text-[#737373] mb-4">{c.description}</p>
@@ -85,7 +85,7 @@ export default function SkillCheckPage() {
         <h2 className="font-bold text-lg mb-3">What you get</h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="text-center">
-            <ShieldCheck className="w-8 h-8 mx-auto mb-2 text-[#1DB96B]" />
+            <ShieldCheck className="w-8 h-8 mx-auto mb-2 text-[#0B854C]" />
             <div className="text-sm font-semibold">Skill Report</div>
             <div className="text-xs text-[#737373]">QR code anyone can check</div>
           </div>

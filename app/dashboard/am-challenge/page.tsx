@@ -62,7 +62,7 @@ export default function AMChallengePage() {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-4">
               <div className="text-xs font-semibold text-[#737373]">Streak</div>
-              <div className="text-3xl font-extrabold text-[#1DB96B]">{enrollment.current_streak} days</div>
+              <div className="text-3xl font-extrabold text-[#0B854C]">{enrollment.current_streak} days</div>
             </div>
             <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-4">
               <div className="text-xs font-semibold text-[#737373]">Days completed</div>
@@ -92,7 +92,7 @@ export default function AMChallengePage() {
                         body: JSON.stringify({ action: 'checkin', dayNumber: d.day_number }),
                       }).then(() => location.reload())
                     }}
-                    className="rounded-md border border-[#E5E5E5] px-3 py-1.5 text-xs font-bold text-[#1DB96B] hover:bg-[#F3FBF6]"
+                    className="rounded-md border border-[#E5E5E5] px-3 py-1.5 text-xs font-bold text-[#0B854C] hover:bg-[#F3FBF6]"
                   >
                     Check in
                   </button>

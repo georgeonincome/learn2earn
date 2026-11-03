@@ -39,7 +39,7 @@ export default function DashboardPlanPage() {
       <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
         <nav className="border-b border-gray-200 bg-white">
           <div className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-4">
-            <Link href="/dashboard" className="text-[#1DB96B] font-semibold hover:underline">← Dashboard</Link>
+            <Link href="/dashboard" className="text-[#0B854C] font-semibold hover:underline">← Dashboard</Link>
             <div className="h-6 w-px bg-gray-200 mx-2" />
             <h1 className="text-xl font-bold">My plan</h1>
           </div>
@@ -79,7 +79,7 @@ export default function DashboardPlanPage() {
               const recommended = p.is_recommended
               return (
                 <div key={p.code} className={`rounded-xl border p-5 flex flex-col gap-3 ${recommended ? 'border-[#1DB96B] bg-[#1DB96B]/05' : 'border-gray-200 bg-white'}`}>
-                  {recommended && <span className="text-[10px] font-bold text-[#1DB96B] uppercase tracking-wider">Best value</span>}
+                  {recommended && <span className="text-[10px] font-bold text-[#0B854C] uppercase tracking-wider">Best value</span>}
                   <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold">ZMW {(p.price_kes * 0.155).toFixed(0)}</span>
                     <span className="text-xs text-gray-500">{p.duration_days} days</span>

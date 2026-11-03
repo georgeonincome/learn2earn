@@ -32,7 +32,7 @@ export default function GuidePage() {
         <div className="space-y-4">
           {steps.map((s) => (
             <div key={s.num} className="flex gap-4">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] font-bold text-xs shrink-0">
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#0B854C] font-bold text-xs shrink-0">
                 {s.num}
               </div>
               <div>

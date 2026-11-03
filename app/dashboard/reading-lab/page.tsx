@@ -77,7 +77,7 @@ export default function ReadingLabPage() {
             </div>
             <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-4">
               <div className="text-xs font-semibold text-[#737373]">Status</div>
-              <div className="text-xs font-bold text-[#1DB96B]">{enrollment.status}</div>
+              <div className="text-xs font-bold text-[#0B854C]">{enrollment.status}</div>
             </div>
           </div>
 
@@ -88,10 +88,10 @@ export default function ReadingLabPage() {
                 <div key={d.id} className="border border-[#E5E5E5] rounded-lg p-4">
                   <div className="flex items-center justify-between mb-2">
                     <span className="font-semibold">{d.title}</span>
-                    <span className="text-xs font-bold text-[#1DB96B]">Day {d.day_number}</span>
+                    <span className="text-xs font-bold text-[#0B854C]">Day {d.day_number}</span>
                   </div>
                   <p className="text-sm text-[#737373] mb-3">{d.reading_assignment}</p>
-                  <button className="flex items-center gap-2 rounded-md border border-[#E5E5E5] px-3 py-2 text-sm text-[#1DB96B] hover:bg-[#F3FBF6]">
+                  <button className="flex items-center gap-2 rounded-md border border-[#E5E5E5] px-3 py-2 text-sm text-[#0B854C] hover:bg-[#F3FBF6]">
                     Open reading <ChevronRight className="w-3 h-3" />
                   </button>
                 </div>
@@ -106,7 +106,7 @@ export default function ReadingLabPage() {
               {habits.map((h) => (
                 <div key={h.id} className="flex items-center justify-between px-3 py-2 border-b border-[#E5E5E5] last:border-0">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" defaultChecked={h.active === 1} className="rounded border-[#E5E5E5] text-[#1DB96B] focus:ring-[#1DB96B]" />
+                    <input type="checkbox" defaultChecked={h.active === 1} className="rounded border-[#E5E5E5] text-[#0B854C] focus:ring-[#1DB96B]" />
                     <span className="text-sm">{h.title}</span>
                   </label>
                   <span className="text-xs text-[#737373]">{h.description}</span>

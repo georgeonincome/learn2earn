@@ -15,7 +15,7 @@ export default function PaymentFailedPage() {
           Your payment did not go through. Nothing has been charged. You can try again or pay manually.
         </p>
         <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-8">
-          <h3 className="text-sm font-extrabold text-[#1DB96B] mb-3 uppercase tracking-[0.12em]">What happened?</h3>
+          <h3 className="text-sm font-extrabold text-[#0B854C] mb-3 uppercase tracking-[0.12em]">What happened?</h3>
           <p className="text-sm text-[#737373] mb-4">
             The payment was not completed successfully. This could be due to network issues, insufficient funds, or the payment timing out.
           </p>
@@ -45,7 +45,7 @@ export default function PaymentFailedPage() {
               href={`https://wa.me/${SITE_CONFIG.whatsapp}?text=Hi%20George%2C%20my%20payment%20did%20not%20go%20through%20on%20Learn2Earn`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm font-bold text-[#1DB96B] hover:text-[#17A05D] transition-colors"
+              className="flex items-center gap-2 text-sm font-bold text-[#0B854C] hover:text-[#17A05D] transition-colors"
             >
               <MessageCircle className="w-3 h-3" /> WhatsApp George
             </a>

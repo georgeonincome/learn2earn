@@ -73,7 +73,7 @@ export default function AdminCohorts() {
                       <div className="flex items-center gap-2">
                         <Link
                           href={`/cohorts/${cohort.slug}`}
-                          className="text-xs font-medium text-[#1DB96B] hover:underline"
+                          className="text-xs font-medium text-[#0B854C] hover:underline"
                         >
                           View
                         </Link>
@@ -106,7 +106,7 @@ export default function AdminCohorts() {
                   <p className="text-xs text-[#737373]">{stat.label}</p>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-[#1DB96B]/10 flex items-center justify-center">
-                  <stat.icon className="w-4 h-4 text-[#1DB96B]" />
+                  <stat.icon className="w-4 h-4 text-[#0B854C]" />
                 </div>
               </div>
             </div>

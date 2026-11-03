@@ -200,7 +200,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
     }
     return (
       <div className="flex aspect-video flex-col justify-end rounded-3xl bg-[#10201A] p-7 text-[#FFFFFF]">
-        <span className="text-sm font-semibold text-[#1DB96B]">{course.category ?? 'Learn2Earn'}</span>
+        <span className="text-sm font-semibold text-[#0B854C]">{course.category ?? 'Learn2Earn'}</span>
         <span className="mt-2 text-3xl font-extrabold leading-tight tracking-normal">{course.title}</span>
       </div>
     )
@@ -620,7 +620,7 @@ export default async function CoursePage({ params }: { params: Promise<{ slug: s
                         </div>
                       ) : (
                         <div className="flex h-full items-end rounded-xl bg-[#10201A] p-3">
-                          <span className="text-sm font-bold text-[#1DB96B]">{r.category ?? 'Learn2Earn'}</span>
+                          <span className="text-sm font-bold text-[#0B854C]">{r.category ?? 'Learn2Earn'}</span>
                         </div>
                       )}
                       <p className="mt-3 line-clamp-2 font-semibold leading-snug group-hover:underline">{r.title}</p>

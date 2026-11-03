@@ -12,7 +12,7 @@ export default function WelcomePage() {
             <Play className="w-8 h-8" />
           </div>
           <h1 className="text-3xl sm:text-5xl font-extrabold mb-4">
-            Welcome to <span className="text-[#1DB96B]">Learn2Earn</span>
+            Welcome to <span className="text-[#0B854C]">Learn2Earn</span>
           </h1>
           <p className="text-lg text-[#A3A3A3] mb-8 max-w-xl mx-auto">
             Practical digital skills for Zambia. Taught personally by George J Kasonso.
@@ -59,7 +59,7 @@ export default function WelcomePage() {
               },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center gap-4 text-center p-6">
-                <div className="w-12 h-12 rounded-full bg-[#1DB96B]/10 flex items-center justify-center text-[#1DB96B]">
+                <div className="w-12 h-12 rounded-full bg-[#1DB96B]/10 flex items-center justify-center text-[#0B854C]">
                   <item.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#111111] mb-2">{item.title}</h3>
@@ -87,7 +87,7 @@ export default function WelcomePage() {
                   'Nothing renews automatically',
                 ].map((item, i) => (
                   <li key={i} className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-[#1DB96B]" />
+                    <Check className="w-4 h-4 text-[#0B854C]" />
                     <span className="text-sm text-[#737373]">{item}</span>
                   </li>
                 ))}
@@ -95,7 +95,7 @@ export default function WelcomePage() {
             </div>
             <div className="flex-1">
               <div className="bg-[#F3F4F6] rounded-2xl p-8 text-center">
-                <BookOpen className="w-16 h-16 text-[#1DB96B] mx-auto mb-4" />
+                <BookOpen className="w-16 h-16 text-[#0B854C] mx-auto mb-4" />
                 <h3 className="text-lg font-bold text-[#111111] mb-2">George J Kasonso</h3>
                 <p className="text-sm text-[#737373] mb-4">
                   Founder & Instructor at Learn2Earn. Zambian digital educator teaching practical skills since 2019.
@@ -104,7 +104,7 @@ export default function WelcomePage() {
                   href={`https://wa.me/${SITE_CONFIG.whatsapp}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-sm font-bold text-[#1DB96B] hover:underline"
+                  className="inline-flex items-center gap-2 text-sm font-bold text-[#0B854C] hover:underline"
                 >
                   WhatsApp George <ArrowRight className="w-3 h-3" />
                 </a>

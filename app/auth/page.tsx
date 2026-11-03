@@ -116,14 +116,14 @@ export default function AuthPage() {
               {mode === 'login' ? (
                 <>
                   No account yet?{' '}
-                  <button onClick={() => setMode('register')} className="text-[#1DB96B] font-semibold hover:underline cursor-pointer">
+                  <button onClick={() => setMode('register')} className="text-[#0B854C] font-semibold hover:underline cursor-pointer">
                     Register
                   </button>
                 </>
               ) : (
                 <>
                   Already have an account?{' '}
-                  <button onClick={() => setMode('login')} className="text-[#1DB96B] font-semibold hover:underline cursor-pointer">
+                  <button onClick={() => setMode('login')} className="text-[#0B854C] font-semibold hover:underline cursor-pointer">
                     Sign in
                   </button>
                 </>
@@ -138,7 +138,7 @@ export default function AuthPage() {
             href={`https://wa.me/${SITE_CONFIG.whatsapp}?text=Hi%20George%2C%20I%20need%20help%20with%20my%20Learn2Earn%20account`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 text-xs text-[#737373] hover:text-[#1DB96B] transition-colors"
+            className="inline-flex items-center gap-2 text-xs text-[#737373] hover:text-[#0B854C] transition-colors"
           >
             <MessageCircle className="w-4 h-4" /> WhatsApp {firstName} for help
           </a>

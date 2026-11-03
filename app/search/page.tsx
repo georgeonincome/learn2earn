@@ -58,7 +58,7 @@ export default function SearchPage({ searchParams }: { searchParams: { [key: str
             <div key={c.id} className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-4">
               <h3 className="font-semibold">{c.title}</h3>
               <p className="text-xs text-[#737373]">{c.description ?? ''}</p>
-              <Link href={`/courses/${c.slug}`} className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#1DB96B] hover:underline">
+              <Link href={`/courses/${c.slug}`} className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-[#0B854C] hover:underline">
                 Open course <ChevronRight className="w-3 h-3" />
               </Link>
             </div>

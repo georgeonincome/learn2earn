@@ -88,7 +88,7 @@ export default function SupportPage() {
               <div key={t.id} className="px-4 py-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{t.subject}</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${t.status === 'open' ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#F3FBF6] text-[#1DB96B]'}`}>{t.status}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${t.status === 'open' ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#F3FBF6] text-[#0B854C]'}`}>{t.status}</span>
                 </div>
                 <p className="text-sm text-[#737373]">{t.message}</p>
                 <div className="flex items-center gap-2 text-xs text-[#737373] mt-2">

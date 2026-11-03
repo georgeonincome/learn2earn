@@ -108,7 +108,7 @@ function BundleSuccessInner() {
         {/* Loading / confirming */}
         {reference && (loading || !purchase) && (
           <div className="rounded-2xl border border-[#E3E8E5] bg-white p-10 text-center">
-            <Clock className="mx-auto mb-3 h-10 w-10 animate-pulse text-[#1DB96B]" />
+            <Clock className="mx-auto mb-3 h-10 w-10 animate-pulse text-[#0B854C]" />
             <h1 className="mb-2 text-xl font-extrabold">Confirming payment</h1>
             <p className="text-sm text-[#5B6B64]">Unlocking your courses… This takes a few seconds. Please keep this page open.</p>
             <p className="mt-4 text-xs text-[#5B6B64]">

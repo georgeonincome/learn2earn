@@ -47,7 +47,7 @@ export default function DarasaPage() {
               <div key={s.id} className="px-4 py-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="font-semibold">{s.title}</span>
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${s.is_active === 1 ? 'bg-[#F3FBF6] text-[#1DB96B]' : 'bg-[#F5F5F5] text-[#737373]'}`}>{s.is_active === 1 ? 'Active' : 'Scheduled'}</span>
+                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${s.is_active === 1 ? 'bg-[#F3FBF6] text-[#0B854C]' : 'bg-[#F5F5F5] text-[#737373]'}`}>{s.is_active === 1 ? 'Active' : 'Scheduled'}</span>
                 </div>
                 <p className="text-sm text-[#737373] mb-2">{s.description}</p>
                 <div className="flex items-center gap-3 text-xs text-[#737373]">

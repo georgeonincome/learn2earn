@@ -39,11 +39,11 @@ export default function PrivacyPage() {
 
           <p className="mt-14 text-sm text-[#737373] border-t pt-6">
             Questions? Message {SITE_CONFIG.founder.name} at{' '}
-            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#1DB96B] hover:underline">
+            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#0B854C] hover:underline">
               {SITE_CONFIG.founder.phone}
             </Link>{' · '}
-            <Link href="/terms" className="text-[#1DB96B] hover:underline">Terms of Use</Link>{' · '}
-            <Link href="/refund-policy" className="text-[#1DB96B] hover:underline">Refund Policy</Link>
+            <Link href="/terms" className="text-[#0B854C] hover:underline">Terms of Use</Link>{' · '}
+            <Link href="/refund-policy" className="text-[#0B854C] hover:underline">Refund Policy</Link>
           </p>
         </div>
       </main>

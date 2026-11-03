@@ -49,7 +49,7 @@ export default function SettingsPage() {
     <div className="min-h-screen bg-[#FAFAFA] text-[#10201A]">
       <nav className="border-b border-gray-200 bg-white">
         <div className="mx-auto max-w-5xl px-4 py-3 flex items-center gap-4">
-          <Link href="/dashboard" className="text-[#1DB96B] font-semibold hover:underline">← Dashboard</Link>
+          <Link href="/dashboard" className="text-[#0B854C] font-semibold hover:underline">← Dashboard</Link>
           <div className="h-6 w-px bg-gray-200 mx-2" />
           <h1 className="text-xl font-bold">Settings</h1>
         </div>
@@ -83,10 +83,10 @@ export default function SettingsPage() {
                 Save
               </button>
             </div>
-            {saved && <p className="mt-2 text-xs text-[#1DB96B]">Saved</p>}
+            {saved && <p className="mt-2 text-xs text-[#0B854C]">Saved</p>}
           </form>
           <p className="mt-4 text-xs text-gray-500">Change photo (JPG/PNG/WebP, up to 5 MB) — upload comes with the file-storage phase.</p>
-          <p className="text-xs text-gray-500">WhatsApp: {data?.phone ?? '—'} · {saved ? '' : <a href="#" className="text-[#1DB96B] hover:underline" onClick={(e) => { e.preventDefault(); setFlavor('pass') }}>Change</a>}</p>
+          <p className="text-xs text-gray-500">WhatsApp: {data?.phone ?? '—'} · {saved ? '' : <a href="#" className="text-[#0B854C] hover:underline" onClick={(e) => { e.preventDefault(); setFlavor('pass') }}>Change</a>}</p>
         </div>
 
         {/* Password */}
@@ -111,10 +111,10 @@ export default function SettingsPage() {
                 Update Password
               </button>
             </div>
-            {saved && flavor === 'pass' && <p className="mt-2 text-xs text-[#1DB96B]">Password saved.</p>}
+            {saved && flavor === 'pass' && <p className="mt-2 text-xs text-[#0B854C]">Password saved.</p>}
           </form>
           <p className="mt-4 text-xs text-gray-500">Continue with Google: not connected. Set a password first.</p>
-          <p className="text-xs text-gray-500"><Link href="/auth" className="text-[#1DB96B] hover:underline">Sign out of other sessions</Link> — session management.</p>
+          <p className="text-xs text-gray-500"><Link href="/auth" className="text-[#0B854C] hover:underline">Sign out of other sessions</Link> — session management.</p>
         </div>
 
         {/* Notifications */}
@@ -133,7 +133,7 @@ export default function SettingsPage() {
                   <label className="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
                     <input
                       type="checkbox"
-                      className="rounded border-gray-300 text-[#1DB96B] focus:ring-[#1DB96B]"
+                      className="rounded border-gray-300 text-[#0B854C] focus:ring-[#1DB96B]"
                       defaultChecked={checked}
                       onChange={(e) => update('preferences', { preferences: { ...(data?.preferences ?? {}), [key]: e.target.checked } })}
                     />

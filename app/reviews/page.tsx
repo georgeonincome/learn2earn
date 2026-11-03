@@ -107,7 +107,7 @@ export default function ReviewsPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-12">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="mb-4 inline-block text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B] bg-[#E8F8F0] px-3 py-1 rounded-full">
+              <p className="mb-4 inline-block text-[11px] font-bold tracking-[0.14em] uppercase text-[#0B854C] bg-[#E8F8F0] px-3 py-1 rounded-full">
                 Testimonials
               </p>
               <h1 className="font-head text-4xl md:text-5xl font-extrabold leading-[1.05] mb-3">
@@ -162,7 +162,7 @@ export default function ReviewsPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {filtered.map((review) => (
               <article key={review.id} className="bg-white border border-[#E5E5E5] rounded-xl p-6 hover:shadow-md transition-all">
-                <Quote className="w-6 h-6 text-[#1DB96B] mb-3" />
+                <Quote className="w-6 h-6 text-[#0B854C] mb-3" />
                 <div className="flex gap-1 mb-3" aria-label={`${review.rating} out of 5 stars`}>
                   {Array.from({ length: review.rating }).map((_, i) => (
                     <Star key={i} className="h-4 w-4 text-[#F59E0B]" fill="#F59E0B" />
@@ -229,7 +229,7 @@ export default function ReviewsPage() {
                 href={`https://wa.me/${SITE_CONFIG.whatsapp}?text=Hi%20George%2C%20I%20have%20feedback%20for%20Learn2Earn`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-sm font-medium text-[#1DB96B] hover:underline inline-flex items-center gap-1"
+                className="text-sm font-medium text-[#0B854C] hover:underline inline-flex items-center gap-1"
               >
                 <MessageCircle className="w-4 h-4" /> Send feedback
               </a>

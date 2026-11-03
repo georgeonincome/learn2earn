@@ -108,7 +108,7 @@ export default function MasterclassesPage() {
                   <p className="text-xs text-[#737373]">{m.date} · {m.time}</p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
-                  <span className="text-xs font-medium text-[#1DB96B]">{m.price}</span>
+                  <span className="text-xs font-medium text-[#0B854C]">{m.price}</span>
                   <span className="text-xs text-[#737373]">{m.seats}</span>
                 </div>
               </div>

@@ -48,7 +48,7 @@ export default function DashboardPage() {
             <p className="text-[#737373] text-sm mt-1">
               Welcome back, <span className="font-semibold text-[#111111]">{name}</span>!
               {isMember && plan && (
-                <span className="ml-2 inline-flex items-center gap-1 text-xs font-medium text-[#1DB96B] bg-[#F3FBF6] px-2 py-0.5 rounded-full">
+                <span className="ml-2 inline-flex items-center gap-1 text-xs font-medium text-[#0B854C] bg-[#F3FBF6] px-2 py-0.5 rounded-full">
                   <Award className="w-3 h-3" /> {plan.name} member
                 </span>
               )}
@@ -57,10 +57,10 @@ export default function DashboardPage() {
           {stats && (
             <div className="flex items-center gap-3">
               <div className="text-right">
-                <div className="text-sm font-bold text-[#1DB96B]">Level {stats.stats.level}</div>
+                <div className="text-sm font-bold text-[#0B854C]">Level {stats.stats.level}</div>
                 <div className="text-xs text-[#737373]">{stats.stats.totalPoints} XP</div>
               </div>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E8F6EF] text-[#1DB96B] font-bold text-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#E8F6EF] text-[#0B854C] font-bold text-sm">
                 {name.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -102,7 +102,7 @@ export default function DashboardPage() {
         <div className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-xl font-extrabold">Course Progress</h2>
-            <span className="text-sm font-semibold text-[#1DB96B]">
+            <span className="text-sm font-semibold text-[#0B854C]">
               {stats?.stats.progressPercent ?? 0}%
             </span>
           </div>
@@ -123,7 +123,7 @@ export default function DashboardPage() {
       <section className="mb-8">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-extrabold">My Courses</h2>
-          <Link href="/courses" className="text-sm font-semibold text-[#1DB96B] hover:underline">
+          <Link href="/courses" className="text-sm font-semibold text-[#0B854C] hover:underline">
             Browse courses
           </Link>
         </div>
@@ -134,10 +134,10 @@ export default function DashboardPage() {
             {stats.enrollments.map((e) => (
               <div key={e.id} className="rounded-xl border border-[#E5E5E5] bg-[#FFFFFF] p-5 hover:border-[#1DB96B] transition-colors">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#1DB96B] text-xs font-bold">C</span>
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#1DB96B]/10 text-[#0B854C] text-xs font-bold">C</span>
                   <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                    e.paymentStatus === 'free' ? 'bg-[#F3FBF6] text-[#1DB96B]' :
-                    e.paymentStatus === 'paid' ? 'bg-[#E8F6EF] text-[#1DB96B]' :
+                    e.paymentStatus === 'free' ? 'bg-[#F3FBF6] text-[#0B854C]' :
+                    e.paymentStatus === 'paid' ? 'bg-[#E8F6EF] text-[#0B854C]' :
                     'bg-[#F5F5F5] text-[#737373]'
                   }`}>
                     {e.paymentStatus === 'free' ? 'Free' : e.paymentStatus === 'paid' ? 'Purchased' : e.paymentStatus}
@@ -149,7 +149,7 @@ export default function DashboardPage() {
                 </p>
                 <Link
                   href={`/courses/${e.courseId ?? ''}`}
-                  className="mt-3 inline-block text-xs font-semibold text-[#1DB96B] hover:underline"
+                  className="mt-3 inline-block text-xs font-semibold text-[#0B854C] hover:underline"
                 >
                   Go to course →
                 </Link>
@@ -252,7 +252,7 @@ function QuickActionCard({ title, description, icon, href, color }: {
       </div>
       <h3 className="font-bold mt-3 text-[#111111]">{title}</h3>
       <p className="text-sm text-[#737373] mt-2">{description}</p>
-      <span className="mt-4 inline-block text-xs font-semibold text-[#1DB96B]">
+      <span className="mt-4 inline-block text-xs font-semibold text-[#0B854C]">
         Go →
       </span>
     </Link>

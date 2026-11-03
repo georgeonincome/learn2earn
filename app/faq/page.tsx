@@ -59,7 +59,7 @@ export default function FAQPage() {
     <div className="min-h-screen font-sans" style={{ backgroundColor: PAGE.pageBg, color: PAGE.text }}>
       <main className="pt-[122px]">
         <div className="max-w-[800px] mx-auto px-6 pb-24">
-          <span className="inline-block text-[11px] font-bold tracking-[0.14em] uppercase text-[#1DB96B] bg-[#E8F8F0] px-3 py-[5px] rounded-full mb-4 block">
+          <span className="inline-block text-[11px] font-bold tracking-[0.14em] uppercase text-[#0B854C] bg-[#E8F8F0] px-3 py-[5px] rounded-full mb-4 block">
             Help
           </span>
           <h1 className="text-[31px] md:text-[40px] font-extrabold text-[#111] leading-[1.1] tracking-[-0.025em] mb-3">
@@ -135,7 +135,7 @@ export default function FAQPage() {
                         style={{ outline: 'none' }}
                       >
                         <span>{f.question}</span>
-                        <ChevronDown className="w-4 h-4 text-[#A3A3A3] flex-shrink-0 mt-1 transition-transform group-open:rotate-180 group-open:text-[#1DB96B]" />
+                        <ChevronDown className="w-4 h-4 text-[#A3A3A3] flex-shrink-0 mt-1 transition-transform group-open:rotate-180 group-open:text-[#0B854C]" />
                       </summary>
                       <div className="px-5 pb-[18px] text-[15px] text-[#404040] leading-[1.7]">
                         {f.answer}

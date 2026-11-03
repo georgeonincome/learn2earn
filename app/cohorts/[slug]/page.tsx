@@ -100,7 +100,7 @@ export default async function CohortPage({ params }: { params: Promise<{ slug: s
                     />
                   </div>
                   <div className="flex items-baseline gap-2 mb-6">
-                    <span className="text-3xl font-extrabold text-[#1DB96B]">
+                    <span className="text-3xl font-extrabold text-[#0B854C]">
                       {formatPrice(cohort.price)}
                     </span>
                     {showEarlyBird && (
@@ -117,7 +117,7 @@ export default async function CohortPage({ params }: { params: Promise<{ slug: s
                       'WhatsApp group access',
                     ].map((t) => (
                       <div key={t} className="flex items-center gap-2 text-sm text-[#737373]">
-                        <Check className="w-4 h-4 text-[#1DB96B]" />
+                        <Check className="w-4 h-4 text-[#0B854C]" />
                         <span>{t}</span>
                       </div>
                     ))}

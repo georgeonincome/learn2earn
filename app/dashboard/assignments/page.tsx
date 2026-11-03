@@ -55,7 +55,7 @@ export default function AssignmentsPage() {
                   <td className="px-4 py-3 text-right text-[#737373]">{a.due_date ? new Date(a.due_date).toLocaleDateString('en-GB') : '—'}</td>
                   <td className="px-4 py-3 text-center text-[#737373]">{a.weight}%</td>
                   <td className="px-4 py-3 text-right">
-                    <Link href={`/courses/${a.course_id}`} className="text-xs text-[#1DB96B] hover:underline">Go to course <ChevronRight className="w-3 h-3" /></Link>
+                    <Link href={`/courses/${a.course_id}`} className="text-xs text-[#0B854C] hover:underline">Go to course <ChevronRight className="w-3 h-3" /></Link>
                   </td>
                 </tr>
               ))

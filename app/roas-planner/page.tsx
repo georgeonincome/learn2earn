@@ -88,7 +88,7 @@ export default function RoasPlannerPage() {
           </div>
         </div>
         <div className="bg-[#F3FBF6] rounded-lg p-4">
-          <p className="text-sm font-semibold text-[#1DB96B]">
+          <p className="text-sm font-semibold text-[#0B854C]">
             {estimatedProfit > 0 ? 'Profitable — scale it.' : 'Not yet profitable — lower your cost per lead or improve conversion.'}
           </p>
         </div>

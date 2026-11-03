@@ -27,7 +27,7 @@ export default async function BookCheckoutPage({ params }: { params: Promise<{ s
       <div className="min-h-screen bg-[#FAFAFA] text-[#111111] flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-[#111111] mb-2">Book Not Found</h1>
-          <Link href="/books" className="text-[#1DB96B] font-medium hover:text-[#17A05D]">
+          <Link href="/books" className="text-[#0B854C] font-medium hover:text-[#17A05D]">
             Browse Books
           </Link>
         </div>

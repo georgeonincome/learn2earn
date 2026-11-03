@@ -80,7 +80,7 @@ export default function DarasaSessionsPage() {
               },
             ].map((item, i) => (
               <div key={i} className="flex flex-col items-center gap-4 text-center p-6">
-                <div className="w-12 h-12 rounded-full bg-[#1DB96B]/10 flex items-center justify-center text-[#1DB96B]">
+                <div className="w-12 h-12 rounded-full bg-[#1DB96B]/10 flex items-center justify-center text-[#0B854C]">
                   <item.icon className="w-6 h-6" />
                 </div>
                 <h3 className="text-lg font-bold text-[#111111] mb-2">{item.title}</h3>
@@ -101,8 +101,8 @@ export default function DarasaSessionsPage() {
             {DARASA_SESSIONS.map((s, i) => (
               <div key={i} className="bg-white border border-[#E5E5E5] rounded-2xl p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-xs font-bold text-[#1DB96B] uppercase tracking-[0.1em]">Live Session</span>
-                  <span className="text-xs font-bold text-[#1DB96B]">Free</span>
+                  <span className="text-xs font-bold text-[#0B854C] uppercase tracking-[0.1em]">Live Session</span>
+                  <span className="text-xs font-bold text-[#0B854C]">Free</span>
                 </div>
                 <h3 className="text-lg font-bold text-[#111111] mb-2">{s.title}</h3>
                 <p className="text-sm text-[#737373] mb-3">{s.description}</p>

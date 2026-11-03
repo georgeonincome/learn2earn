@@ -35,6 +35,7 @@ const C = {
   radiusCard: 12,
   radiusBtn: 8,
   radiusPill: 9999,
+  textAction: '#0B854C',
 }
 
 /* Map categories to representative images */
@@ -323,7 +324,7 @@ export default function CoursesPage() {
                   </Link>
                   {/* body */}
                   <div className="p-4">
-                    <p className="text-xs font-semibold mb-1" style={{ color: C.primary }}>
+                    <p className="text-xs font-semibold mb-1" style={{ color: C.textAction }}>
                       {c.category ?? 'Course'} · {c.format ?? 'Self-paced'}
                     </p>
                     <Link href={`/courses/${c.slug}`}>
@@ -339,7 +340,7 @@ export default function CoursesPage() {
                     </div>
                     {/* price row */}
                     <div className="flex items-center gap-2 flex-wrap mb-2">
-                      <span className="text-lg font-medium" style={{ color: C.primary }}>
+                      <span className="text-lg font-medium" style={{ color: C.textAction }}>
                         {eff === 0 ? 'Free' : fmtZMW(eff)}
                       </span>
                       {showSave && (
@@ -362,7 +363,7 @@ export default function CoursesPage() {
                         type="button"
                         onClick={() => setSubscribeModal({ open: true, course: c })}
                         className="inline-flex w-full items-center justify-center gap-1.5 mt-1 text-sm font-semibold transition-colors"
-                        style={{ minHeight: 40, borderRadius: C.radiusBtn, background: '#F3FBF6', color: C.primary, border: `1px solid ${C.primary}`, padding: '0 18px' }}
+                        style={{ minHeight: 40, borderRadius: C.radiusBtn, background: '#F3FBF6', color: '#0F7A42', border: `1px solid ${C.primary}`, padding: '0 18px' }}
                       >
                         <Lock className="w-3 h-3" /> Subscribe · from {fmtZMW(c.monthlySubPrice)}/mo
                       </button>

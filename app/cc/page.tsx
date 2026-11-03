@@ -15,7 +15,7 @@ export default function CcPage() {
         <div className="bg-white border border-[#E5E5E5] rounded-2xl p-6 mb-8">
           <div className="flex items-center justify-between mb-4">
             <span className="text-sm font-medium text-[#111111]">Certificate ID</span>
-            <span className="text-xs font-mono text-[#1DB96B] font-bold">L2E-2026-001</span>
+            <span className="text-xs font-mono text-[#0B854C] font-bold">L2E-2026-001</span>
           </div>
           <div className="flex justify-between text-sm mb-2">
             <span className="text-[#737373]">Student Name</span>

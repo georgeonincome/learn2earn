@@ -81,7 +81,7 @@ export default function AdminOrdersPage() {
                   <td className="px-4 py-3 text-center text-[#737373]">{o.payment_method}</td>
                   <td className="px-4 py-3 text-center">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                      STATUS_COLOR[o.payment_status] ? `bg-[#F3FBF6] text-[#1DB96B]` : 'bg-[#F5F5F5] text-[#737373]'
+                      STATUS_COLOR[o.payment_status] ? `bg-[#F3FBF6] text-[#0B854C]` : 'bg-[#F5F5F5] text-[#737373]'
                     }`}>{o.payment_status}</span>
                   </td>
                   <td className="px-4 py-3 text-right text-[#737373]">

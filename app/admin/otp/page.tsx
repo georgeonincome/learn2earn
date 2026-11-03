@@ -60,7 +60,7 @@ export default function AdminOtpPage() {
                   <div className="font-mono font-bold text-[#111111]">{c.code}</div>
                   <div className="text-xs text-[#737373]">{c.purpose} · used: {c.used === 1 ? 'yes' : 'no'}</div>
                 </div>
-                <button onClick={() => consume(c.code)} className="rounded-md bg-[#F3FBF6] px-3 py-1 text-xs font-bold text-[#1DB96B] hover:bg-[#E0F5EC]">Verify</button>
+                <button onClick={() => consume(c.code)} className="rounded-md bg-[#F3FBF6] px-3 py-1 text-xs font-bold text-[#0B854C] hover:bg-[#E0F5EC]">Verify</button>
               </div>
             ))}
           </div>

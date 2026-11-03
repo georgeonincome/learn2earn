@@ -86,7 +86,7 @@ export default function AdminCoursesPage() {
                     </td>
                     <td className="px-4 py-3 text-[#737373]">{c.slug}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${st.color === '#1DB96B' ? 'bg-[#F3FBF6] text-[#1DB96B]' : st.color === '#DC2626' ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#F5F5F5] text-[#737373]'}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-bold ${st.color === '#1DB96B' ? 'bg-[#F3FBF6] text-[#0B854C]' : st.color === '#DC2626' ? 'bg-[#FEE2E2] text-[#DC2626]' : 'bg-[#F5F5F5] text-[#737373]'}`}>
                         {st.label}
                       </span>
                     </td>
@@ -94,17 +94,17 @@ export default function AdminCoursesPage() {
                       ZMW {((c.sale_price ?? c.regular_price) * 0.155).toFixed(0)}
                     </td>
                     <td className="px-4 py-3 text-center">
-                      {c.include_in_plan === 1 ? <span className="text-xs font-bold text-[#1DB96B]">In plan</span> : <span className="text-xs text-[#737373]">—</span>}
+                      {c.include_in_plan === 1 ? <span className="text-xs font-bold text-[#0B854C]">In plan</span> : <span className="text-xs text-[#737373]">—</span>}
                     </td>
                     <td className="px-4 py-3 text-right">
                       {c.status === 'published' && (
                         <button onClick={() => setStatus(c.id, 'unlisted')} className="text-xs text-[#DC2626] hover:underline mr-2">Unpublish</button>
                       )}
                       {c.status === 'unlisted' && (
-                        <button onClick={() => setStatus(c.id, 'published')} className="text-xs text-[#1DB96B] hover:underline mr-2">Publish</button>
+                        <button onClick={() => setStatus(c.id, 'published')} className="text-xs text-[#0B854C] hover:underline mr-2">Publish</button>
                       )}
                       {c.status === 'archived' && (
-                        <button onClick={() => setStatus(c.id, 'draft')} className="text-xs text-[#1DB96B] hover:underline mr-2">Restore</button>
+                        <button onClick={() => setStatus(c.id, 'draft')} className="text-xs text-[#0B854C] hover:underline mr-2">Restore</button>
                       )}
                       {c.status !== 'archived' && (
                         <button onClick={() => setStatus(c.id, 'archived')} className="text-xs text-[#DC2626] hover:underline">Archive</button>

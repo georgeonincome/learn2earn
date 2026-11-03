@@ -34,7 +34,7 @@ export default function RefundPage() {
           <h2 className="text-xl font-bold text-[#111111] mt-12 mb-4">How to request</h2>
           <p className="text-[#404040] leading-7 mb-6">
             WhatsApp {SITE_CONFIG.founder.name} at{' '}
-            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#1DB96B] hover:underline">
+            <Link href={`https://wa.me/${SITE_CONFIG.whatsapp}`} className="text-[#0B854C] hover:underline">
               {SITE_CONFIG.founder.phone}
             </Link>{' '}
             with your transaction reference. Payment or access issues are handled first.
@@ -42,11 +42,11 @@ export default function RefundPage() {
 
           <p className="mt-14 text-sm text-[#737373] border-t pt-6">
             Questions? Message us on WhatsApp or email{' '}
-            <a href={`mailto:${SITE_CONFIG.founder.email}`} className="text-[#1DB96B] hover:underline">
+            <a href={`mailto:${SITE_CONFIG.founder.email}`} className="text-[#0B854C] hover:underline">
               {SITE_CONFIG.founder.email}
             </a>{' · '}
-            <Link href="/terms" className="text-[#1DB96B] hover:underline">Terms of Use</Link>{' · '}
-            <Link href="/privacy-policy" className="text-[#1DB96B] hover:underline">Privacy Policy</Link>
+            <Link href="/terms" className="text-[#0B854C] hover:underline">Terms of Use</Link>{' · '}
+            <Link href="/privacy-policy" className="text-[#0B854C] hover:underline">Privacy Policy</Link>
           </p>
         </div>
       </main>

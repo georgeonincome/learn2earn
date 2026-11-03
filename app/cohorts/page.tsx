@@ -40,6 +40,7 @@ const C = {
   radiusCard: 12,
   radiusBtn: 8,
   radiusPill: 9999,
+  textAction: '#0B854C',
 }
 
 const SORTS = [
@@ -300,7 +301,7 @@ export default function CohortsPage() {
                         </span>
                       </div>
                       {!ended && until >= 0 && until <= 14 && (
-                        <div className="text-xs" style={{ color: C.primary, fontWeight: 500 }}>
+                        <div className="text-xs" style={{ color: C.textAction, fontWeight: 500 }}>
                           {until === 0 ? 'Starts today' : until === 1 ? 'Starts tomorrow' : `Starts in ${until} days`}
                           {showEarlyBird && <span style={{ color: C.textMuted, fontWeight: 400 }}> · Early bird open</span>}
                         </div>
@@ -314,7 +315,7 @@ export default function CohortsPage() {
                       <div style={{ marginTop: 2 }}>
                         {!ended && (
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span style={{ color: C.primary, fontWeight: 700, fontSize: 16 }}>
+                            <span style={{ color: C.textAction, fontWeight: 700, fontSize: 16 }}>
                               {formatPrice(c.price)}
                             </span>
                             {showEarlyBird && (
