@@ -53,7 +53,7 @@ export default function AboutPage() {
             <Heart className="w-7 h-7 text-[hsl(var(--primary))]" />
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-            About <span className="text-[hsl(var(--primary))]">Learn2Earn</span>
+            <span className="text-white">About</span> <span className="text-[hsl(var(--primary))]">Learn2Earn</span>
           </h1>
           <p className="text-lg text-gray-300 leading-relaxed max-w-2xl mx-auto">
             A creator-led Zambian platform built to make practical digital skills accessible, fast, and affordable for everyone.
@@ -214,7 +214,7 @@ export default function AboutPage() {
           {/* Dark CTA */}
           <section className="bg-[#0A0D14] text-white p-8 sm:p-10 rounded-2xl text-center">
             <h2 className="text-2xl sm:text-3xl font-bold mb-3">
-              Zambia doesn&apos;t need more degrees — <span className="text-[hsl(var(--primary))]">Zambia needs more skills.</span>
+              <span className="text-white">Zambia doesn&apos;t need more degrees —</span> <span className="text-[hsl(var(--primary))]">Zambia needs more skills.</span>
             </h2>
             <p className="text-gray-300 mb-6 max-w-xl mx-auto">
               Your past doesn&apos;t define your potential. Your skill will.
