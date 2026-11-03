@@ -99,7 +99,7 @@ const EnrollmentOption = ({ name, checked, title, price, note, highlight }: {
   <label
     className={`block cursor-pointer rounded-2xl border-2 p-4 transition-colors motion-reduce:transition-none has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-[var(--cv-action)] ${checked ? 'border-[var(--cv-ink)] bg-[var(--cv-bg)]' : 'border-[var(--cv-line)] hover:border-[var(--cv-line-strong)]'}`}
   >
-    <input type="radio" name={name} className="sr-only" checked={checked} defaultChecked={checked} />
+    <input type="radio" name={name} className="sr-only" defaultChecked={checked} />
     <span className="flex items-start justify-between gap-3">
       <span className="flex items-center gap-3">
         <span
