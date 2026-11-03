@@ -2,6 +2,11 @@
 
 Status: **DONE** — Phase 5 implemented and smoke-tested against `file:./local.db` on 2026-11-03.
 
+Note (2026-11-03, addendum): the reference BundleLanding chunk authored links
+against `wa.me/254…`; this port derives the international WhatsApp link from
+`SITE_CONFIG.whatsapp` (`260…`) — the same convention as BookCheckoutForm and
+the phase-7 landings, so no rebranding gaps remain in bundle/book flows.
+
 Note: reference BundleLanding embeds the purchase form directly on the landing page
 (no separate `/bundle/[slug]/checkout` route), so checkout lives in the landing
 component; success is `/bundle-success?ref=`.
