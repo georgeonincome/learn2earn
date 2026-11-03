@@ -200,7 +200,7 @@ export async function GET(request: NextRequest, ctx: { params: Promise<{ id: str
       <div class="signatures">
         <div class="signature">
           <div class="sig-line"></div>
-          <div class="sig-name">George J Kasonso</div>
+          <div class="sig-name">George</div>
           <div class="sig-title">Founder &amp; Lead Instructor</div>
         </div>
         <div style="text-align: right;">

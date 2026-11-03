@@ -80,7 +80,7 @@ export default function AboutPage() {
                 <Layout className="w-4 h-4 text-[hsl(var(--primary))]" />
                 <span className="text-sm font-semibold text-[hsl(var(--primary))]">Meet the Founder</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl font-bold text-[#111111]">{fullName}</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[hsl(0_100%_99%)]">{fullName}</h2>
               <p className="text-[#737373] leading-relaxed">
                 Zambian digital educator, content strategist, and entrepreneur with <span className="font-bold text-[#111111]">1.1M+ followers</span> across platforms. I started from a small cyber café and turned self-taught skills into a mission to train Africa.
               </p>
@@ -107,7 +107,7 @@ export default function AboutPage() {
               One person runs <span className="text-[hsl(var(--primary))]">everything</span>
             </h2>
             <p className="text-[#737373] text-center max-w-2xl mx-auto mb-6">
-              Learn2Earn is not a company with departments. It is built, taught and maintained personally by George J Kasonso — the courses, the live cohorts, the platform itself and the replies to your messages. You will not waste time being passed around a customer support queue. You deal with George directly.
+              Learn2Earn is not a company with departments. It is built, taught and maintained personally by George — the courses, the live cohorts, the platform itself and the replies to your messages. You will not waste time being passed around a customer support queue. You deal with George directly.
             </p>
             <div className="max-w-3xl mx-auto">
               <Play className="w-8 h-8 text-[hsl(var(--primary))]" />

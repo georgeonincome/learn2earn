@@ -112,7 +112,7 @@ export default async function FunnelPage({ params }: { params: Promise<{ slug: s
             Ready to Get Started?
           </h2>
           <p className="text-sm text-[#111111]/80 mb-8 max-w-lg mx-auto">
-            Join George J Kasonso and start building practical digital skills today.
+            Join George and start building practical digital skills today.
           </p>
           <Link
             href={funnel.ctaHref}

@@ -380,13 +380,13 @@ export default function HomePage() {
                   { name: 'TikTok', handle: '@george_kasonso', href: SITE_CONFIG.social.tiktok, icon: 'TT' },
                   { name: 'Instagram', handle: '@george_kasonso', href: SITE_CONFIG.social.instagram, icon: 'IG' },
                   { name: 'YouTube', handle: '@georgekasonso', href: SITE_CONFIG.social.youtube, icon: 'YT' },
-                  { name: 'Facebook', handle: 'George Kasonso', href: SITE_CONFIG.social.facebook, icon: 'F' },
-                  { name: 'LinkedIn', handle: 'George Kasonso', href: SITE_CONFIG.social.linkedin, icon: 'IN' },
+                  { name: 'Facebook', handle: 'George', href: SITE_CONFIG.social.facebook, icon: 'F' },
+                  { name: 'LinkedIn', handle: 'George', href: SITE_CONFIG.social.linkedin, icon: 'IN' },
                 ].map((v) => (
                   <a key={v.href} href={v.href} target="_blank" rel="noopener noreferrer" className="group flex items-center gap-4 px-1 py-4 border-b border-[hsl(24_14%_88%)] last:border-0">
                     <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(0_86%_3%)] text-xs font-extrabold text-[hsl(0_100%_99%)]">{v.icon}</span>
                     <span className="min-w-0">
-                      <span className="block font-bold text-[hsl(0_100%_99%)]">{v.name}</span>
+                      <span className="block font-bold text-[#111111]">{v.name}</span>
                       <span className="block truncate text-sm text-[hsl(354_6%_39%)]">{v.handle}</span>
                     </span>
                     <ArrowRight className="ml-auto h-5 w-5 text-[hsl(153_85%_28%)] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

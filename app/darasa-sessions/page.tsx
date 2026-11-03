@@ -42,7 +42,7 @@ export default function DarasaSessionsPage() {
             Darasa Sessions
           </h1>
           <p className="text-lg text-[#A3A3A3] mb-8 max-w-xl mx-auto">
-            Free live classes every week. Learn practical digital skills from George J Kasonso. No payment required.
+            Free live classes every week. Learn practical digital skills from George. No payment required.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

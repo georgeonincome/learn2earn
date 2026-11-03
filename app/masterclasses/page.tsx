@@ -39,7 +39,7 @@ export default function MasterclassesPage() {
             Monthly Live Masterclasses
           </h1>
           <p className="text-lg text-[#A3A3A3] mb-8 max-w-xl mx-auto">
-            Join George J Kasonso for exclusive live training sessions every month. Learn cutting-edge digital skills, interact directly with the instructor, and connect with a community of African learners.
+            Join George for exclusive live training sessions every month. Learn cutting-edge digital skills, interact directly with the instructor, and connect with a community of African learners.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

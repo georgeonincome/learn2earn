@@ -96,7 +96,7 @@ export default function WelcomePage() {
             <div className="flex-1">
               <div className="bg-[#F3F4F6] rounded-2xl p-8 text-center">
                 <BookOpen className="w-16 h-16 text-[#0B854C] mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-[#111111] mb-2">George J Kasonso</h3>
+                <h3 className="text-lg font-bold text-[#111111] mb-2">George</h3>
                 <p className="text-sm text-[#737373] mb-4">
                   Founder & Instructor at Learn2Earn. Zambian digital educator teaching practical skills since 2019.
                 </p>
